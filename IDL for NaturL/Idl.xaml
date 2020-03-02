@@ -1,0 +1,73 @@
+﻿<Window x:Class="IDL_for_NaturL.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IDL_for_NaturL"
+        xmlns:self="clr-namespace:IDL_for_NaturL"
+        mc:Ignorable="d"
+        Title="IdL for NaturL" Height="450" Width="800"
+        Closing= "IDL_Closing"
+        Icon="C:\Users\Adrian\source\repos\IDL for NaturL\IDL for NaturL\ressources\logoicon.png">
+    <Window.CommandBindings>
+        <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute" Executed="OpenCommand_Executed"/>
+    </Window.CommandBindings>
+    <Grid x:Name="idl">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top" Height="25" >
+                <MenuItem Header="_File" >
+                    <MenuItem Header="_New" KeyDown="New_Keydown">
+                        <TextBox x:Name="inputF" Text="Input file name" KeyDown="inputF_Keydown"/>
+                    </MenuItem>
+                    <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
+                    <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>
+                    <Separator />
+                    <MenuItem Header="Exit" Command="self:CustomCommands.Exit"/>
+                </MenuItem>
+                <MenuItem Header="Edit">
+                    <MenuItem Header="_Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=CodeBox}"/>
+                    <MenuItem Header="_Paste" Command="ApplicationCommands.Paste" CommandTarget="{Binding ElementName=CodeBox}"/>
+                    <MenuItem Header="_Cut" Command="ApplicationCommands.Cut" CommandTarget="{Binding ElementName=CodeBox}"/>
+                    <MenuItem Header="_Undo" Command="ApplicationCommands.Undo" CommandTarget="{Binding ElementName=CodeBox}"/>
+                </MenuItem>
+                <MenuItem Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="C:\Users\Adrian\source\repos\IDL for NaturL\IDL for NaturL\ressources\untitled.png" Stretch="UniformToFill"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+            </Menu>
+            <TabControl DockPanel.Dock="Top" Height="1080" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+                <TabItem Header="Unknown File" x:Name="Tab1">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="787*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="TextBox" x:Name="CodeBox" TextWrapping="Wrap" Grid.ColumnSpan="3" AcceptsReturn="True" AcceptsTab="True" Background="Silver"/>
+                    </Grid>
+                </TabItem>
+                <!--<TabItem Header="Second File">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="787*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="TextBox" x:Name="CodeBox2" TextWrapping="Wrap" Grid.ColumnSpan="3" AcceptsReturn="True"/>
+                    </Grid>
+                </TabItem>-->
+            </TabControl>
+        </DockPanel>
+
+    </Grid>
+
+</Window>
