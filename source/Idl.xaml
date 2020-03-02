@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="IdL for NaturL" Height="450" Width="800"
         Closing= "IDL_Closing"
-        Icon="C:\Users\Adrian\source\repos\IDL for NaturL\IDL for NaturL\ressources\logoicon.png">
+        Icon="IDL for NaturL\ressources\logoicon.png">
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
@@ -39,7 +39,7 @@
                 </MenuItem>
                 <MenuItem Width="24">
                     <MenuItem.Icon>
-                        <Image Source="C:\Users\Adrian\source\repos\IDL for NaturL\IDL for NaturL\ressources\untitled.png" Stretch="UniformToFill"/>
+                        <Image Source="IDL for NaturL\ressources\untitled.png" Stretch="UniformToFill"/>
                     </MenuItem.Icon>
                 </MenuItem>
 
