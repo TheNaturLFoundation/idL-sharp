@@ -8,7 +8,11 @@
         mc:Ignorable="d"
         Title="IdL for NaturL" Height="450" Width="800"
         Closing= "IDL_Closing"
+<<<<<<< HEAD:IDL for NaturL/Idl.xaml
         Icon="C:/Users/Adrian/Desktop/IDLPULL/idl/ressources/logoicon.png">
+=======
+        Icon="IDL for NaturL\ressources\logoicon.png">
+>>>>>>> fb316753954fafb159a88543d270c1847a47b7be:source/Idl.xaml
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
@@ -39,7 +43,11 @@
                 </MenuItem>
                 <MenuItem Width="24">
                     <MenuItem.Icon>
+<<<<<<< HEAD:IDL for NaturL/Idl.xaml
                         <Image Source="C:/Users/Adrian/Desktop/IDLPull/idl/ressources/untitled.png" Stretch="UniformToFill"/>
+=======
+                        <Image Source="IDL for NaturL\ressources\untitled.png" Stretch="UniformToFill"/>
+>>>>>>> fb316753954fafb159a88543d270c1847a47b7be:source/Idl.xaml
                     </MenuItem.Icon>
                 </MenuItem>
 
