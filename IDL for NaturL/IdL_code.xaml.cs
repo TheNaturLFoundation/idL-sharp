@@ -31,7 +31,7 @@ namespace IDL_for_NaturL
         public bool newfile = false;
         public MainWindow()
         {
-            //InitializeComponent();
+            InitializeComponent();
         }
 
         //THESE ARE THE METHODS THAT MANAGE THE INTERFACE BASIC COMMANDS-------------------------
