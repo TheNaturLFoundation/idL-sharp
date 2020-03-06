@@ -8,10 +8,9 @@
         mc:Ignorable="d"
         Title="IdL for NaturL" Height="450" Width="800"
         Closing= "IDL_Closing"
-        Icon="ressources\logoicon.png"
-        Background="Gray">
+        Icon="ressources\logoicon.png">
     <Window.CommandBindings>
-        <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute" Executed="OpenCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.Save_As" CanExecute="SaveAsCommand_CanExecute" Executed="SaveAsCommand_Executed"/>
@@ -23,10 +22,9 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <DockPanel>
-            <Menu DockPanel.Dock="Top" Height="25" Background="Gray">
+            <Menu DockPanel.Dock="Top" Height="25">
                 <MenuItem Header="_File" >
-                    <MenuItem Header="_New" KeyDown="New_Keydown">
-                        <TextBox x:Name="inputF" Text="Input file name" KeyDown="inputF_Keydown"/>
+                    <MenuItem Header="_New" Click="NewWindow">
                     </MenuItem>
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>

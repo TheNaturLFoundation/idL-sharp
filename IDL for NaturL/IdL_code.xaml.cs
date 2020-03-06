@@ -61,6 +61,12 @@ namespace IDL_for_NaturL
         // This function refers to the "Save" button in the toolbar, opens the file dialog and asks the user the file to overwrite
         // (May be improved, no need to select the file where to save if the file is already saved somewhere)
 
+        private void NewWindow(object sender, RoutedEventArgs e)
+        {
+            Window inputWindow = new InputWindow((arg)=>{ this.file = arg; });
+            inputWindow.Show();
+        }
+        
         private void Save_Click(object sender, RoutedEventArgs e = null)
         {
 
@@ -91,7 +97,6 @@ namespace IDL_for_NaturL
             
         }
 
-        #region NewFile
         // This function refers to the event handler "IDL_Closing" in "Window" attributes,
         // Handles the window closing, asks wether the user wants to save his file before closing.
         private void IDL_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -116,46 +121,8 @@ namespace IDL_for_NaturL
 
         }
 
-        // This function manages the new file creation, however it's bugged, will be changed soon
-        // What we want is open a new window over the actual window in order to ask user for an input
-        private void inputF_Keydown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                newfile = true;
-                if (inputF.Text.Contains(".nl"))
-                {
-                    var myfile = File.Create(inputF.Text);
-                    myfile.Close();
+        
 
-                }
-                else
-                {
-                    var myfile = File.Create(inputF.Text);
-                    myfile.Close();
-                }
-                
-            }
-            else if(e.Key == Key.Escape)
-            {
-                inputF.Text = "Input file name";
-                newfile = false;
-            }
-            if (newfile)
-            {
-                Open_Click(sender, e);
-            }
-        }
-        public void New_Keydown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Escape)
-            {
-                inputF.Text = "Input file name";
-            }
-        }
-        #endregion
-
-        //Faire une classe pour le new, qui ouvre une nouvelle fenetre
 
         //-----------------------------------------------------------------------------------------
 

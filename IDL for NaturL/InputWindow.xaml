@@ -1,0 +1,20 @@
+<Window x:Class="IDL_for_NaturL.InputWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IDL_for_NaturL"
+        xmlns:self="clr-namespace:IDL_for_NaturL"
+        mc:Ignorable="d"
+        Title="Input file name" Height="186" Width="462"
+        Icon="ressources\logoicon.png">
+    <Window.CommandBindings>
+    </Window.CommandBindings>
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="25,24,0,0" Text="Please input new file name:" TextWrapping="Wrap" VerticalAlignment="Top" Width="148"/>
+        <TextBox x:Name="input" Margin="25,59,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Keyboard.KeyDown="KeyPressed"/>
+        <Button Content="OK" Margin="290,108,0,0" HorizontalAlignment="Left" Width="45" Height="25" VerticalAlignment="Top" Click="Created"/>
+        <Button Content="Cancel" Margin="365,108,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="45" Click="Cancelled"/>
+    </Grid>
+
+</Window>

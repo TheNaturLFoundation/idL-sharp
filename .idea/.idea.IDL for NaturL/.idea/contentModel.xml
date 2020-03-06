@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
     <e p="C:\Users\Adrian\.Rider2019.2\system\extResources" t="IncludeRecursive" />
@@ -12,6 +12,8 @@
         <e p="IDL for NaturL.csproj" t="IncludeRecursive" />
         <e p="Idl.xaml" t="Include" />
         <e p="IdL_code.xaml.cs" t="Include" />
+        <e p="InputWindow.xaml" t="Include" />
+        <e p="InputWindow_code.xaml.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
