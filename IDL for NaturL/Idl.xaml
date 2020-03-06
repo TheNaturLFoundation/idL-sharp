@@ -8,15 +8,13 @@
         mc:Ignorable="d"
         Title="IdL for NaturL" Height="450" Width="800"
         Closing= "IDL_Closing"
-<<<<<<< HEAD:IDL for NaturL/Idl.xaml
-        Icon="C:/Users/Adrian/Desktop/IDLPULL/idl/ressources/logoicon.png">
-=======
-        Icon="IDL for NaturL\ressources\logoicon.png">
->>>>>>> fb316753954fafb159a88543d270c1847a47b7be:source/Idl.xaml
+        Icon="ressources\logoicon.png"
+        Background="Gray">
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute" Executed="OpenCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.Save_As" CanExecute="SaveAsCommand_CanExecute" Executed="SaveAsCommand_Executed"/>
     </Window.CommandBindings>
     <Grid x:Name="idl">
         <Grid.ColumnDefinitions>
@@ -25,13 +23,14 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <DockPanel>
-            <Menu DockPanel.Dock="Top" Height="25" >
+            <Menu DockPanel.Dock="Top" Height="25" Background="Gray">
                 <MenuItem Header="_File" >
                     <MenuItem Header="_New" KeyDown="New_Keydown">
                         <TextBox x:Name="inputF" Text="Input file name" KeyDown="inputF_Keydown"/>
                     </MenuItem>
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>
+                    <MenuItem Header="_Save As..." Command="self:CustomCommands.Save_As"/>
                     <Separator />
                     <MenuItem Header="Exit" Command="self:CustomCommands.Exit"/>
                 </MenuItem>
@@ -43,11 +42,7 @@
                 </MenuItem>
                 <MenuItem Width="24">
                     <MenuItem.Icon>
-<<<<<<< HEAD:IDL for NaturL/Idl.xaml
-                        <Image Source="C:/Users/Adrian/Desktop/IDLPull/idl/ressources/untitled.png" Stretch="UniformToFill"/>
-=======
-                        <Image Source="IDL for NaturL\ressources\untitled.png" Stretch="UniformToFill"/>
->>>>>>> fb316753954fafb159a88543d270c1847a47b7be:source/Idl.xaml
+                        <Image Source="ressources/Untitled.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
 
@@ -56,11 +51,12 @@
                 <TabItem Header="Unknown File" x:Name="Tab1">
                     <Grid Background="#FFE5E5E5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="787*"/>
+                            <ColumnDefinition Width="57*"/>
+                            <ColumnDefinition Width="730*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="TextBox" x:Name="CodeBox" TextWrapping="Wrap" Grid.ColumnSpan="3" AcceptsReturn="True" AcceptsTab="True" Background="Silver"/>
+                        <TextBox Text="TextBox" x:Name="CodeBox" TextWrapping="Wrap" Grid.ColumnSpan="4" AcceptsReturn="True" AcceptsTab="True" Background="Silver"/>
                     </Grid>
                 </TabItem>
                 <!--<TabItem Header="Second File">

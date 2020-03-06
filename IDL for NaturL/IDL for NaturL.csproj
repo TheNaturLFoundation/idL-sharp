@@ -8,7 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ressources\logoicon.png" />
+    <None Remove="ressources\logoiconsrc.png" />
+    <None Remove="ressources\Untitled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="jacobslusser.ScintillaNET" Version="3.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="ressources\logoicon.png" />
+    <Resource Include="ressources\logoiconsrc.png" />
+    <Resource Include="ressources\Untitled.png" />
   </ItemGroup>
 
   <ItemGroup>

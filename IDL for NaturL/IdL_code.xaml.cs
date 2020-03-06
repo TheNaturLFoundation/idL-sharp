@@ -26,7 +26,8 @@ namespace IDL_for_NaturL
         //Can improve it by saving the string of the opened file and comparing it to the one we want to save
         //This one detects any keyboard stroke
         bool DataChanged = false;
-        public bool IsSaved;
+        public bool IsSaved = false;
+        public bool IsFileSelected = false;
         public string file = "";
         public bool newfile = false;
         public MainWindow()
@@ -36,6 +37,8 @@ namespace IDL_for_NaturL
 
         //THESE ARE THE METHODS THAT MANAGE THE INTERFACE BASIC COMMANDS-------------------------
 
+        // This function refers to the "Open" button in the toolbar, opens the file dialog and asks the user the file to open
+        // Content of the opened file is then showed in the codebox of idL
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -49,28 +52,48 @@ namespace IDL_for_NaturL
                 CodeBox.Text += Table;
                 Tab1.Header = System.IO.Path.GetFileName(file);
                 IsSaved = false;
+                IsFileSelected = true;
             }
             //System.IO.File.Create(System.IO.Path.GetFullPath(nameoffile)); Ancient version, saves file in path with the .exe program
             //We don't want that, we want to open file explorer
         }
 
+        // This function refers to the "Save" button in the toolbar, opens the file dialog and asks the user the file to overwrite
+        // (May be improved, no need to select the file where to save if the file is already saved somewhere)
 
         private void Save_Click(object sender, RoutedEventArgs e = null)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "nl files (*.nl)|*.nl*|Text files (*.txt)|*.txt";
 
-            if (saveFileDialog.ShowDialog() == true)
+
+            if (!IsFileSelected)
             {
-
-                File.WriteAllText(saveFileDialog.FileName, CodeBox.Text);
-                IsSaved = true;
-                file = saveFileDialog.FileName;
-                Tab1.Header = System.IO.Path.GetFileName(file);
+                Save_AsClick(sender, e);
+            }
+            else
+            {
+                File.WriteAllText(file, CodeBox.Text);
             }
 
         }
 
+        private void Save_AsClick(object sender, RoutedEventArgs e = null)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "nl files (*.nl)|*.nl*|Text files (*.txt)|*.txt";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                File.WriteAllText(saveFileDialog.FileName, CodeBox.Text);
+                IsSaved = true;
+                file = saveFileDialog.FileName;
+                IsFileSelected = true;
+                Tab1.Header = System.IO.Path.GetFileName(file);
+            }
+            
+        }
+
+        #region NewFile
+        // This function refers to the event handler "IDL_Closing" in "Window" attributes,
+        // Handles the window closing, asks wether the user wants to save his file before closing.
         private void IDL_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (DataChanged && !IsSaved)
@@ -92,6 +115,9 @@ namespace IDL_for_NaturL
             }
 
         }
+
+        // This function manages the new file creation, however it's bugged, will be changed soon
+        // What we want is open a new window over the actual window in order to ask user for an input
         private void inputF_Keydown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
@@ -127,6 +153,8 @@ namespace IDL_for_NaturL
                 inputF.Text = "Input file name";
             }
         }
+        #endregion
+
         //Faire une classe pour le new, qui ouvre une nouvelle fenetre
 
         //-----------------------------------------------------------------------------------------
@@ -170,8 +198,18 @@ namespace IDL_for_NaturL
         }
 
         #endregion
+        
+        #region SaveAsCommand
+        private void SaveAsCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
 
-
+        private void SaveAsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Save_AsClick(sender);
+        }
+        #endregion
         //------------------------------------------------------------------------------------------
     }
 
@@ -223,6 +261,12 @@ namespace IDL_for_NaturL
                     new KeyGesture(Key.N,ModifierKeys.Control)
                }
            );
+        public static readonly RoutedUICommand Save_As = new RoutedUICommand
+            (
+                "Save_As",
+                "Save_As",
+                typeof(CustomCommands)
+                );
     }
     #endregion
 
