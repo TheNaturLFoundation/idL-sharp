@@ -24,7 +24,7 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top" Height="25">
                 <MenuItem Header="_File" >
-                    <MenuItem Header="_New" Click="NewWindow">
+                    <MenuItem Header="_New" Click="NewFile">
                     </MenuItem>
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>

@@ -46,10 +46,9 @@ namespace IDL_for_NaturL
             if (openFileDialog.ShowDialog() == true)
             {
                 CodeBox.Text = "";
-                file = openFileDialog.SafeFileName;
-                var filestream = openFileDialog.OpenFile();
-                var Table = File.ReadAllText(file);
-                CodeBox.Text += Table;
+                file = openFileDialog.FileName;
+                var table = File.ReadAllText(file);
+                CodeBox.Text += table;
                 Tab1.Header = System.IO.Path.GetFileName(file);
                 IsSaved = false;
                 IsFileSelected = true;
@@ -67,6 +66,30 @@ namespace IDL_for_NaturL
             inputWindow.Show();
         }
         
+        private void NewFile(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "nl files (*.nl)|*.nl*|Text files (*.txt)|*.txt"
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                file = saveFileDialog.FileName;
+                Console.WriteLine(file);
+                Console.WriteLine(file);
+                if (!File.Exists(file))
+                {
+                    if (file.Contains(".nl"))
+                        File.Create(file);
+                    else
+                        File.Create(file + ".nl");
+                }
+                IsSaved = false;
+                IsFileSelected = true;
+                Tab1.Header = System.IO.Path.GetFileName(file);
+            }
+        }
+
         private void Save_Click(object sender, RoutedEventArgs e = null)
         {
 
