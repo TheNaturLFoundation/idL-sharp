@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
+using Microsoft.VisualBasic;
 
 namespace IDL_for_NaturL
 {
@@ -23,32 +24,42 @@ namespace IDL_for_NaturL
     public partial class MainWindow : Window
     {
         //Constants in order to determine if the data is dirty or know
-        //Can improve it by saving the string of the opened file and comparing it to the one we want to save
-        //This one detects any keyboard stroke
-        bool DataChanged = false;
-        public bool IsSaved = false;
-        public bool IsFileSelected = false;
-        public string file = "";
-        public bool newfile = false;
+        private string firstData = "";
+        private bool IsSaved = false;
+        private bool IsFileSelected = false;
+        private string file = "";
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
         //THESE ARE THE METHODS THAT MANAGE THE INTERFACE BASIC COMMANDS-------------------------
-
+        private bool DataChanged(string firstdata, string current)
+        {
+            return firstdata != current;
+        }
         // This function refers to the "Open" button in the toolbar, opens the file dialog and asks the user the file to open
-        // Content of the opened file is then showed in the codebox of idL
+        // Content of the opened file is then showed in the codebox of idl
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "nl files (*.nl)|*.nl*|Text files (*.txt)|*.txt";
+            if (DataChanged(firstData, CodeBox.Text) && !IsSaved)
+            {
+                MessageBoxResult result = MessageBox.Show("The file has been modified \n Would you like to save your changes ?", "Data App", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Save_Click(sender,e);
+                }
+            }
             if (openFileDialog.ShowDialog() == true)
             {
                 CodeBox.Text = "";
                 file = openFileDialog.FileName;
-                var table = File.ReadAllText(file);
-                CodeBox.Text += table;
+                var text = File.ReadAllText(file);
+                CodeBox.Text += text;
+                firstData = text;
                 Tab1.Header = System.IO.Path.GetFileName(file);
                 IsSaved = false;
                 IsFileSelected = true;
@@ -56,9 +67,6 @@ namespace IDL_for_NaturL
             //System.IO.File.Create(System.IO.Path.GetFullPath(nameoffile)); Ancient version, saves file in path with the .exe program
             //We don't want that, we want to open file explorer
         }
-
-        // This function refers to the "Save" button in the toolbar, opens the file dialog and asks the user the file to overwrite
-        // (May be improved, no need to select the file where to save if the file is already saved somewhere)
 
         private void NewWindow(object sender, RoutedEventArgs e)
         {
@@ -68,6 +76,14 @@ namespace IDL_for_NaturL
         
         private void NewFile(object sender, RoutedEventArgs e)
         {
+            if (DataChanged(firstData,CodeBox.Text) && !IsSaved)
+            {
+                MessageBoxResult result = MessageBox.Show("The file has been modified \n Would you like to save your changes ?", "Data App", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Save_Click(sender,e);
+                }
+            }
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "nl files (*.nl)|*.nl*|Text files (*.txt)|*.txt"
@@ -89,11 +105,9 @@ namespace IDL_for_NaturL
                 Tab1.Header = System.IO.Path.GetFileName(file);
             }
         }
-
+        // This function refers to the "Save" button in the toolbar, opens the file dialog and asks the user the file to overwrite
         private void Save_Click(object sender, RoutedEventArgs e = null)
         {
-
-
             if (!IsFileSelected)
             {
                 Save_AsClick(sender, e);
@@ -124,7 +138,7 @@ namespace IDL_for_NaturL
         // Handles the window closing, asks wether the user wants to save his file before closing.
         private void IDL_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (DataChanged && !IsSaved)
+            if (DataChanged(firstData,CodeBox.Text) && !IsSaved)
             {
                 string msg = "Do you want to save your changes ?\n";
                 MessageBoxResult result = MessageBox.Show(msg, "Data App", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
@@ -149,7 +163,7 @@ namespace IDL_for_NaturL
 
         //-----------------------------------------------------------------------------------------
 
-        //THESE ARE THE COMMANDS BINDED
+        //These are the basic commands
 
         #region ExitCommand
         private void ExitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -203,7 +217,8 @@ namespace IDL_for_NaturL
         //------------------------------------------------------------------------------------------
     }
 
-    #region CustomClasses
+    #region CustomCommands
+    // This class CustomCommands allows us to create custom commands with keyboard shortcuts
     public static class CustomCommands
     {
        
