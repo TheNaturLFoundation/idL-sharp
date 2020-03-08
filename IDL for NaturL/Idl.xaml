@@ -37,7 +37,7 @@
                     <MenuItem Header="_Cut" Command="ApplicationCommands.Cut" CommandTarget="{Binding ElementName=CodeBox}"/>
                     <MenuItem Header="_Undo" Command="ApplicationCommands.Undo" CommandTarget="{Binding ElementName=CodeBox}"/>
                 </MenuItem>
-                <MenuItem Width="24">
+                <MenuItem Width="24" Click="CompilePseudoCode">
                     <MenuItem.Icon>
                         <Image Source="ressources/Untitled.png"/>
                     </MenuItem.Icon>
@@ -53,12 +53,11 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="" x:Name="CodeBox" TextWrapping="Wrap" Grid.ColumnSpan="4" AcceptsReturn="True" AcceptsTab="True" Background="Silver"/>
+                        <TextBox Text="" x:Name="CodeBox" AllowDrop="True" PreviewDragOver="CodeBox_OnPreviewDragOver" TextWrapping="Wrap" Grid.ColumnSpan="4" AcceptsReturn="True" AcceptsTab="True" Background="Silver"/>
                     </Grid>
                 </TabItem>
             </TabControl>
         </DockPanel>
-
     </Grid>
 
 </Window>

@@ -9,9 +9,6 @@
         <e p="App.xaml.cs" t="Include" />
         <e p="AssemblyInfo.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
-        <e p="Bonjour à vous.nl" t="Include" />
-        <e p="hello.nl" t="Include" />
-        <e p="helloeaezae.nl" t="Include" />
         <e p="IDL for NaturL.csproj" t="IncludeRecursive" />
         <e p="Idl.xaml" t="Include" />
         <e p="IdL_code.xaml.cs" t="Include" />

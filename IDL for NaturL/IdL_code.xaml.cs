@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
 using Microsoft.VisualBasic;
+using Path = System.IO.Path;
 
 namespace IDL_for_NaturL
 {
@@ -39,7 +41,7 @@ namespace IDL_for_NaturL
         {
             return firstData != CodeBox.Text;
         }
-        
+
         // This function refers to the "Open" button in the toolbar, opens the file dialog and asks the user the file to open
         // Content of the opened file is then showed in the codebox of idl
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -50,14 +52,17 @@ namespace IDL_for_NaturL
             };
             if (DataChanged() && !IsSaved)
             {
-                MessageBoxResult result = MessageBox.Show("The file has been modified \n Would you like to save your changes ?", "Data App", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result =
+                    MessageBox.Show("The file has been modified \n Would you like to save your changes ?", "Data App",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                    Save_Click(sender,e);
+                    Save_Click(sender, e);
                 }
             }
+
             if (openFileDialog.ShowDialog() == true)
-            { 
+            {
                 file = openFileDialog.FileName;
                 var text = File.ReadAllText(file);
                 CodeBox.Text = text;
@@ -70,21 +75,23 @@ namespace IDL_for_NaturL
 
         private void NewWindow(object sender, RoutedEventArgs e)
         {
-            Window inputWindow = new InputWindow((arg)=>{ this.file = arg; });
+            Window inputWindow = new InputWindow((arg) => { this.file = arg; });
             inputWindow.Show();
         }
-        
+
         private void NewFile(object sender, RoutedEventArgs e)
         {
             if (DataChanged() && !IsSaved)
             {
-                MessageBoxResult result = MessageBox.Show("The file has been modified \n Would you like to save your changes ?",
+                MessageBoxResult result = MessageBox.Show(
+                    "The file has been modified \n Would you like to save your changes ?",
                     "Data App", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                    Save_Click(sender,e);
+                    Save_Click(sender, e);
                 }
             }
+
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "nl files (*.nl)|*.nl*|Text files (*.txt)|*.txt"
@@ -92,9 +99,8 @@ namespace IDL_for_NaturL
             if (saveFileDialog.ShowDialog() == true)
             {
                 file = saveFileDialog.FileName;
-                if (!File.Exists(file))
-                    if (!file.Contains(".nl"))
-                        file += ".nl";
+                if (!file.Contains(".nl"))
+                    file += ".nl";
                 File.Create(file);
                 IsSaved = false;
                 IsFileSelected = true;
@@ -102,9 +108,10 @@ namespace IDL_for_NaturL
                 CodeBox.Text = "";
             }
         }
+
         // This function refers to the "Save" button in the toolbar, opens the file dialog and asks the user the file to overwrite
         private void Save_Click(object sender, RoutedEventArgs e = null)
-        { 
+        {
             if (!IsFileSelected)
             {
                 Save_AsClick(sender, e);
@@ -138,7 +145,7 @@ namespace IDL_for_NaturL
             firstData = text;
 
         }
-    
+
         // This function refers to the event handler "IDL_Closing" in "Window" attributes,
         // Handles the window closing, asks wether the user wants to save his file before closing.
         private void IDL_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -146,7 +153,8 @@ namespace IDL_for_NaturL
             if (DataChanged() && !IsSaved)
             {
                 string msg = "Do you want to save your changes ?\n";
-                MessageBoxResult result = MessageBox.Show(msg, "Data App", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show(msg, "Data App", MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
                     // If user want to close and save, cancel closure
@@ -157,17 +165,28 @@ namespace IDL_for_NaturL
                     e.Cancel = true;
                 }
             }
-
         }
 
+        private void CompilePseudoCode(object sender, RoutedEventArgs routedEventArgs)
+        {
+            string path = Path.GetFullPath(file);
+            Process process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "executable.exe", Arguments = path + " " + Path.ChangeExtension(path, ".py")
+                }
+            };
+            process.Start();
+        }
         
-
 
         //-----------------------------------------------------------------------------------------
 
         //These are the basic commands
 
         #region ExitCommand
+
         private void ExitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -177,6 +196,7 @@ namespace IDL_for_NaturL
         {
             Application.Current.Shutdown();
         }
+
         #endregion
 
         #region SaveCommand
@@ -190,9 +210,11 @@ namespace IDL_for_NaturL
         {
             Save_Click(sender);
         }
+
         #endregion
 
         #region OpenCommand
+
         private void OpenCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -204,8 +226,9 @@ namespace IDL_for_NaturL
         }
 
         #endregion
-        
+
         #region SaveAsCommand
+
         private void SaveAsCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -215,69 +238,77 @@ namespace IDL_for_NaturL
         {
             Save_AsClick(sender);
         }
+
         #endregion
         
-        
-        //------------------------------------------------------------------------------------------
-
+        private void CodeBox_OnPreviewDragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
+    //------------------------------------------------------------------------------------------
+
+
 
     #region CustomCommands
     // This class CustomCommands allows us to create custom commands with keyboard shortcuts
     public static class CustomCommands
     {
-       
+
         public static readonly RoutedUICommand Exit = new RoutedUICommand
-            (
-                "Exit",
-                "Exit",
-                typeof(CustomCommands),
-                new InputGestureCollection()
-                {
-                    new KeyGesture(Key.F4, ModifierKeys.Alt)
-                }
-            );
+        (
+            "Exit",
+            "Exit",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.F4, ModifierKeys.Alt)
+            }
+        );
 
         //Define more commands here, just like the one above
         public static readonly RoutedUICommand Save = new RoutedUICommand
-           (
-               "Save",
-               "Save",
-               typeof(CustomCommands),
-               new InputGestureCollection()
-               {
-                    new KeyGesture(Key.S,ModifierKeys.Control)
-               }
-           );
+        (
+            "Save",
+            "Save",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.S, ModifierKeys.Control)
+            }
+        );
 
         public static readonly RoutedUICommand Open = new RoutedUICommand
-           (
-               "Open",
-               "Open",
-               typeof(CustomCommands),
-               new InputGestureCollection()
-               {
-                    new KeyGesture(Key.O,ModifierKeys.Control)
-               }
-           );
+        (
+            "Open",
+            "Open",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.O, ModifierKeys.Control)
+            }
+        );
 
         public static readonly RoutedUICommand New = new RoutedUICommand
-           (
-               "New",
-               "New",
-               typeof(CustomCommands),
-               new InputGestureCollection()
-               {
-                    new KeyGesture(Key.N,ModifierKeys.Control)
-               }
-           );
-        public static readonly RoutedUICommand Save_As = new RoutedUICommand
-            (
-                "Save_As",
-                "Save_As",
-                typeof(CustomCommands)
-                );
-    }
-    #endregion
+        (
+            "New",
+            "New",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.N, ModifierKeys.Control)
+            }
+        );
 
+        public static readonly RoutedUICommand Save_As = new RoutedUICommand
+        (
+            "Save_As",
+            "Save_As",
+            typeof(CustomCommands)
+        );
+    }
+
+        #endregion
 }
+
+
