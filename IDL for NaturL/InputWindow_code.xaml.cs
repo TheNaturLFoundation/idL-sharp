@@ -33,13 +33,13 @@ namespace IDL_for_NaturL
             {
                 if (_setValue != null)
                     _setValue (input.Text);
-                if (input.Text.Contains(".nl"))
+                if (input.Text.Contains(".ntl"))
                 {
                     File.Create(input.Text);
                 }
                 else
                 {
-                    File.Create(input.Text + ".nl");
+                    File.Create(input.Text + ".ntl");
                 }
                 this.Close();
             }
@@ -48,13 +48,13 @@ namespace IDL_for_NaturL
         {
             if (_setValue != null)
                 _setValue(input.Text);
-            if (input.Text.Contains(".nl"))
+            if (input.Text.Contains(".ntl"))
             {
                 File.Create(input.Text);
             }
             else
             {
-                File.Create(input.Text + ".nl");
+                File.Create(input.Text + ".ntl");
             }
             this.Close();
         }

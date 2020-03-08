@@ -35,7 +35,7 @@ namespace IDL_for_NaturL
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "nl files (*.nl)|*.nl|Text files (*.txt)|*.txt"
+                Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt"
             };
             if (DataChanged() && !_isSaved)
             {
@@ -84,13 +84,13 @@ namespace IDL_for_NaturL
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                Filter = "nl files (*.nl)|*.nl*|Text files (*.txt)|*.txt"
+                Filter = "nl files (*.ntl)|*.ntl*|Text files (*.txt)|*.txt"
             };
             if (saveFileDialog.ShowDialog() == true)
             {
                 _file = saveFileDialog.FileName;
-                if (!_file.Contains(".nl"))
-                    _file += ".nl";
+                if (!_file.Contains(".ntl"))
+                    _file += ".ntl";
                 File.Create(_file);
                 _isSaved = false;
                 _isFileSelected = true;
@@ -120,12 +120,12 @@ namespace IDL_for_NaturL
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                Filter = "nl files (*.nl)|*.nl*|Text files (*.txt)|*.txt"
+                Filter = "ntl files (*.ntl)|*.ntl*|Text files (*.txt)|*.txt"
             };
             if (saveFileDialog.ShowDialog() != true) return;
             _file = saveFileDialog.FileName;
-            if (!_file.Contains(".nl"))
-                _file += ".nl";
+            if (!_file.Contains(".ntl"))
+                _file += ".ntl";
             File.WriteAllText(_file, CodeBox.Text);
             _isSaved = true;
             _isFileSelected = true;
@@ -166,14 +166,16 @@ namespace IDL_for_NaturL
             if (CodeBox.Text != "")
             {
                 string path = Path.GetFullPath(_file);
+                Console.WriteLine(path);
                 Process process = new Process
                 {
                     StartInfo =
                     {
-                        FileName = "./ressources/naturL.exe",
+                        FileName = "../../../ressources/naturL.exe",
                         Arguments = path + " " + Path.ChangeExtension(path, ".py")
                     }
                 };
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
                 Process idle = new Process
                 {
