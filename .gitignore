@@ -13,8 +13,8 @@
 x64/
 [Bb]in/
 [Oo]bj/
-.idea
-.vs
+.idea/
+.vs/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
