@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ContentModelStore">
     <e p="C:\Users\Adrian\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Adrian\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_IDL for NaturL.-1099322885.00" t="ExcludeRecursive" />
-    <e p="C:\Users\Adrian\Desktop\IDLPull\idL" t="IncludeFlat">
+    <e p="C:\Users\Adrian\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_IDL for NaturL.1802952672.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Adrian\Desktop\NaturLPull\idL" t="IncludeFlat">
       <e p="IDL for NaturL" t="IncludeRecursive">
         <e p="App.xaml" t="Include" />
         <e p="App.xaml.cs" t="Include" />
@@ -30,6 +30,7 @@
           <e p="GWgoasadness.png" t="Include" />
           <e p="logoicon.png" t="Include" />
           <e p="logoiconsrc.png" t="Include" />
+          <e p="naturL.exe" t="Include" />
           <e p="Untitled.png" t="Include" />
         </e>
       </e>

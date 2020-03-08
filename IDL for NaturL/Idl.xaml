@@ -12,7 +12,7 @@
         <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute" Executed="OpenCommand_Executed"/>
-        <CommandBinding Command="self:CustomCommands.Save_As" CanExecute="SaveAsCommand_CanExecute" Executed="SaveAsCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.SaveAs" CanExecute="SaveAsCommand_CanExecute" Executed="SaveAsCommand_Executed"/>
     </Window.CommandBindings>
     <Grid x:Name="idl">
         <Grid.ColumnDefinitions>
@@ -27,7 +27,7 @@
                     </MenuItem>
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>
-                    <MenuItem Header="_Save As..." Command="self:CustomCommands.Save_As"/>
+                    <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs"/>
                     <Separator />
                     <MenuItem Header="Exit" Command="self:CustomCommands.Exit"/>
                 </MenuItem>
@@ -53,7 +53,7 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="" x:Name="CodeBox" AllowDrop="True" PreviewDragOver="CodeBox_OnPreviewDragOver" TextWrapping="Wrap" Grid.ColumnSpan="4" AcceptsReturn="True" AcceptsTab="True" Background="Silver"/>
+                        <TextBox Text="" x:Name="CodeBox" AllowDrop="True" TextWrapping="Wrap" Grid.ColumnSpan="4" AcceptsReturn="True" AcceptsTab="True" Background="Silver"/>
                     </Grid>
                 </TabItem>
             </TabControl>
