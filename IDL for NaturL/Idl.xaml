@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IDL_for_NaturL"
         xmlns:self="clr-namespace:IDL_for_NaturL"
         mc:Ignorable="d"
         Title="IdL for NaturL" Height="450" Width="800"
@@ -57,16 +56,6 @@
                         <TextBox Text="" x:Name="CodeBox" TextWrapping="Wrap" Grid.ColumnSpan="4" AcceptsReturn="True" AcceptsTab="True" Background="Silver"/>
                     </Grid>
                 </TabItem>
-                <!--<TabItem Header="Second File">
-                    <Grid Background="#FFE5E5E5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="787*"/>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="4*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Text="TextBox" x:Name="CodeBox2" TextWrapping="Wrap" Grid.ColumnSpan="3" AcceptsReturn="True"/>
-                    </Grid>
-                </TabItem>-->
             </TabControl>
         </DockPanel>
 
