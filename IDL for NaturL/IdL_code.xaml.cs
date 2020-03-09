@@ -204,12 +204,13 @@ namespace IDL_for_NaturL
                     {
                         StartInfo =
                         {
-                            FileName = root + @"Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
-                            Arguments = "idle " + Path.ChangeExtension(path, ".py")
+                            FileName = @"idle",
+                            Arguments = Path.ChangeExtension(path, ".py")
                         }
                     };
-                    idle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     idle.Start();
+                    idle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
                 }
                 else
                 {
