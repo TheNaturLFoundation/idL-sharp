@@ -177,14 +177,16 @@ namespace IDL_for_NaturL
                 };
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
+                string root = Path.GetPathRoot(Environment.SystemDirectory); 
                 Process idle = new Process
                 {
                     StartInfo =
                         {
-                            FileName = @"C:\Users\Adrian\AppData\Local\Programs\Python\Python37\Lib\idlelib\idle.bat" ,Arguments =Path.ChangeExtension(path, ".py")
+                            FileName = root + @"Windows\System32\WindowsPowerShell\v1.0\powershell.exe"/*@"C:\Users\Adrian\AppData\Local\Programs\Python\Python37\Lib\idlelib\idle.bat"*/ ,Arguments = "idle " + Path.ChangeExtension(path, ".py")
                         }
                 };
                 idle.Start();
+                Console.WriteLine("started");
             }
 
         }
