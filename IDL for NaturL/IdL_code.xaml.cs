@@ -26,7 +26,14 @@ namespace IDL_for_NaturL
         //THESE ARE THE METHODS THAT MANAGE THE INTERFACE BASIC COMMANDS-------------------------
         private bool DataChanged()
         {
-            return _firstData != CodeBox.Text;
+            if (_firstData != CodeBox.Text)
+            {
+                _isSaved = false;
+            }
+
+            return (_firstData != CodeBox.Text);
+
+
         }
 
         // This function refers to the "Open" button in the toolbar, opens the file dialog and asks the user the file to open
@@ -54,6 +61,7 @@ namespace IDL_for_NaturL
                 var text = File.ReadAllText(_file);
                 CodeBox.Text = text;
                 _firstData = text;
+                Console.WriteLine("test");
                 Tab1.Header = Path.GetFileNameWithoutExtension(_file);
                 _isSaved = false;
                 _isFileSelected = true;
@@ -116,8 +124,9 @@ namespace IDL_for_NaturL
             {
                 File.WriteAllText(_file, CodeBox.Text);
                 _isSaved = true;
-                var text = File.ReadAllText(_file);
-                _firstData = text;
+                //var text = File.ReadAllText(_file);
+                _firstData = CodeBox.Text.ToString();
+                Console.WriteLine("test");
             }
         }
 
@@ -136,7 +145,8 @@ namespace IDL_for_NaturL
             _isFileSelected = true;
             Tab1.Header = Path.GetFileName(_file);
             string text = File.ReadAllText(_file);
-            _firstData = text;
+            _firstData = text.ToString();
+            Console.WriteLine("test");
 
         }
 
@@ -190,6 +200,7 @@ namespace IDL_for_NaturL
                             FileName = root + @"Windows\System32\WindowsPowerShell\v1.0\powershell.exe" ,Arguments = "idle " + Path.ChangeExtension(path, ".py")
                         }
                 };
+                idle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 idle.Start();
             }
 

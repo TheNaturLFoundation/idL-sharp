@@ -46,7 +46,7 @@
 
             </Menu>
             <TabControl x:Name="TabControl" DockPanel.Dock="Top" Height="1080" HorizontalAlignment="Stretch" Margin="0,0,0,0">
-                <TabItem Header="Unknown File" x:Name="Tab1">
+                <TabItem Header="No File" x:Name="Tab1">
                     <Grid Background="#FFE5E5E5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="57*"/>
@@ -54,7 +54,7 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="" x:Name="CodeBox" AllowDrop="True" TextWrapping="Wrap" Grid.ColumnSpan="4" AcceptsReturn="True" AcceptsTab="True" Background="Silver"/>
+                        <TextBox Text="" x:Name="CodeBox" AllowDrop="True" TextWrapping="Wrap" Grid.ColumnSpan="4" AcceptsReturn="True" AcceptsTab="True" Background="#fff7e0"/>
                     </Grid>
                 </TabItem>
             </TabControl>
