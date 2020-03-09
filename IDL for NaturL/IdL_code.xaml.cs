@@ -89,7 +89,7 @@ namespace IDL_for_NaturL
             if (saveFileDialog.ShowDialog() == true)
             {
                 _file = saveFileDialog.FileName;
-                if (!_file.Contains(".ntl"))
+                if (!_file.EndsWith(".ntl"))
                     _file += ".ntl";
                 File.Create(_file);
                 _isSaved = false;
@@ -99,6 +99,12 @@ namespace IDL_for_NaturL
             }
         }
 
+        private void NewWindow(object sender, RoutedEventArgs e)
+        {
+            MainWindow newwindow = new MainWindow();
+            newwindow.Show();
+        }
+        
         // This function refers to the "Save" button in the toolbar, opens the file dialog and asks the user the file to overwrite
         private void Save_Click()
         {
@@ -113,7 +119,6 @@ namespace IDL_for_NaturL
                 var text = File.ReadAllText(_file);
                 _firstData = text;
             }
-
         }
 
         private void Save_AsClick()
@@ -182,11 +187,10 @@ namespace IDL_for_NaturL
                 {
                     StartInfo =
                         {
-                            FileName = root + @"Windows\System32\WindowsPowerShell\v1.0\powershell.exe"/*@"C:\Users\Adrian\AppData\Local\Programs\Python\Python37\Lib\idlelib\idle.bat"*/ ,Arguments = "idle " + Path.ChangeExtension(path, ".py")
+                            FileName = root + @"Windows\System32\WindowsPowerShell\v1.0\powershell.exe" ,Arguments = "idle " + Path.ChangeExtension(path, ".py")
                         }
                 };
                 idle.Start();
-                Console.WriteLine("started");
             }
 
         }

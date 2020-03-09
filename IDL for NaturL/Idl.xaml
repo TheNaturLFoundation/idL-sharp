@@ -25,11 +25,12 @@
                 <MenuItem Header="_File" >
                     <MenuItem Header="_New" Click="NewFile">
                     </MenuItem>
+                    <MenuItem Header="_New Window" Click="NewWindow"></MenuItem>
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>
                     <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs"/>
                     <Separator />
-                    <MenuItem Header="Exit" Command="self:CustomCommands.Exit"/>
+                    <MenuItem Header="_Exit" Command="self:CustomCommands.Exit"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
                     <MenuItem Header="_Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=CodeBox}"/>

@@ -1,23 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Win32;
 using System.IO;
-using System.Windows.Controls.Primitives;
 
 namespace IDL_for_NaturL
 {
+    // This class is not used at the moment, will be usefull later
+    // Opens an input dialog and asks the user for an input
     public partial class InputWindow : Window
     {
         Action<string> _setValue;
@@ -29,10 +18,9 @@ namespace IDL_for_NaturL
         }
         private void KeyPressed(object sender, KeyEventArgs e = null)
         {
-            if (Key.Enter == e.Key)
+            if (Key.Enter == e?.Key)
             {
-                if (_setValue != null)
-                    _setValue (input.Text);
+                _setValue?.Invoke (input.Text);
                 if (input.Text.Contains(".ntl"))
                 {
                     File.Create(input.Text);
