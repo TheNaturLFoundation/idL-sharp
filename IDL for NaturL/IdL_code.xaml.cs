@@ -125,8 +125,7 @@ namespace IDL_for_NaturL
                 File.WriteAllText(_file, CodeBox.Text);
                 _isSaved = true;
                 //var text = File.ReadAllText(_file);
-                _firstData = CodeBox.Text.ToString();
-                Console.WriteLine("test");
+                _firstData = CodeBox.Text; 
             }
         }
 
@@ -187,23 +186,39 @@ namespace IDL_for_NaturL
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
-                        Arguments = path + " " + Path.ChangeExtension(path, ".py")
+                        Arguments = path + " " + Path.ChangeExtension(path, ".py"),
+                        UseShellExecute = false,
+                        RedirectStandardError = true
                     }
+
                 };
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
-                string root = Path.GetPathRoot(Environment.SystemDirectory); 
-                Process idle = new Process
-                {
-                    StartInfo =
-                        {
-                            FileName = root + @"Windows\System32\WindowsPowerShell\v1.0\powershell.exe" ,Arguments = "idle " + Path.ChangeExtension(path, ".py")
-                        }
-                };
-                idle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                idle.Start();
-            }
+                StreamReader reader = process.StandardError;
+                string error = reader.ReadLine();
 
+                if (error == null)
+                {
+                    string root = Path.GetPathRoot(Environment.SystemDirectory);
+                    Process idle = new Process
+                    {
+                        StartInfo =
+                        {
+                            FileName = root + @"Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+                            Arguments = "idle " + Path.ChangeExtension(path, ".py")
+                        }
+                    };
+                    idle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    idle.Start();
+                }
+                else
+                {
+                    // Popup
+                    MessageBoxResult result =
+                        MessageBox.Show(error, "Error",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
         }
         
         //-----------------------------------------------------------------------------------------
