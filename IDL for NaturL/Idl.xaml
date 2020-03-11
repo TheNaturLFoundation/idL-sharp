@@ -15,6 +15,13 @@
         <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute" Executed="OpenCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.SaveAs" CanExecute="SaveAsCommand_CanExecute" Executed="SaveAsCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.Transpile" CanExecute="TranspileCommand_CanExecute" Executed="TranspileCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.Execute" CanExecute="ExecuteCommand_CanExecute" Executed="ExecuteCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.NewWindow" CanExecute="NewWindowCommand_CanExecute" Executed="NewWindowCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.NewTab" CanExecute="NewTabCommand_CanExecute" Executed="NewTabCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.New" CanExecute="NewCommand_CanExecute" Executed="NewCommand_Executed"/>
+
+
     </Window.CommandBindings>
 
     <Grid x:Name="idl">
@@ -22,7 +29,6 @@
             <RowDefinition Height="489*"/>
             <RowDefinition Height="128*"/>
         </Grid.RowDefinitions>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="0*"/>
@@ -31,30 +37,37 @@
         <DockPanel Grid.RowSpan="2">
             <Menu DockPanel.Dock="Top" Height="25">
                 <MenuItem Header="_File" >
-                    <MenuItem Header="_New" Click="NewFile"/>
-                    <MenuItem Header="_New Window" Click="NewWindow"/>
+                    <MenuItem Header="_New" Command="self:CustomCommands.New"/>
+                    <MenuItem Header="_New Window" Command="self:CustomCommands.NewWindow"/>
+                    <MenuItem Header="_New Tab" Command="self:CustomCommands.NewTab"/>
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>
                     <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs"/>
-                    <Separator />
+                    <Separator/>
                     <MenuItem Header="_Exit" Command="self:CustomCommands.Exit"/>
                 </MenuItem>
+                
                 <MenuItem Header="Edit">
                     <MenuItem Header="_Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=CodeBox}"/>
                     <MenuItem Header="_Paste" Command="ApplicationCommands.Paste" CommandTarget="{Binding ElementName=CodeBox}"/>
                     <MenuItem Header="_Cut" Command="ApplicationCommands.Cut" CommandTarget="{Binding ElementName=CodeBox}"/>
                     <MenuItem Header="_Undo" Command="ApplicationCommands.Undo" CommandTarget="{Binding ElementName=CodeBox}"/>
                 </MenuItem>
-                <MenuItem Width="24" Click="CompilePseudoCode">
+                <MenuItem Width="24" Command="self:CustomCommands.Execute">
                     <MenuItem.Icon>
                         <Image Source="ressources/Untitled.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <!--<MenuItem Header="Execute" Click="Execute"></MenuItem>-->
+                <MenuItem Width="25" Command="self:CustomCommands.Transpile">
+                    <MenuItem.Icon>
+                        <Image Source="ressources/transpile.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
 
             </Menu>
-            <TabControl x:Name="TabControl" DockPanel.Dock="Top" Margin="0,0,0,0">
-                <TabItem Header="No File" x:Name="Tab1">
+            <TabControl x:Name="TabControl" DockPanel.Dock="Top">
+                <TabItem Header="No File" x:Name="Tab1" >
                     <Grid Background="#FFE5E5E5" >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="37*"/>
@@ -64,15 +77,11 @@
                             <ColumnDefinition Width="552*"/>
                             <ColumnDefinition Width="565*"/>
                         </Grid.ColumnDefinitions>
-
-
-                        <!--<TextBox Text="" x:Name="CodeBox" AllowDrop="True" TextWrapping="Wrap" Grid.ColumnSpan="5" AcceptsReturn="True" AcceptsTab="True" Background="#fff7e0" Margin="0,0,0,673"/>-->
-
-
                         <avalonedit:TextEditor
                             x:Name="python"
                             Text=""
-                            SyntaxHighlighting="python"
+                            IsReadOnly="True"
+                            SyntaxHighlighting="Python"
                             FontFamily="Consolas"
                             FontSize="10pt" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         <Grid/>
@@ -80,12 +89,13 @@
                             <avalonedit:TextEditor
                                 x:Name="CodeBox"
                                 Text=""
-                                SyntaxHighlighting="python"
+                                SyntaxHighlighting="Python"
                                 FontFamily="Consolas"
-                                FontSize="10pt" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="0,0,0,0" />
-                        </Grid>
+                                FontSize="10pt" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="0,0,0,0" /></Grid>
                         <Grid Grid.ColumnSpan="2" Height="120" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1"/>
-                        <avalonedit:TextEditor Text="Test" IsReadOnly="True" Name="STD" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2"/>
+                        <avalonedit:TextEditor 
+                            Text="" IsReadOnly="True" FontFamily="Segoe UI"
+                            Name="STD" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2"/>
                     </Grid>
 
 

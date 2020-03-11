@@ -4,7 +4,13 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
 using System.IO;
+using System.Reflection;
 using Path = System.IO.Path;
+using System.Windows.Controls;
+using System.Windows.Markup;
+using System.Xml;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
 
 namespace IDL_for_NaturL
@@ -19,10 +25,23 @@ namespace IDL_for_NaturL
         private bool _isSaved;
         private bool _isFileSelected;
         private string _file = "";
+        
         public MainWindow()
         {
-            
             InitializeComponent();
+            string path = File.ReadAllText("../../../ressources/lastfile.txt");
+            if (path != "")
+            {
+                CodeBox.Text = File.ReadAllText(path);
+                _file = path;
+                _isFileSelected = true;
+                _firstData = CodeBox.Text;
+            }
+
+            /*var myAssembly = Assembly.GetExecutingAssembly(); 
+            using Stream s = myAssembly.GetManifestResourceStream("MyHighlighting.xshd");
+            using XmlTextReader reader = new XmlTextReader(s);
+            CodeBox.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);*/
         }
 
         //THESE ARE THE METHODS THAT MANAGE THE INTERFACE BASIC COMMANDS-------------------------
@@ -63,7 +82,6 @@ namespace IDL_for_NaturL
                 var text = File.ReadAllText(_file);
                 CodeBox.Text = text;
                 _firstData = text;
-                Console.WriteLine("test");
                 Tab1.Header = Path.GetFileNameWithoutExtension(_file);
                 _isSaved = false;
                 _isFileSelected = true;
@@ -147,14 +165,13 @@ namespace IDL_for_NaturL
             Tab1.Header = Path.GetFileName(_file);
             string text = File.ReadAllText(_file);
             _firstData = text.ToString();
-            Console.WriteLine("test");
-
         }
 
         // This function refers to the event handler "IDL_Closing" in "Window" attributes,
         // Handles the window closing, asks whether the user wants to save his file before closing.
         private void IDL_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            File.WriteAllText("../../../ressources/lastfile.txt",_file);
             if (DataChanged() && !_isSaved)
             {
                 string msg = "Do you want to save your changes ?\n";
@@ -172,7 +189,7 @@ namespace IDL_for_NaturL
             }
         }
 
-        private void CompilePseudoCode(object sender, RoutedEventArgs routedEventArgs)
+        private void Transpile(object sender, RoutedEventArgs routedEventArgs)
         {
             if (DataChanged() && !_isSaved)
             {
@@ -182,7 +199,6 @@ namespace IDL_for_NaturL
             if (CodeBox.Text != "")
             {
                 string path = Path.GetFullPath(_file);
-                Console.WriteLine(path);
                 string python_file = Path.ChangeExtension(path, ".py");
                 Process process = new Process
                 {
@@ -198,70 +214,49 @@ namespace IDL_for_NaturL
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
                 process.WaitForExit();
-                python.Text = File.ReadAllText(python_file);
 
                 StreamReader reader = process.StandardError;
                 string error = reader.ReadLine();
 
                 if (error == null)
                 {
-                    /*Process idle = new Process
-                    {
-                        StartInfo =
-                        {
-                            FileName = @"idle",
-                            Arguments = Path.ChangeExtension(path, ".py")
-                        }
-                    };
-                    idle.Start();
-                    idle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;*/
-
+                    STD.Text = "Transpilation succeded";
+                    python.Text = File.ReadAllText(python_file);
                 }
                 else
                 {
-                    // Popup
-                    MessageBox.Show(error, "Error",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    STD.Text = error;
                 }
             }
         }
 
-        /*private void Execute(object sender, RoutedEventArgs e)
+        private void Execute(object sender, RoutedEventArgs e)
         {
-            string path = Path.GetFullPath(_file);
-            Console.WriteLine(path);
+            Transpile(sender,e);
+            string path = Path.GetFullPath(_file); 
             Process process = new Process
             {
                 StartInfo =
                 {
-                    FileName = "../../../ressources/naturL.exe",
-                    Arguments = path + " " + Path.ChangeExtension(path, ".py"),
+                    FileName = "python",
+                    Arguments = Path.ChangeExtension(path, ".py"),
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true
                 }
-
             };
+            process.EnableRaisingEvents = true;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
+            process.WaitForExit();
             StreamReader errorReader = process.StandardError;
-            string error = errorReader.ReadLine();
-            StreamReader outputReader = process.StandardError;
-            string output = outputReader.ReadLine();
-            if (error != null)
-            {
-                MessageBoxResult result =
-                    MessageBox.Show(error, "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            if (output != null)
-            {
-                MessageBoxResult result =
-                    MessageBox.Show(output, "Sortie du programme",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }*/
+            string error = errorReader.ReadToEnd();
+            StreamReader outputReader = process.StandardOutput;
+            string output = outputReader.ReadToEnd();
+            STD.Text = error;
+            STD.Text += output;
+            
+        }
         //-----------------------------------------------------------------------------------------
 
         //These are the basic commands
@@ -321,7 +316,73 @@ namespace IDL_for_NaturL
         }
 
         #endregion
+
+        #region Transpile and Execute
+        private void TranspileCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void TranspileCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Transpile(sender, e);
+
+        }
+        private void ExecuteCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ExecuteCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Execute(sender, e);
+        }
+        #endregion
+
+        //aled elie.
+        #region NewTab
+        private void NewTabCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
         
+        private void NewTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            string savedTabControl = XamlWriter.Save(this.FindName("Tab1"));
+
+            StringReader stringReader = new StringReader(savedTabControl);
+            XmlReader xmlReader = XmlReader.Create(stringReader);
+            TabItem newTabControl = (TabItem)XamlReader.Load(xmlReader);
+            newTabControl.Name = "Tab2";
+            //renommer les trucs quoi
+            ((TabControl)FindName("TabControl")).Items.Add(newTabControl);
+        }
+        #endregion
+
+        #region NewWindow
+        private void NewWindowCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void NewWindowCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            NewWindow(sender, e);
+        }
+        #endregion
+        
+        #region New File
+        private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            NewFile(sender, e);
+        }
+
+        #endregion
     }
     //------------------------------------------------------------------------------------------
 
@@ -365,7 +426,54 @@ namespace IDL_for_NaturL
                 new KeyGesture(Key.O, ModifierKeys.Control)
             }
         );
-        /*
+        
+        public static readonly RoutedUICommand NewTab = new RoutedUICommand
+        (
+            "NewTab",
+            "NewTab",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.T, ModifierKeys.Control)
+            }
+        );
+        
+        public static readonly RoutedUICommand SaveAs = new RoutedUICommand
+        (
+            "Save_As",
+            "Save_As",
+            typeof(CustomCommands)
+        );
+        public static readonly RoutedUICommand Transpile = new RoutedUICommand
+        (
+        "Transpile",
+        "Transpile",
+        typeof(CustomCommands),
+        new InputGestureCollection()
+        {
+                new KeyGesture(Key.F5, ModifierKeys.Control)
+        }
+        );
+        public static readonly RoutedUICommand Execute = new RoutedUICommand
+        (
+        "Execute",
+        "Execute",
+        typeof(CustomCommands),
+        new InputGestureCollection()
+        {
+                new KeyGesture(Key.F5)
+        }
+        );
+        public static readonly RoutedUICommand NewWindow = new RoutedUICommand
+        (
+            "NewWindow",
+            "NewWindow",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.N,ModifierKeys.Control | ModifierKeys.Shift)
+            }
+        );
         public static readonly RoutedUICommand New = new RoutedUICommand
         (
             "New",
@@ -376,16 +484,10 @@ namespace IDL_for_NaturL
                 new KeyGesture(Key.N, ModifierKeys.Control)
             }
         );
-        */
-        public static readonly RoutedUICommand SaveAs = new RoutedUICommand
-        (
-            "Save_As",
-            "Save_As",
-            typeof(CustomCommands)
-        );
     }
+    
 
-        #endregion
+    #endregion
 }
 
 
