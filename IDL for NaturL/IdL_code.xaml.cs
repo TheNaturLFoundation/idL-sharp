@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System.IO;
 using Path = System.IO.Path;
 
+
 namespace IDL_for_NaturL
 {
     /// <summary>
@@ -20,6 +21,7 @@ namespace IDL_for_NaturL
         private string _file = "";
         public MainWindow()
         {
+            
             InitializeComponent();
         }
 
@@ -181,12 +183,13 @@ namespace IDL_for_NaturL
             {
                 string path = Path.GetFullPath(_file);
                 Console.WriteLine(path);
+                string python_file = Path.ChangeExtension(path, ".py");
                 Process process = new Process
                 {
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
-                        Arguments = path + " " + Path.ChangeExtension(path, ".py"),
+                        Arguments = path + " " + python_file,
                         UseShellExecute = false,
                         RedirectStandardError = true
                     }
@@ -194,13 +197,15 @@ namespace IDL_for_NaturL
                 };
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
+                process.WaitForExit();
+                python.Text = File.ReadAllText(python_file);
+
                 StreamReader reader = process.StandardError;
                 string error = reader.ReadLine();
 
                 if (error == null)
                 {
-                    string root = Path.GetPathRoot(Environment.SystemDirectory);
-                    Process idle = new Process
+                    /*Process idle = new Process
                     {
                         StartInfo =
                         {
@@ -209,19 +214,54 @@ namespace IDL_for_NaturL
                         }
                     };
                     idle.Start();
-                    idle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    idle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;*/
 
                 }
                 else
                 {
                     // Popup
-                    MessageBoxResult result =
-                        MessageBox.Show(error, "Error",
-                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(error, "Error",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
-        
+
+        /*private void Execute(object sender, RoutedEventArgs e)
+        {
+            string path = Path.GetFullPath(_file);
+            Console.WriteLine(path);
+            Process process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "../../../ressources/naturL.exe",
+                    Arguments = path + " " + Path.ChangeExtension(path, ".py"),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                }
+
+            };
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.Start();
+            StreamReader errorReader = process.StandardError;
+            string error = errorReader.ReadLine();
+            StreamReader outputReader = process.StandardError;
+            string output = outputReader.ReadLine();
+            if (error != null)
+            {
+                MessageBoxResult result =
+                    MessageBox.Show(error, "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            if (output != null)
+            {
+                MessageBoxResult result =
+                    MessageBox.Show(output, "Sortie du programme",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }*/
         //-----------------------------------------------------------------------------------------
 
         //These are the basic commands

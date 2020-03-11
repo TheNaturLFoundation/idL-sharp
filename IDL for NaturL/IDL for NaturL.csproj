@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="jacobslusser.ScintillaNET" Version="3.6.3" />
+    <PackageReference Include="AvalonEdit" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>

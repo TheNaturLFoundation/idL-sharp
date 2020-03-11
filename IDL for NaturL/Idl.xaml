@@ -1,31 +1,38 @@
-﻿<Window x:Class="IDL_for_NaturL.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:self="clr-namespace:IDL_for_NaturL"
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" x:Class="IDL_for_NaturL.MainWindow"
         mc:Ignorable="d"
-        Title="IdL for NaturL" Height="450" Width="800"
+        Title="IdL for NaturL" Height="633" Width="1123"
         Closing= "IDL_Closing"
         Icon="ressources\logoicon.png">
+
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute" Executed="OpenCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.SaveAs" CanExecute="SaveAsCommand_CanExecute" Executed="SaveAsCommand_Executed"/>
     </Window.CommandBindings>
+
     <Grid x:Name="idl">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="489*"/>
+            <RowDefinition Height="128*"/>
+        </Grid.RowDefinitions>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <DockPanel>
+        <DockPanel Grid.RowSpan="2">
             <Menu DockPanel.Dock="Top" Height="25">
                 <MenuItem Header="_File" >
-                    <MenuItem Header="_New" Click="NewFile">
-                    </MenuItem>
-                    <MenuItem Header="_New Window" Click="NewWindow"></MenuItem>
+                    <MenuItem Header="_New" Click="NewFile"/>
+                    <MenuItem Header="_New Window" Click="NewWindow"/>
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>
                     <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs"/>
@@ -43,19 +50,45 @@
                         <Image Source="ressources/Untitled.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <!--<MenuItem Header="Execute" Click="Execute"></MenuItem>-->
 
             </Menu>
-            <TabControl x:Name="TabControl" DockPanel.Dock="Top" Height="1080" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+            <TabControl x:Name="TabControl" DockPanel.Dock="Top" Margin="0,0,0,0">
                 <TabItem Header="No File" x:Name="Tab1">
-                    <Grid Background="#FFE5E5E5">
+                    <Grid Background="#FFE5E5E5" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="37*"/>
+                            <RowDefinition Height="10*"/>
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="57*"/>
-                            <ColumnDefinition Width="730*"/>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="552*"/>
+                            <ColumnDefinition Width="565*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="" x:Name="CodeBox" AllowDrop="True" TextWrapping="Wrap" Grid.ColumnSpan="4" AcceptsReturn="True" AcceptsTab="True" Background="#fff7e0"/>
+
+
+                        <!--<TextBox Text="" x:Name="CodeBox" AllowDrop="True" TextWrapping="Wrap" Grid.ColumnSpan="5" AcceptsReturn="True" AcceptsTab="True" Background="#fff7e0" Margin="0,0,0,673"/>-->
+
+
+                        <avalonedit:TextEditor
+                            x:Name="python"
+                            Text=""
+                            SyntaxHighlighting="python"
+                            FontFamily="Consolas"
+                            FontSize="10pt" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        <Grid/>
+                        <Grid>
+                            <avalonedit:TextEditor
+                                x:Name="CodeBox"
+                                Text=""
+                                SyntaxHighlighting="python"
+                                FontFamily="Consolas"
+                                FontSize="10pt" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="0,0,0,0" />
+                        </Grid>
+                        <Grid Grid.ColumnSpan="2" Height="120" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1"/>
+                        <avalonedit:TextEditor Text="Test" IsReadOnly="True" Name="STD" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2"/>
                     </Grid>
+
+
                 </TabItem>
             </TabControl>
         </DockPanel>
