@@ -1,101 +1,118 @@
 ﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:self="clr-namespace:IDL_for_NaturL"
-        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" x:Class="IDL_for_NaturL.MainWindow"
-        mc:Ignorable="d"
-        Title="IdL for NaturL" Height="633" Width="1123"
-        Closing= "IDL_Closing"
-        Icon="ressources\logoicon.png">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:self="clr-namespace:IDL_for_NaturL"
+    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" x:Class="IDL_for_NaturL.MainWindow"
+    mc:Ignorable="d"
+    Title="IdL for NaturL" Height="633" Width="1123"
+    Closing="IDL_Closing"
+    Icon="ressources\logoicon.png">
 
     <Window.CommandBindings>
-        <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed"/>
-        <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
-        <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute" Executed="OpenCommand_Executed"/>
-        <CommandBinding Command="self:CustomCommands.SaveAs" CanExecute="SaveAsCommand_CanExecute" Executed="SaveAsCommand_Executed"/>
-        <CommandBinding Command="self:CustomCommands.Transpile" CanExecute="TranspileCommand_CanExecute" Executed="TranspileCommand_Executed"/>
-        <CommandBinding Command="self:CustomCommands.Execute" CanExecute="ExecuteCommand_CanExecute" Executed="ExecuteCommand_Executed"/>
-        <CommandBinding Command="self:CustomCommands.NewWindow" CanExecute="NewWindowCommand_CanExecute" Executed="NewWindowCommand_Executed"/>
-        <CommandBinding Command="self:CustomCommands.NewTab" CanExecute="NewTabCommand_CanExecute" Executed="NewTabCommand_Executed"/>
-        <CommandBinding Command="self:CustomCommands.New" CanExecute="NewCommand_CanExecute" Executed="NewCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute"
+                        Executed="ExitCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute"
+                        Executed="SaveCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute"
+                        Executed="OpenCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.SaveAs" CanExecute="SaveAsCommand_CanExecute"
+                        Executed="SaveAsCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Transpile" CanExecute="TranspileCommand_CanExecute"
+                        Executed="TranspileCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Execute" CanExecute="ExecuteCommand_CanExecute"
+                        Executed="ExecuteCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.NewWindow" CanExecute="NewWindowCommand_CanExecute"
+                        Executed="NewWindowCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.NewTab" CanExecute="NewTabCommand_CanExecute"
+                        Executed="NewTabCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.New" CanExecute="NewCommand_CanExecute"
+                        Executed="NewCommand_Executed" />
 
 
     </Window.CommandBindings>
 
     <Grid x:Name="idl">
         <Grid.RowDefinitions>
-            <RowDefinition Height="489*"/>
-            <RowDefinition Height="128*"/>
+            <RowDefinition Height="489*" />
+            <RowDefinition Height="128*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="0*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <DockPanel Grid.RowSpan="2">
             <Menu DockPanel.Dock="Top" Height="25">
-                <MenuItem Header="_File" >
-                    <MenuItem Header="_New" Command="self:CustomCommands.New"/>
-                    <MenuItem Header="_New Window" Command="self:CustomCommands.NewWindow"/>
-                    <MenuItem Header="_New Tab" Command="self:CustomCommands.NewTab"/>
-                    <MenuItem Header="_Open" Command="self:CustomCommands.Open"/>
-                    <MenuItem Header="_Save" Command="self:CustomCommands.Save"/>
-                    <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs"/>
-                    <Separator/>
-                    <MenuItem Header="_Exit" Command="self:CustomCommands.Exit"/>
+                <MenuItem Header="_File">
+                    <MenuItem Header="_New" Command="self:CustomCommands.New" />
+                    <MenuItem Header="_New Window" Command="self:CustomCommands.NewWindow" />
+                    <MenuItem Header="_New Tab" Command="self:CustomCommands.NewTab" />
+                    <MenuItem Header="_Open" Command="self:CustomCommands.Open" />
+                    <MenuItem Header="_Save" Command="self:CustomCommands.Save" />
+                    <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs" />
+                    <Separator />
+                    <MenuItem Header="_Exit" Command="self:CustomCommands.Exit" />
                 </MenuItem>
-                
+
                 <MenuItem Header="Edit">
-                    <MenuItem Header="_Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=CodeBox}"/>
-                    <MenuItem Header="_Paste" Command="ApplicationCommands.Paste" CommandTarget="{Binding ElementName=CodeBox}"/>
-                    <MenuItem Header="_Cut" Command="ApplicationCommands.Cut" CommandTarget="{Binding ElementName=CodeBox}"/>
-                    <MenuItem Header="_Undo" Command="ApplicationCommands.Undo" CommandTarget="{Binding ElementName=CodeBox}"/>
+                    <MenuItem Header="_Copy" Command="ApplicationCommands.Copy"
+                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                    <MenuItem Header="_Paste" Command="ApplicationCommands.Paste"
+                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                    <MenuItem Header="_Cut" Command="ApplicationCommands.Cut"
+                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                    <MenuItem Header="_Undo" Command="ApplicationCommands.Undo"
+                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
                 </MenuItem>
                 <MenuItem Width="24" Command="self:CustomCommands.Execute">
                     <MenuItem.Icon>
-                        <Image Source="ressources/Untitled.png"/>
+                        <Image Source="ressources/Untitled.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Width="25" Command="self:CustomCommands.Transpile">
                     <MenuItem.Icon>
-                        <Image Source="ressources/transpile.png"/>
+                        <Image Source="ressources/transpile.png" />
                     </MenuItem.Icon>
                 </MenuItem>
 
 
             </Menu>
-            <TabControl x:Name="TabControl" DockPanel.Dock="Top">
-                <TabItem Header="No File" x:Name="Tab1" >
-                    <Grid Background="#FFE5E5E5" >
+            <TabControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged">
+                <TabItem Header="No File" Name="Tab_id_" Margin="-2,-2,2,0">
+
+                    <Grid Name="python_grid" Background="#FFE5E5E5">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="37*"/>
-                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="37*" />
+                            <RowDefinition Height="10*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="552*"/>
-                            <ColumnDefinition Width="565*"/>
+                            <ColumnDefinition Width="552*" />
+                            <ColumnDefinition Width="565*" />
                         </Grid.ColumnDefinitions>
                         <avalonedit:TextEditor
-                            x:Name="python"
+                            Name="python_id_"
                             Text=""
                             IsReadOnly="True"
                             SyntaxHighlighting="Python"
                             FontFamily="Consolas"
                             FontSize="10pt" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        <Grid/>
-                        <Grid>
+                        <Grid Name="grid_codebox">
                             <avalonedit:TextEditor
-                                x:Name="CodeBox"
+                                Name="CodeBox_id_"
                                 Text=""
                                 SyntaxHighlighting="Python"
                                 FontFamily="Consolas"
-                                FontSize="10pt" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="0,0,0,0" /></Grid>
-                        <Grid Grid.ColumnSpan="2" Height="120" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1"/>
-                        <avalonedit:TextEditor 
+                                FontSize="10pt" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                Margin="0,0,0,0" />
+                        </Grid>
+                        <Grid Grid.ColumnSpan="2" Height="120" VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch" Grid.Row="1" />
+                        <avalonedit:TextEditor
                             Text="" IsReadOnly="True" FontFamily="Segoe UI"
-                            Name="STD" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2"/>
+                            Name="STD_id_" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch"
+                            Grid.Row="1" Grid.ColumnSpan="2" />
                     </Grid>
 
 
