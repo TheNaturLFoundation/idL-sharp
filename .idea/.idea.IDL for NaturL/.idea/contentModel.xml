@@ -29,6 +29,7 @@
         <e p="ressources" t="Include">
           <e p="GWgoasadness.png" t="Include" />
           <e p="lastfile.txt" t="Include" />
+          <e p="lastfiles.txt" t="Include" />
           <e p="logoicon.png" t="Include" />
           <e p="logoiconsrc.png" t="Include" />
           <e p="naturL.exe" t="Include" />

@@ -31,7 +31,7 @@ namespace IDL_for_NaturL
         private string tabitem;
         public MainWindow()
         {
-            InitializeComponent(); 
+            InitializeComponent();
             string[] paths = File.ReadAllLines("../../../ressources/lastfiles.txt");
             tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
             ((TabControl)FindName("TabControl")).Items.RemoveAt(0);
@@ -71,19 +71,28 @@ namespace IDL_for_NaturL
             RegisterName("Tab"+n,newTabControl);
             ((TabControl)FindName("TabControl"))?.Items.Add(newTabControl);
             Console.WriteLine(_tabInt);
-            foreach (TabItem el in ((TabControl)FindName("TabControl")).Items)
+            /*foreach (TabItem el in ((TabControl)FindName("TabControl")).Items)
             {
                 Console.WriteLine(el.Name);
                 Console.WriteLine(((TextEditor) ((Grid) el.FindName("grid_codebox")).Children[0]).Name);
-            }
+            }*/
             RegisterName("CodeBox"+n,(TextEditor) ((Grid) ((TabItem) FindName("Tab"+n)).FindName("grid_codebox")).Children[0]);
             RegisterName("python"+n,(TextEditor) ((Grid) ((TabItem) FindName("Tab"+n)).FindName("python_grid")).Children[0]);
             RegisterName("STD" + n, (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("python_grid")).Children[3]);
             if (path != null)
             {
+                _file = Path.GetFileNameWithoutExtension(path);
                 string s = File.ReadAllText(path);
                 ((TextEditor) FindName("CodeBox" + n)).Text = s;
-
+                ((TabItem) FindName("Tab" + n)).Header = _file;
+                _firstData = s;
+                _isFileSelected = true;
+                _isSaved = true;
+            }
+            else
+            {
+                _file = "";
+                _firstData = "";
             }
 
 
@@ -92,12 +101,12 @@ namespace IDL_for_NaturL
         //THESE ARE THE METHODS THAT MANAGE THE INTERFACE BASIC COMMANDS-------------------------
         private bool DataChanged()
         {
-            if (_firstData != ((TextEditor)FindName("CodeBox"+_tabInt)).Text)
+            if (_firstData != ((TextEditor)FindName("CodeBox"+currentTab)).Text)
             {
                 _isSaved = false;
             }
 
-            return (_firstData != ((TextEditor)FindName("CodeBox"+_tabInt)).Text);
+            return (_firstData != ((TextEditor)FindName("CodeBox"+currentTab)).Text);
 
 
         }
@@ -123,11 +132,11 @@ namespace IDL_for_NaturL
 
             if (openFileDialog.ShowDialog() == true)
             {
-                _file = openFileDialog.FileName;
+                _file = openFileDialog.FileName; 
                 var text = File.ReadAllText(_file);
-                ((TextEditor)FindName("CodeBox"+_tabInt)).Text = text;
+                ((TextEditor)FindName("CodeBox"+currentTab)).Text = text;
                 _firstData = text;
-                ((TabItem)FindName("Tab"+_tabInt)).Header = Path.GetFileNameWithoutExtension(_file);
+                ((TabItem)FindName("Tab"+currentTab)).Header = Path.GetFileNameWithoutExtension(_file);
                 _isSaved = false;
                 _isFileSelected = true;
             }
@@ -141,7 +150,7 @@ namespace IDL_for_NaturL
             Window inputWindow = new InputWindow((arg) => { this._file = arg;TabControl_OnSelectionChangedShow();
         }*/
 
-        private void NewFile(object sender, RoutedEventArgs e)
+        private void NewFile(object sender , RoutedEventArgs e)
         {
             if (DataChanged() && !_isSaved)
             {
@@ -166,8 +175,8 @@ namespace IDL_for_NaturL
                 File.Create(_file);
                 _isSaved = false;
                 _isFileSelected = true;
-                ((TabItem)FindName("CodeBox"+_tabInt)).Header = Path.GetFileNameWithoutExtension(_file);
-                ((TextEditor)FindName("CodeBox"+_tabInt)).Text = "";
+                ((TabItem)FindName("Tab"+currentTab)).Header = Path.GetFileNameWithoutExtension(_file);
+                ((TextEditor)FindName("CodeBox"+currentTab)).Text = "";
             }
         }
 
@@ -175,6 +184,18 @@ namespace IDL_for_NaturL
         {
             MainWindow newwindow = new MainWindow();
             newwindow.Show();
+        }
+        //Functiom in order to write all text in a file
+        private void WriteAllTextSafe()
+        {
+            if (_file != "")
+            {
+                File.WriteAllText(_file, ((TextEditor)FindName("CodeBox"+currentTab)).Text);
+            }
+            else
+            {
+                NewFile(null,null);
+            }
         }
         
         // This function refers to the "Save" button in the toolbar, opens the file dialog and asks the user the file to overwrite
@@ -186,10 +207,10 @@ namespace IDL_for_NaturL
             }
             else
             {
-                File.WriteAllText(_file, ((TextEditor)FindName("CodeBox"+_tabInt)).Text);
+                WriteAllTextSafe();
                 _isSaved = true;
                 //var text = File.ReadAllText(_file);
-                _firstData = ((TextEditor)FindName("CodeBox"+_tabInt)).Text; 
+                _firstData = ((TextEditor)FindName("CodeBox"+currentTab)).Text; 
             }
         }
 
@@ -203,10 +224,10 @@ namespace IDL_for_NaturL
             _file = saveFileDialog.FileName;
             if (!_file.Contains(".ntl"))
                 _file += ".ntl";
-            File.WriteAllText(_file, ((TextEditor)FindName("CodeBox"+_tabInt)).Text);
+            WriteAllTextSafe();
             _isSaved = true;
             _isFileSelected = true;
-            ((TabItem)FindName("Tab"+_tabInt)).Header = Path.GetFileName(_file);
+            ((TabItem)FindName("Tab"+currentTab)).Header = Path.GetFileNameWithoutExtension(_file);
             string text = File.ReadAllText(_file);
             _firstData = text.ToString();
         }
@@ -215,7 +236,7 @@ namespace IDL_for_NaturL
         // Handles the window closing, asks whether the user wants to save his file before closing.
         private void IDL_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            File.WriteAllText("../../../ressources/lastfile.txt",_file);
+            File.WriteAllText("../../../ressources/lastfiles.txt",_file);
             if (DataChanged() && !_isSaved)
             {
                 string msg = "Do you want to save your changes ?\n";
@@ -232,15 +253,25 @@ namespace IDL_for_NaturL
                 }
             }
         }
+        
+        //Function in order to quote paths as the cmd doesn't understand what a path with spaces is
+        private string Quote(string toBeQuoted)
+        {
+            if (toBeQuoted != null)
+            {
+                return '"' + toBeQuoted + '"';
+            }
 
-        private void Transpile(object sender, RoutedEventArgs routedEventArgs)
+            return null;
+        }
+        private bool Transpile(object sender, RoutedEventArgs routedEventArgs)
         {
             if (DataChanged() && !_isSaved)
             {
                 Save_Click();
             }
 
-            if (((TextEditor)FindName("CodeBox"+_tabInt)).Text != "")
+            if (((TextEditor)FindName("CodeBox"+currentTab)).Text != "")
             {
                 string path = Path.GetFullPath(_file);
                 string python_file = Path.ChangeExtension(path, ".py");
@@ -249,7 +280,7 @@ namespace IDL_for_NaturL
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
-                        Arguments = path + " " + python_file,
+                        Arguments = Quote(path) + " " + Quote(python_file),
                         UseShellExecute = false,
                         RedirectStandardError = true
                     }
@@ -258,53 +289,59 @@ namespace IDL_for_NaturL
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
                 process.WaitForExit();
-
                 StreamReader reader = process.StandardError;
                 string error = reader.ReadLine();
 
                 if (error == null)
                 {
-                    ((TextEditor)FindName("STD"+_tabInt)).Text = "Transpilation succeded";
-                    ((TextEditor)FindName("python"+_tabInt)).Text = File.ReadAllText(python_file);
+                    ((TextEditor)FindName("STD"+currentTab)).Text = "Transpilation succeded";
+                    ((TextEditor)FindName("python"+currentTab)).Text = File.ReadAllText(python_file);
                 }
                 else
                 {
-                    ((TextEditor)FindName("STD"+_tabInt)).Text = error;
+                    ((TextEditor)FindName("STD"+currentTab)).Text = error;
+                    
                 }
+
+                return true;
             }
+
+            return false;
         }
 
         private void Execute(object sender, RoutedEventArgs e)
         {
-            Transpile(sender,e);
-            string path = Path.GetFullPath(_file); 
-            Process process = new Process
+            if (Transpile(sender,e))
             {
-                StartInfo =
+                string path = Path.GetFullPath(_file);
+                Process process = new Process
                 {
-                    FileName = "python",
-                    Arguments = Path.ChangeExtension(path, ".py"),
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                }
-            };
-            process.EnableRaisingEvents = true;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.Start();
-            process.WaitForExit();
-            StreamReader errorReader = process.StandardError;
-            string error = errorReader.ReadToEnd();
-            StreamReader outputReader = process.StandardOutput;
-            string output = outputReader.ReadToEnd();
-            ((TextEditor)FindName("STD"+_tabInt)).Text = error;
-            ((TextEditor)FindName("STD"+_tabInt)).Text += output;
-            
+                    StartInfo =
+                    {
+                        FileName = "python",
+                        Arguments = Quote(Path.ChangeExtension(path, ".py")),
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    }
+                };
+                process.EnableRaisingEvents = true;
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
+                StreamReader errorReader = process.StandardError;
+                string error = errorReader.ReadToEnd();
+                StreamReader outputReader = process.StandardOutput;
+                string output = outputReader.ReadToEnd();
+                ((TextEditor) FindName("STD" + currentTab)).Text = error;
+                ((TextEditor) FindName("STD" + currentTab)).Text += output;
+            }
+
         }
         //-----------------------------------------------------------------------------------------
 
         //These are the basic commands
-
+        #region CommandsExecution
         #region ExitCommand
 
         private void ExitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -426,10 +463,11 @@ namespace IDL_for_NaturL
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine(((TabControl)e.Source).SelectedIndex);
-            Console.WriteLine(((TabControl)e.Source).Items[((TabControl)e.Source).SelectedIndex]);
-
+            currentTab = ((TabControl) e.Source).SelectedIndex;
         }
+        #endregion
     }
+        
     //------------------------------------------------------------------------------------------
 
 
