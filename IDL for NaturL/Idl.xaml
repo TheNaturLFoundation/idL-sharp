@@ -29,6 +29,8 @@
                         Executed="NewTabCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.New" CanExecute="NewCommand_CanExecute"
                         Executed="NewCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.CloseTab" CanExecute="CloseTabCommand_CanExecute"
+                        Executed="CloseTabCommand_Executed" />
 
 
     </Window.CommandBindings>
@@ -49,6 +51,7 @@
                     <MenuItem Header="_New" Command="self:CustomCommands.New" />
                     <MenuItem Header="_New Window" Command="self:CustomCommands.NewWindow" />
                     <MenuItem Header="_New Tab" Command="self:CustomCommands.NewTab" />
+                    <MenuItem Header="_Close Tab" Command="self:CustomCommands.CloseTab" />
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open" />
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save" />
                     <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs" />
@@ -65,6 +68,8 @@
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
                     <MenuItem Header="_Undo" Command="ApplicationCommands.Undo"
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                    <MenuItem Header="Redo" Command="ApplicationCommands.Redo"
+                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
                 </MenuItem>
                 <MenuItem Width="24" Command="self:CustomCommands.Execute">
                     <MenuItem.Icon>

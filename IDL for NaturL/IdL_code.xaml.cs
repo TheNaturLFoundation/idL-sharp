@@ -28,7 +28,9 @@ namespace IDL_for_NaturL
         private string _file = "";
         private int _tabInt = 0;
         private int currentTab = 0;
+        private string _currenttabID;
         private string tabitem;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -47,13 +49,6 @@ namespace IDL_for_NaturL
                     NewTabItems(_tabInt, path);
                 }
             }
-            /*if (path != "")
-            {
-                CodeBox0.Text = File.ReadAllText(path);
-                _file = path;
-                _isFileSelected = true;
-                _firstData = CodeBox0.Text;
-            }*/
 
             /*Coloration synthaxique
             var myAssembly = Assembly.GetExecutingAssembly(); 
@@ -64,18 +59,12 @@ namespace IDL_for_NaturL
 
         private void NewTabItems(int n,string path)
         {
-            StringReader stringReader = new StringReader(tabitem.Replace("_id_",n.ToString()));
-            //Console.WriteLine(tabitem.Replace("_id_",n.ToString()));
+            StringReader stringReader = new StringReader(tabitem.Replace("_id_", n.ToString()));
             XmlReader xmlReader = XmlReader.Create(stringReader);
             TabItem newTabControl = (TabItem)XamlReader.Load(xmlReader);
             RegisterName("Tab"+n,newTabControl);
             ((TabControl)FindName("TabControl"))?.Items.Add(newTabControl);
-            Console.WriteLine(_tabInt);
-            /*foreach (TabItem el in ((TabControl)FindName("TabControl")).Items)
-            {
-                Console.WriteLine(el.Name);
-                Console.WriteLine(((TextEditor) ((Grid) el.FindName("grid_codebox")).Children[0]).Name);
-            }*/
+            newTabControl.Header = n;
             RegisterName("CodeBox"+n,(TextEditor) ((Grid) ((TabItem) FindName("Tab"+n)).FindName("grid_codebox")).Children[0]);
             RegisterName("python"+n,(TextEditor) ((Grid) ((TabItem) FindName("Tab"+n)).FindName("python_grid")).Children[0]);
             RegisterName("STD" + n, (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("python_grid")).Children[3]);
@@ -101,12 +90,12 @@ namespace IDL_for_NaturL
         //THESE ARE THE METHODS THAT MANAGE THE INTERFACE BASIC COMMANDS-------------------------
         private bool DataChanged()
         {
-            if (_firstData != ((TextEditor)FindName("CodeBox"+currentTab)).Text)
+            if (_firstData != ((TextEditor)FindName("CodeBox"+_currenttabID)).Text)
             {
                 _isSaved = false;
             }
 
-            return (_firstData != ((TextEditor)FindName("CodeBox"+currentTab)).Text);
+            return (_firstData != ((TextEditor)FindName("CodeBox"+_currenttabID)).Text);
 
 
         }
@@ -234,6 +223,8 @@ namespace IDL_for_NaturL
 
         // This function refers to the event handler "IDL_Closing" in "Window" attributes,
         // Handles the window closing, asks whether the user wants to save his file before closing.
+        
+        
         private void IDL_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             File.WriteAllText("../../../ressources/lastfiles.txt",_file);
@@ -251,6 +242,45 @@ namespace IDL_for_NaturL
                 {
                     e.Cancel = true;
                 }
+            }
+        }
+
+        private void UnregisterNamesAndRemove()
+        {
+            UnregisterName("Tab"+_currenttabID);
+            UnregisterName("CodeBox"+_currenttabID);
+            UnregisterName("python"+_currenttabID);
+            UnregisterName("STD"+_currenttabID);
+            Console.WriteLine("unregister slt");
+            ((TabControl) FindName("TabControl")).Items.RemoveAt(currentTab);
+            //NewTabItems(++_tabInt,null);
+            //((TabControl) FindName("TabControl")).SelectedItem = FindName("Tab"+(_tabInt-1));
+        }
+        private void CloseTab()
+        {
+            if (DataChanged() && !_isSaved)
+            {
+                string msg = "Do you want to save your changes ?\n";
+                MessageBoxResult result = MessageBox.Show(msg, "Data App", MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Save_Click();
+                    UnregisterNamesAndRemove();
+                    Console.WriteLine(currentTab);
+
+                }
+                else if (result == MessageBoxResult.No)
+                { 
+                    UnregisterNamesAndRemove();
+                    Console.WriteLine(currentTab);
+                }
+            }
+            else
+            {
+                UnregisterNamesAndRemove();
+                Console.WriteLine(currentTab);
+
             }
         }
         
@@ -429,7 +459,6 @@ namespace IDL_for_NaturL
 
         private void NewTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            
             NewTabItems(++_tabInt,null);
         }
 
@@ -459,11 +488,32 @@ namespace IDL_for_NaturL
         }
 
         #endregion
+        private void CloseTabCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = ((TabControl) FindName("TabControl")).Items.Count > 1;
+        }
+
+        private void CloseTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            CloseTab();
+        }
 
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Console.WriteLine(((TabControl)e.Source).SelectedIndex);
+            Console.WriteLine("index" + ((TabControl)e.Source).SelectedIndex);
+            if (((TabControl)e.Source).SelectedIndex == -1)
+            {
+                ((TabControl) e.Source).SelectedIndex = 0;
+            }
+            TabControl tabcontrol = (TabControl) e.Source;
+            TabItem __tabitem = (TabItem) tabcontrol.SelectedItem;
+            if (__tabitem != null)
+                Console.WriteLine("Il est pas nul mdr");
+            else
+                Console.WriteLine("Ben il est devenu nul ducoup pas de chance");
             currentTab = ((TabControl) e.Source).SelectedIndex;
+            _currenttabID = ((TabItem) ((TabControl) e.Source).SelectedItem).Name.Replace("Tab","");
+            Console.WriteLine(_currenttabID);
         }
         #endregion
     }
@@ -566,6 +616,16 @@ namespace IDL_for_NaturL
             new InputGestureCollection()
             {
                 new KeyGesture(Key.N, ModifierKeys.Control)
+            }
+        );
+        public static readonly RoutedUICommand CloseTab = new RoutedUICommand
+        (
+            "CloseTab",
+            "CloseTab",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.W, ModifierKeys.Control)
             }
         );
     }
