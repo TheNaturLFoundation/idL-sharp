@@ -12,7 +12,6 @@ using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Collections.Generic;
-using System.Windows.Forms.VisualStyles;
 using ICSharpCode.AvalonEdit;
 
 namespace IDL_for_NaturL
@@ -31,7 +30,6 @@ namespace IDL_for_NaturL
         private int currentTab = 0;
         private string _currenttabID;
         private string tabitem;
-        private List<string> IsFileSelected = new List<string>();
         
         public MainWindow()
         {
@@ -39,6 +37,7 @@ namespace IDL_for_NaturL
             string[] paths = File.ReadAllLines("../../../ressources/lastfiles.txt");
             tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
             ((TabControl)FindName("TabControl")).Items.RemoveAt(0);
+
             if (paths.Length == 0)
             {
                 NewTabItems(_tabInt,null);
@@ -65,6 +64,7 @@ namespace IDL_for_NaturL
             TabItem newTabControl = (TabItem)XamlReader.Load(xmlReader);
             RegisterName("Tab"+n,newTabControl);
             ((TabControl)FindName("TabControl"))?.Items.Add(newTabControl);
+            newTabControl.Header = n;
             RegisterName("CodeBox"+n,(TextEditor) ((Grid) ((TabItem) FindName("Tab"+n)).FindName("grid_codebox")).Children[0]);
             RegisterName("python"+n,(TextEditor) ((Grid) ((TabItem) FindName("Tab"+n)).FindName("python_grid")).Children[0]);
             RegisterName("STD" + n, (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("python_grid")).Children[3]);
@@ -77,14 +77,11 @@ namespace IDL_for_NaturL
                 _firstData = s;
                 _isFileSelected = true;
                 _isSaved = true;
-                IsFileSelected.Add(n.ToString());
             }
             else
             {
                 _file = "";
                 _firstData = "";
-                _isFileSelected = false;
-                _isSaved = false;
             }
 
 
@@ -107,7 +104,6 @@ namespace IDL_for_NaturL
         // Content of the opened file is then showed in the codebox of idl
         private void Open_Click()
         {
-            Console.WriteLine("Open_Click");
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt"
@@ -125,13 +121,13 @@ namespace IDL_for_NaturL
 
             if (openFileDialog.ShowDialog() == true)
             {
-                _file = openFileDialog.FileName;
+                _file = openFileDialog.FileName; 
                 var text = File.ReadAllText(_file);
                 ((TextEditor)FindName("CodeBox"+currentTab)).Text = text;
                 _firstData = text;
                 ((TabItem)FindName("Tab"+currentTab)).Header = Path.GetFileNameWithoutExtension(_file);
                 _isSaved = false;
-                IsFileSelected.Add(_currenttabID.ToString());
+                _isFileSelected = true;
             }
         }
 
@@ -145,7 +141,6 @@ namespace IDL_for_NaturL
 
         private void NewFile(object sender , RoutedEventArgs e)
         {
-            Console.WriteLine("NewFile");
             if (DataChanged() && !_isSaved)
             {
                 MessageBoxResult result = MessageBox.Show(
@@ -171,7 +166,6 @@ namespace IDL_for_NaturL
                 _isFileSelected = true;
                 ((TabItem)FindName("Tab"+currentTab)).Header = Path.GetFileNameWithoutExtension(_file);
                 ((TextEditor)FindName("CodeBox"+currentTab)).Text = "";
-                IsFileSelected.Add(_currenttabID.ToString());
             }
         }
 
@@ -185,7 +179,7 @@ namespace IDL_for_NaturL
         {
             if (_file != "")
             {
-                File.WriteAllText(_file, ((TextEditor)FindName("CodeBox"+_currenttabID)).Text);
+                File.WriteAllText(_file, ((TextEditor)FindName("CodeBox"+currentTab)).Text);
             }
             else
             {
@@ -196,7 +190,7 @@ namespace IDL_for_NaturL
         // This function refers to the "Save" button in the toolbar, opens the file dialog and asks the user the file to overwrite
         private void Save_Click()
         {
-            if (!IsFileSelected.Contains(currentTab.ToString()))
+            if (!_isFileSelected)
             {
                 Save_AsClick();
             }
@@ -205,7 +199,7 @@ namespace IDL_for_NaturL
                 WriteAllTextSafe();
                 _isSaved = true;
                 //var text = File.ReadAllText(_file);
-                _firstData = ((TextEditor)FindName("CodeBox"+_currenttabID)).Text;
+                _firstData = ((TextEditor)FindName("CodeBox"+currentTab)).Text; 
             }
         }
 
@@ -221,58 +215,36 @@ namespace IDL_for_NaturL
                 _file += ".ntl";
             WriteAllTextSafe();
             _isSaved = true;
-            IsFileSelected.Add(_currenttabID.ToString());
-            ((TabItem)FindName("Tab"+_currenttabID)).Header = Path.GetFileNameWithoutExtension(_file);
+            _isFileSelected = true;
+            ((TabItem)FindName("Tab"+currentTab)).Header = Path.GetFileNameWithoutExtension(_file);
             string text = File.ReadAllText(_file);
             _firstData = text.ToString();
         }
 
         // This function refers to the event handler "IDL_Closing" in "Window" attributes,
         // Handles the window closing, asks whether the user wants to save his file before closing.
-
-        private MessageBoxResult messageOnClose(string message)
-        {
-            MessageBoxResult result = MessageBox.Show(message, "Data App", MessageBoxButton.YesNoCancel,
-                MessageBoxImage.Question);
-            return result;
-        }
+        
         
         private void IDL_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            foreach (TabItem item in ((TabControl) FindName("TabControl")).Items)
+            File.WriteAllText("../../../ressources/lastfiles.txt",_file);
+            if (DataChanged() && !_isSaved)
             {
-                _currenttabID = item.Name.Replace("Tab", "");
-                if (!IsFileSelected.Contains(_currenttabID))
+                string msg = "Do you want to save your changes ?\n";
+                MessageBoxResult result = MessageBox.Show(msg, "Data App", MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
                 {
-                    MessageBoxResult result = messageOnClose("Your changes on the file: " + item.Header +
-                                   " are not saved. \n Would you like to save them?");
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        Save_Click();
-                    }
-                    else if (result == MessageBoxResult.No)
-                    {
-                        continue;
-                    }
-                    else if (result == MessageBoxResult.Cancel)
-                    {
-                        e.Cancel = true;
-                        break;
-                    }
+                    // If user want to close and save, cancel closure
+                    Save_Click();
                 }
-                else
+                else if (result == MessageBoxResult.Cancel)
                 {
-                    if (_file != "")
-                    {
-
-                        File.WriteAllText(_file, ((TextEditor) FindName("CodeBox"+_currenttabID)).Text);
-                        File.WriteAllText("../../../ressources/lastfiles.txt",Path.GetFullPath(_file));
-                        
-                    }
+                    e.Cancel = true;
                 }
             }
         }
-        // Function in order to unregister previous instances (used for closing a tab)
+
         private void UnregisterNamesAndRemove()
         {
             UnregisterName("Tab"+_currenttabID);
@@ -284,7 +256,6 @@ namespace IDL_for_NaturL
             //NewTabItems(++_tabInt,null);
             //((TabControl) FindName("TabControl")).SelectedItem = FindName("Tab"+(_tabInt-1));
         }
-        
         private void CloseTab()
         {
             if (DataChanged() && !_isSaved)
@@ -323,16 +294,14 @@ namespace IDL_for_NaturL
 
             return null;
         }
-        
         private bool Transpile(object sender, RoutedEventArgs routedEventArgs)
         {
-
-            if (!IsFileSelected.Contains(currentTab.ToString()))
+            if (DataChanged() && !_isSaved)
             {
                 Save_Click();
             }
-            
-            if (((TextEditor)FindName("CodeBox"+_currenttabID)).Text != "")
+
+            if (((TextEditor)FindName("CodeBox"+currentTab)).Text != "")
             {
                 string path = Path.GetFullPath(_file);
                 string python_file = Path.ChangeExtension(path, ".py");
@@ -399,7 +368,6 @@ namespace IDL_for_NaturL
             }
 
         }
-        
         //-----------------------------------------------------------------------------------------
 
         //These are the basic commands
@@ -539,9 +507,13 @@ namespace IDL_for_NaturL
             }
             TabControl tabcontrol = (TabControl) e.Source;
             TabItem __tabitem = (TabItem) tabcontrol.SelectedItem;
+            if (__tabitem != null)
+                Console.WriteLine("Il est pas nul mdr");
+            else
+                Console.WriteLine("Ben il est devenu nul ducoup pas de chance");
             currentTab = ((TabControl) e.Source).SelectedIndex;
             _currenttabID = ((TabItem) ((TabControl) e.Source).SelectedItem).Name.Replace("Tab","");
-            
+            Console.WriteLine(_currenttabID);
         }
         #endregion
     }
