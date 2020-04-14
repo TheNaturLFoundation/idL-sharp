@@ -73,7 +73,7 @@
                 </MenuItem>
                 <MenuItem Width="24" Command="self:CustomCommands.Execute">
                     <MenuItem.Icon>
-                        <Image Source="ressources/Untitled.png" />
+                        <Image Source="ressources/Untitled.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Width="25" Command="self:CustomCommands.Transpile">
@@ -100,7 +100,7 @@
                             Name="python_id_"
                             Text=""
                             IsReadOnly="True"
-                            SyntaxHighlighting="Python"
+                            SyntaxHighlighting="NaturL"
                             FontFamily="Consolas"
                             FontSize="10pt" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         <Grid Name="grid_codebox">

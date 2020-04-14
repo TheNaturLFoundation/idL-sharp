@@ -14,6 +14,7 @@
         <e p="IdL_code.xaml.cs" t="Include" />
         <e p="InputWindow.xaml" t="Include" />
         <e p="InputWindow_code.xaml.cs" t="Include" />
+        <e p="naturl_coloration.xshd" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
@@ -28,7 +29,6 @@
         </e>
         <e p="ressources" t="Include">
           <e p="GWgoasadness.png" t="Include" />
-          <e p="lastfile.txt" t="Include" />
           <e p="lastfiles.txt" t="Include" />
           <e p="logoicon.png" t="Include" />
           <e p="logoiconsrc.png" t="Include" />

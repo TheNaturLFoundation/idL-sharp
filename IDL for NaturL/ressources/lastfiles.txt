@@ -1,1 +1,6 @@
-C:\Users\Adrian\Desktop\NaturLPull\idL\IDL for NaturL\bin\Debug\netcoreapp3.1\compter
+C:\Users\Adrian\Desktop\NaturLPull\idL\IDL for NaturL\bin\Debug\netcoreapp3.1\fact.ntl
+C:\Users\Adrian\Desktop\NaturLPull\idL\IDL for NaturL\bin\Debug\netcoreapp3.1\fact.ntl
+C:\Users\Adrian\Desktop\NaturLPull\idL\IDL for NaturL\bin\Debug\netcoreapp3.1\fact.ntl
+C:\Users\Adrian\Desktop\NaturLPull\idL\IDL for NaturL\bin\Debug\netcoreapp3.1\fact.ntl
+C:\Users\Adrian\Desktop\NaturLPull\idL\IDL for NaturL\bin\Debug\netcoreapp3.1\fact.ntl
+C:\Users\Adrian\Desktop\NaturLPull\idL\IDL for NaturL\bin\Debug\netcoreapp3.1\fact.ntl
