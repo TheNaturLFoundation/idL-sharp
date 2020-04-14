@@ -9,12 +9,14 @@
         <e p="App.xaml.cs" t="Include" />
         <e p="AssemblyInfo.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
+        <e p="Hello.xsl" t="Include" />
         <e p="IDL for NaturL.csproj" t="IncludeRecursive" />
         <e p="Idl.xaml" t="Include" />
         <e p="IdL_code.xaml.cs" t="Include" />
         <e p="InputWindow.xaml" t="Include" />
         <e p="InputWindow_code.xaml.cs" t="Include" />
         <e p="naturl_coloration.xshd" t="Include" />
+        <e p="NewFile1.txt" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">

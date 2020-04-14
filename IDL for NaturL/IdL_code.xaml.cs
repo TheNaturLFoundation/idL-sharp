@@ -121,8 +121,8 @@ namespace IDL_for_NaturL
             {
                 _currentTabHandler._isSaved = false;
             }
-
-            return (_currentTabHandler._firstData != ((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
+            
+            return _currentTabHandler._firstData != ((TextEditor) FindName("CodeBox" + _currenttabId)).Text;
         }
 
         // This function refers to the "Open" button in the toolbar, opens the file dialog and asks the user the file to open
@@ -288,7 +288,7 @@ namespace IDL_for_NaturL
                 }
                 else
                 {
-                    if (_currentTabHandler._file != "")
+                    if (!string.IsNullOrEmpty(_currentTabHandler._file))
                     {
                         File.WriteAllText(_currentTabHandler._file,
                             ((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
@@ -516,7 +516,17 @@ namespace IDL_for_NaturL
 
         private void NewTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            NewTabItems(_tabInt++, null);
+            /*string path = null;
+            InputWindow newwindow = new InputWindow();
+            newwindow.Show();
+            path = newwindow.Input.Text;
+            Console.WriteLine(path);*/
+            //if (!newwindow.IsOpen1)
+            {
+                NewTabItems(_tabInt++, null);
+            }
+            
+
         }
 
         #endregion

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System.IO;
+using System.Windows.Controls;
 
 namespace IDL_for_NaturL
 {
@@ -9,33 +10,35 @@ namespace IDL_for_NaturL
     // Opens an input dialog and asks the user for an input
     public partial class InputWindow : Window
     {
-        Action<string> _setValue;
-        public InputWindow(Action<string> setValue)
+        public TextBox Input
         {
-            _setValue = setValue;
-            InitializeComponent();
-
+            get => input;
+            set => input = value;
         }
-        private void KeyPressed(object sender, KeyEventArgs e = null)
+
+        private bool IsOpen;
+
+        public bool IsOpen1
+        {
+            get => IsOpen;
+            set => IsOpen = value;
+        }
+
+        public InputWindow()
+        {
+            InitializeComponent();
+            IsOpen = true;
+        }
+        private void KeyPressed(object sender, KeyEventArgs e)
         {
             if (Key.Enter == e?.Key)
             {
-                _setValue?.Invoke (input.Text);
-                if (input.Text.Contains(".ntl"))
-                {
-                    File.Create(input.Text);
-                }
-                else
-                {
-                    File.Create(input.Text + ".ntl");
-                }
-                this.Close();
+                Created(sender, null);
             }
+            Console.WriteLine("input is: "+input.Text);
         }
         private void Created(object sender, RoutedEventArgs e)
         {
-            if (_setValue != null)
-                _setValue(input.Text);
             if (input.Text.Contains(".ntl"))
             {
                 File.Create(input.Text);
@@ -45,10 +48,12 @@ namespace IDL_for_NaturL
                 File.Create(input.Text + ".ntl");
             }
             this.Close();
+            IsOpen = false;
         }
         private void Cancelled(object sender, RoutedEventArgs e)
         {
             this.Close();
+            IsOpen = false;
         }
     }
 }

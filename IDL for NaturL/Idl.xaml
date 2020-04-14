@@ -100,14 +100,14 @@
                             Name="python_id_"
                             Text=""
                             IsReadOnly="True"
-                            SyntaxHighlighting="NaturL"
+                            SyntaxHighlighting="Python"
                             FontFamily="Consolas"
                             FontSize="10pt" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         <Grid Name="grid_codebox">
                             <avalonedit:TextEditor
                                 Name="CodeBox_id_"
                                 Text=""
-                                SyntaxHighlighting="Python"
+                                SyntaxHighlighting="NaturL"
                                 FontFamily="Consolas"
                                 FontSize="10pt" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                 Margin="0,0,0,0" />
