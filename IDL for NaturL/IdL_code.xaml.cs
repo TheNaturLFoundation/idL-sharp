@@ -13,6 +13,7 @@ using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms.VisualStyles;
 using ICSharpCode.AvalonEdit;
 
@@ -39,7 +40,7 @@ namespace IDL_for_NaturL
         {
             public TabHandling(string file, bool isSaved = false)
             {
-                _isFileSelected = file == null;
+                _isFileSelected = file != null && file != "";
                 _firstData = file == null ? "" : File.ReadAllText(file);
                 _isSaved = isSaved;
                 _file = file;
@@ -67,12 +68,12 @@ namespace IDL_for_NaturL
             if (paths.Length == 0)
             {
                 NewTabItems(_tabInt++, null);
+                Console.WriteLine(_currentTabHandler._isFileSelected);
             }
             else
             {
                 foreach (string path in paths)
                 {
-                    Console.WriteLine(path);
                     NewTabItems(_tabInt++, path);
                 }
             }
@@ -86,7 +87,7 @@ namespace IDL_for_NaturL
 
         private void NewTabItems(int n, string path)
         {
-            Console.WriteLine(path);
+            Console.WriteLine("NewTabItems");
             StringReader stringReader = new StringReader(tabitem.Replace("_id_", n.ToString()));
             XmlReader xmlReader = XmlReader.Create(stringReader);
             TabItem newTabControl = (TabItem) XamlReader.Load(xmlReader);
@@ -101,13 +102,16 @@ namespace IDL_for_NaturL
             
             TabHandling tabHandling = new TabHandling(path);
             attributes.Add(n.ToString(), tabHandling);
-            
+            TabControl.SelectedIndex = ((TabControl) FindName("TabControl")).Items.Count - 1;
+            if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
+            {
+                Console.WriteLine("Warning in CurrenttabHandler (On selection changed)");
+            }
             if (path != null)
             {
-                tabHandling._file = Path.GetFileName(path);
                 string s = File.ReadAllText(path);
                 ((TextEditor) FindName("CodeBox" + n)).Text = s;
-                ((TabItem) FindName("Tab" + n)).Header = tabHandling._file;
+                ((TabItem) FindName("Tab" + n)).Header = Path.GetFileNameWithoutExtension(tabHandling._file);
                 tabHandling._firstData = s;
                 tabHandling._isFileSelected = true;
                 tabHandling._isSaved = true;
@@ -134,26 +138,15 @@ namespace IDL_for_NaturL
             {
                 Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt"
             };
-            if (DataChanged() && !_currentTabHandler._isSaved)
-            {
-                MessageBoxResult result =
-                    MessageBox.Show("The file has been modified \n Would you like to save your changes ?", "Data App",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    Save_Click();
-                }
-            }
-
             if (openFileDialog.ShowDialog() == true)
             {
-                _currentTabHandler._file = openFileDialog.FileName;
+                string filename = openFileDialog.FileName;
+                NewTabItems(_tabInt++,filename);
                 var text = File.ReadAllText(_currentTabHandler._file);
                 ((TextEditor) FindName("CodeBox" + _currenttabId)).Text = text;
                 _currentTabHandler._firstData = text;
                 ((TabItem) FindName("Tab" + _currenttabId)).Header =
                     Path.GetFileNameWithoutExtension(_currentTabHandler._file);
-                _currentTabHandler._isSaved = true;
             }
         }
 
@@ -168,27 +161,18 @@ namespace IDL_for_NaturL
         private void NewFile(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("NewFile");
-            if (DataChanged() && !_currentTabHandler._isSaved)
-            {
-                MessageBoxResult result = MessageBox.Show(
-                    "The file has been modified \n Would you like to save your changes ?",
-                    "Data App", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    Save_Click();
-                }
-            }
-
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "nl files (*.ntl)|*.ntl*|Text files (*.txt)|*.txt"
             };
             if (saveFileDialog.ShowDialog() == true)
             {
-                _currentTabHandler._file = saveFileDialog.FileName;
-                if (!_currentTabHandler._file.EndsWith(".ntl"))
-                    _currentTabHandler._file += ".ntl";
-                File.Create(_currentTabHandler._file);
+                string filename = saveFileDialog.FileName;
+                if (!filename.EndsWith(".ntl"))
+                    filename += ".ntl";
+                Stream myfile = File.Create(filename);
+                myfile.Close();
+                NewTabItems(_tabInt++,filename);
                 _currentTabHandler._isSaved = false;
                 _currentTabHandler._isFileSelected = true;
                 ((TabItem) FindName("Tab" + _currenttabId)).Header =
@@ -208,7 +192,6 @@ namespace IDL_for_NaturL
         {
             if (!string.IsNullOrEmpty(_currentTabHandler?._file))
             {
-                Console.WriteLine(_currenttabId);
                 File.WriteAllText(_currentTabHandler._file, ((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
             }
             else
@@ -228,13 +211,13 @@ namespace IDL_for_NaturL
             {
                 WriteAllTextSafe();
                 _currentTabHandler._isSaved = true;
-                //var text = File.ReadAllText(_file);
                 _currentTabHandler._firstData = ((TextEditor) FindName("CodeBox" + _currenttabId)).Text;
             }
         }
 
         private void Save_AsClick()
         {
+            Console.WriteLine("Save_AsClick");
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "ntl files (*.ntl)|*.ntl*|Text files (*.txt)|*.txt"
@@ -268,7 +251,11 @@ namespace IDL_for_NaturL
             foreach (TabItem item in ((TabControl) FindName("TabControl")).Items)
             {
                 _currenttabId = item.Name.Replace("Tab", "");
-                if (!_currentTabHandler._isFileSelected)
+                if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
+                {
+                    Console.WriteLine("Warning in CurrenttabHandler (On selection changed)");
+                }
+                if (!_currentTabHandler._isFileSelected && DataChanged())
                 {
                     MessageBoxResult result = messageOnClose("Your changes on the file: " + item.Header +
                                                              " are not saved. \n Would you like to save them?");
@@ -322,18 +309,15 @@ namespace IDL_for_NaturL
                 {
                     Save_Click();
                     UnregisterNamesAndRemove();
-                    Console.WriteLine(_currentTab);
                 }
                 else if (result == MessageBoxResult.No)
                 {
                     UnregisterNamesAndRemove();
-                    Console.WriteLine(_currentTab);
                 }
             }
             else
             {
                 UnregisterNamesAndRemove();
-                Console.WriteLine(_currentTab);
             }
         }
 
@@ -516,17 +500,7 @@ namespace IDL_for_NaturL
 
         private void NewTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            /*string path = null;
-            InputWindow newwindow = new InputWindow();
-            newwindow.Show();
-            path = newwindow.Input.Text;
-            Console.WriteLine(path);*/
-            //if (!newwindow.IsOpen1)
-            {
-                NewTabItems(_tabInt++, null);
-            }
-            
-
+            NewTabItems(_tabInt++, null);
         }
 
         #endregion
@@ -572,7 +546,6 @@ namespace IDL_for_NaturL
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("TabControl On Selection Changed");
-            Console.WriteLine("index" + ((TabControl) e.Source).SelectedIndex);
             if (((TabControl) e.Source).SelectedIndex == -1)
             {
                 ((TabControl) e.Source).SelectedIndex = 0;
@@ -582,7 +555,6 @@ namespace IDL_for_NaturL
             {
                 var source = (TabItem) e.AddedItems[0];
                 _currentTab = ((TabControl) e.Source).SelectedIndex;
-                Console.WriteLine(_currentTab);
                 _currenttabId = source.Name.Replace("Tab", "");
                 Console.WriteLine("Current tab id " + _currenttabId);
                 if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
@@ -596,7 +568,6 @@ namespace IDL_for_NaturL
                 string i = source.Name.Replace("Tab", "");
                 attributes.Remove(i);
             }
-            
         }
 
         #endregion

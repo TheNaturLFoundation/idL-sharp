@@ -17,6 +17,7 @@
         <e p="InputWindow_code.xaml.cs" t="Include" />
         <e p="naturl_coloration.xshd" t="Include" />
         <e p="NewFile1.txt" t="Include" />
+        <e p="NewFile2.txt" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">

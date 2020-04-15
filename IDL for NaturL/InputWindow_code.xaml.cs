@@ -16,18 +16,17 @@ namespace IDL_for_NaturL
             set => input = value;
         }
 
-        private bool IsOpen;
+        private bool cancelled;
 
-        public bool IsOpen1
+        public bool Cancelled1
         {
-            get => IsOpen;
-            set => IsOpen = value;
+            get => cancelled;
+            set => cancelled = value;
         }
 
         public InputWindow()
         {
             InitializeComponent();
-            IsOpen = true;
         }
         private void KeyPressed(object sender, KeyEventArgs e)
         {
@@ -35,25 +34,35 @@ namespace IDL_for_NaturL
             {
                 Created(sender, null);
             }
-            Console.WriteLine("input is: "+input.Text);
         }
         private void Created(object sender, RoutedEventArgs e)
         {
-            if (input.Text.Contains(".ntl"))
+            if (input.Text.EndsWith(".ntl"))
             {
-                File.Create(input.Text);
+                var myfile = File.Create(input.Text);
+                myfile.Close();
             }
             else
             {
-                File.Create(input.Text + ".ntl");
+                var myfile = File.Create(input.Text + ".ntl");
+                myfile.Close();
             }
             this.Close();
-            IsOpen = false;
         }
         private void Cancelled(object sender, RoutedEventArgs e)
         {
             this.Close();
-            IsOpen = false;
+            cancelled = true;
+        }
+
+        private void Cancelled_ESC(object sender, KeyEventArgs e)
+        {
+            if (Key.Escape == e?.Key)
+            {
+                Console.WriteLine("Escape");
+                this.Close();
+                cancelled = true;
+            }
         }
     }
 }

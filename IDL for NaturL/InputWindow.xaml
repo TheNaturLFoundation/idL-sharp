@@ -7,7 +7,8 @@
         xmlns:self="clr-namespace:IDL_for_NaturL"
         mc:Ignorable="d"
         Title="Input file name" Height="186" Width="462"
-        Icon="ressources\logoicon.png">
+        Icon="ressources\logoicon.png"
+        Keyboard.KeyDown="Cancelled_ESC">
     <Window.CommandBindings>
     </Window.CommandBindings>
     <Grid>
