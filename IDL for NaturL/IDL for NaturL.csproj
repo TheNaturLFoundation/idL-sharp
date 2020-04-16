@@ -8,19 +8,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ressources\close.png" />
     <None Remove="ressources\logoicon.png" />
     <None Remove="ressources\logoiconsrc.png" />
+    <None Remove="ressources\minimize.png" />
+    <None Remove="ressources\ouvrir.png" />
+    <None Remove="ressources\plus.png" />
+    <None Remove="ressources\recent.png" />
     <None Remove="ressources\transpile.png" />
     <None Remove="ressources\Untitled.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.0.1" />
+    <PackageReference Include="ICSharpCode.TextEditor" Version="3.2.1.6466" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="ressources\close.png" />
     <Resource Include="ressources\logoicon.png" />
     <Resource Include="ressources\logoiconsrc.png" />
+    <Resource Include="ressources\minimize.png" />
+    <Resource Include="ressources\ouvrir.png" />
+    <Resource Include="ressources\plus.png" />
+    <Resource Include="ressources\recent.png" />
     <Resource Include="ressources\transpile.png" />
     <Resource Include="ressources\Untitled.png" />
   </ItemGroup>
@@ -32,6 +43,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Remove="HashMap.cs" />
+    <Compile Remove="ressourceLoader.cs" />
   </ItemGroup>
 
   <ItemGroup>

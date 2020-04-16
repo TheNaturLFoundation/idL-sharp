@@ -1,0 +1,156 @@
+<Window x:Class="IDL_for_NaturL.LaunchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:IDL_for_NaturL"
+        mc:Ignorable="d"
+        Title="Bienvenue sur NaturL" Height="320" Width="520"
+        Background="#ed9200"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Icon="ressources/logoicon.png"
+        MouseLeftButtonDown ="Window_MouseDown">
+    <Grid>
+        <Image HorizontalAlignment="Left" Source="ressources\logoicon.png" Height="86" Margin="208,19,0,0" VerticalAlignment="Top" Width="85"/>
+        <TextBlock HorizontalAlignment="Left" Margin="163,108,0,0" Foreground="White" Text="The NaturL Foundation" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
+        <TextBlock HorizontalAlignment="Left" Margin="213,134,0,0" Foreground="White" Text="idL version 1.0" TextWrapping="Wrap" VerticalAlignment="Top" Opacity="0.6" FontStyle="Italic" LineStackingStrategy="MaxHeight"/>
+        <TextBlock HorizontalAlignment="Center" Margin="0,284,0,0" Foreground="White" Text="Argatu Vlad • Le Comte Adrian • Scatton Simon • Tabet Rostan" 
+                   TextWrapping="Wrap" VerticalAlignment="Top" Width="346" Height="20" Opacity="0.85"/>
+
+
+
+        <!-- Ouvrir recents -->
+        <Image Source="ressources/recent.png" HorizontalAlignment="Left" Height="18" Margin="175,171,0,0" VerticalAlignment="Top" Width="19"/>
+        <Button Content="Ouvrir récents    " FontWeight="SemiBold" Background="#ed9200" HorizontalAlignment="Left" Margin="208,171,0,0" VerticalAlignment="Top" Width="90" Height="20" Padding="1,1,1,3" BorderThickness="0,0,0,0" Click="Open_Recent">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="TextElement.Foreground" Value="#109e06"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+
+
+
+        <!-- Ouvrir un fichier-->
+        <Image Source="ressources/ouvrir.png" Margin="175,203,0,0" HorizontalAlignment="Left" Width="19" Height="27" VerticalAlignment="Top"/>
+        <Button Content ="Ouvrir un fichier" FontWeight="SemiBold" HorizontalAlignment="Left" Margin="208,204,0,0" VerticalAlignment="Top" Visibility="Visible" Background="#ed9200" BorderThickness="0,0,0,0" FontFamily="Segoe UI" Click="Open_Click" Height="20" Width="90">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="TextElement.Foreground" Value="#109e06"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+
+
+        <!-- Creer un fichier-->
+        <Image HorizontalAlignment="Left" Source="ressources/plus.png" Height="22" Margin="177,236,0,0" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.583,0.48"/>
+        <Button Content="Créer un fichier  " FontWeight="SemiBold"  HorizontalAlignment="Left" Margin="208,236,0,0" VerticalAlignment="Top" Width="90" Visibility="Visible" Background="#ed9200" BorderThickness="0,0,0,0" Opacity="1" FontFamily="Segoe UI" Click="New_Click" Height="20">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="TextElement.Foreground" Value="#109e06"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+
+
+        <!-- Close Window -->
+        <Button HorizontalAlignment="Left"  Margin="487,0,0,290" VerticalAlignment="Bottom" Padding="0,0,0,0" Width="33" Height="30" BorderThickness="0,0,0,0" ClipToBounds="True" Click="Close_Window" >
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#ed9200"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Red"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Image Source="ressources/close.png" Height="23" Width="24" RenderTransformOrigin="0.5,0.5"/>
+        </Button>
+
+        <!--- Minimize window-->
+        <Button HorizontalAlignment="Left"  Margin="454,0,0,290" VerticalAlignment="Bottom" Padding="0,0,0,0" Width="28" Height="30" BorderThickness="0,0,0,0" ClipToBounds="True" Click="Minimize_Window">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#ed9200"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="LightGray"/>
+                            
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Image Source="ressources/minimize.png" Height="23" Width="24" RenderTransformOrigin="0.5,0.5"/>
+        </Button>
+    </Grid>
+</Window>

@@ -1,3 +1,1 @@
-C:\Users\Adrian\Desktop\NaturLPull\naturL\example\dichotomie.ntl
-C:\Users\Adrian\Desktop\NaturLPull\naturL\example\fact.ntl
-C:\Users\Adrian\Desktop\NaturLPull\naturL\example\countdown.ntl
+C:\Users\Adrian\Desktop\NaturLPull\naturL\example\compter.ntl

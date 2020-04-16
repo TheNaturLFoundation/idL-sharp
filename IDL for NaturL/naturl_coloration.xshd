@@ -1,35 +1,99 @@
-<SyntaxDefinition name="NaturL">
-    <Color name="Comment" foreground="Green" />
-    <Color name="String" foreground="Blue" />
+<?xml version="1.0"?>
+<!-- syntaxdefinition for C# 2000 by Mike Krueger -->
 
-    <!-- This is the main ruleset. -->
-    <RuleSet>
-        <Span color="Comment" begin="//" />
-        <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+<SyntaxDefinition name = "naturL" extensions = ".ntl">
 
-        <Span color="String">
-            <Begin>"</Begin>
-            <End>"</End>
-            <RuleSet>
-                <!-- nested span for escape sequences -->
-                <Span begin="\\" end="." />
-            </RuleSet>
-        </Span>
+    <Properties>
+        <Property name="LineComment" value="//"/>
+    </Properties>
 
-        <Keywords fontWeight="bold" foreground="Blue">
-            <Word>if</Word>
-            <Word>else</Word>
+    <Digits name = "Digits" bold = "false" italic = "false" color = "DarkBlue"/>
+
+    <RuleSets>
+        <RuleSet ignorecase="false">
+            <Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' ,	.?</Delimiters>
+            
             <!-- ... -->
-        </Keywords>
 
-        <!-- Digits -->
-        <Rule foreground="DarkBlue">
-            \b0[xX][0-9a-fA-F]+  # hex number
-            |    \b
-            (    \d+(\.[0-9]+)?   #number with optional floating point
-            |    \.[0-9]+         #or just starting with floating point
-            )
-            ([eE][+-]?[0-9]+)? # optional exponent
-        </Rule>
-    </RuleSet>
+            <Span name = "BlockComment" rule = "CommentMarkerSet" bold = "false" italic = "false" color = "Green" stopateol = "false">
+                <Begin>/*</Begin>
+                <End>*/</End>
+            </Span>
+
+            <MarkPrevious bold = "false" italic = "false" color = "#581dab">(</MarkPrevious>
+
+            <KeyWords name = "Punctuation" bold = "false" italic = "false" color = "DarkGreen">
+                <Key word = "," />
+                <Key word = "." />
+                <Key word = ";" />
+                <Key word = "(" />
+                <Key word = ")" />
+                <Key word = "[" />
+                <Key word = "]" />
+                <Key word = "{" />
+                <Key word = "}" />
+                <Key word = "+" />
+                <Key word = "-" />
+                <Key word = "/" />
+                <Key word = "%" />
+                <Key word = "*" />
+                <Key word = "&lt;" />
+                <Key word = "&gt;" />
+                <Key word = "^" />
+                <Key word = "=" />
+                <Key word = "~" />
+                <Key word = "!" />
+                <Key word = "|" />
+                <Key word = "&amp;" />
+            </KeyWords>
+
+            <KeyWords name = "AccessKeywords" bold="false" italic="false" color="Black">
+                <Key word = "this" />
+                <Key word = "base" />
+            </KeyWords>
+            
+            <KeyWords name="structure_words" bold="true" color="#0278e6">
+                <Key word = "fonction"/>
+                <Key word = "variables"/>
+                <Key word = "debut"/>
+                <Key word = "pour"/>
+                <Key word = "de"/>
+                <Key word = "jusqu_a"/>
+                <Key word = "faire"/>
+                <Key word = "retourner"/>
+                <Key word = "fin"/>
+                <Key word = "si"/>
+                <Key word="sinon_si"/>
+                <Key word = "tant_que"/>
+                <Key word = "alors"/>
+                <Key word = "vrai"/>
+                <Key word = "faux"/>
+                <Key word = "procedure"/>
+            </KeyWords>
+            
+            <KeyWords name="types" bold = "true" color = "#d91ac6">
+                <Key word="entier"/>
+                <Key word="reel"/>
+                <Key word="chaine"/>
+                <Key word="charactère"/>
+                <Key word="liste"/>
+                <Key word="booleen"/>
+                <Key word="?"/>
+                <Key word ="rien"/>
+            </KeyWords>
+            <!-- ... -->
+        </RuleSet>
+
+        <RuleSet name = "CommentMarkerSet" ignorecase = "false">
+            <Delimiters>&lt;&gt;~!@%^*()-+=|\#/{}[]:;"' ,	.?</Delimiters>
+            <KeyWords name = "ErrorWords" bold="true" italic="false" color="Red">
+                <Key word = "TODO" />
+                <Key word = "FIXME" />
+            </KeyWords>
+            <KeyWords name = "WarningWords" bold="true" italic="false" color="#EEE0E000">
+                <Key word = "HACK" />
+                <Key word = "UNDONE" />
+            </KeyWords>
+        </RuleSet>
+    </RuleSets>
 </SyntaxDefinition>

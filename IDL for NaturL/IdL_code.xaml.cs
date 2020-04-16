@@ -10,12 +10,14 @@ using Path = System.IO.Path;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Xml;
-using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms.VisualStyles;
-using ICSharpCode.AvalonEdit;
+using ICSharpCode.TextEditor.Document;
+using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
 namespace IDL_for_NaturL
 {
@@ -35,12 +37,12 @@ namespace IDL_for_NaturL
         private string tabitem;
         private Dictionary<string, TabHandling> attributes;
         private TabHandling _currentTabHandler;
-
+        private IHighlightingDefinition _highlightingDefinition;
         private class TabHandling
         {
             public TabHandling(string file, bool isSaved = false)
             {
-                _isFileSelected = file != null && file != "";
+                _isFileSelected = !string.IsNullOrEmpty(file);
                 _firstData = file == null ? "" : File.ReadAllText(file);
                 _isSaved = isSaved;
                 _file = file;
@@ -56,11 +58,19 @@ namespace IDL_for_NaturL
             public override string ToString() =>
                 $"(Is File Selected : {_isFileSelected}, FirstData : {"first_data"}, IsSaved : {_isSaved}, File : {_file})";
         }
-
+        
 
         public MainWindow()
         {
             InitializeComponent();
+            Console.WriteLine("Initialized MainWindow");
+            TextEditor textEditor =
+                (TextEditor) ((Grid) ((TabItem) FindName("Tab_id_")).FindName("grid_codebox")).Children[0];
+            XmlTextReader reader = new XmlTextReader("../../../naturl_coloration.xshd");
+            _highlightingDefinition = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+            textEditor.SyntaxHighlighting = _highlightingDefinition;
+            reader.Close();
+
             attributes = new Dictionary<string, TabHandling>();
             string[] paths = File.ReadAllLines("../../../ressources/lastfiles.txt");
             tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
@@ -77,12 +87,11 @@ namespace IDL_for_NaturL
                     NewTabItems(_tabInt++, path);
                 }
             }
+        }
 
-            /*Coloration synthaxique
-            var myAssembly = Assembly.GetExecutingAssembly(); 
-            using Stream s = myAssembly.GetManifestResourceStream("MyHighlighting.xshd");
-            using XmlTextReader reader = new XmlTextReader(s);
-            CodeBox.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);*/
+        public void RemoveTab(int tabindex)
+        {
+            ((TabControl)FindName("TabControl")).Items.RemoveAt(tabindex);
         }
 
         private void NewTabItems(int n, string path)
@@ -102,6 +111,9 @@ namespace IDL_for_NaturL
             
             TabHandling tabHandling = new TabHandling(path);
             attributes.Add(n.ToString(), tabHandling);
+            ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("grid_codebox")).Children[0])
+                .SyntaxHighlighting = _highlightingDefinition;
+            
             TabControl.SelectedIndex = ((TabControl) FindName("TabControl")).Items.Count - 1;
             if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
             {
@@ -131,12 +143,12 @@ namespace IDL_for_NaturL
 
         // This function refers to the "Open" button in the toolbar, opens the file dialog and asks the user the file to open
         // Content of the opened file is then showed in the codebox of idl
-        private void Open_Click()
+        public void Open_Click()
         {
             Console.WriteLine("Open_Click");
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt"
+                Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt| cs files (*.cs)|*.cs"
             };
             if (openFileDialog.ShowDialog() == true)
             {
@@ -158,7 +170,7 @@ namespace IDL_for_NaturL
             Window inputWindow = new InputWindow((arg) => { this._file = arg;TabControl_OnSelectionChangedShow();
         }*/
 
-        private void NewFile(object sender, RoutedEventArgs e)
+        public void NewFile(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("NewFile");
             SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -295,6 +307,7 @@ namespace IDL_for_NaturL
             UnregisterName("python" + _currenttabId);
             UnregisterName("STD" + _currenttabId);
             ((TabControl) FindName("TabControl")).Items.RemoveAt(_currentTab);
+            TabControl.SelectedIndex = ((TabControl) FindName("TabControl")).Items.Count - 1;
             //attributes.Remove(_currenttabId);
         }
 

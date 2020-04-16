@@ -16,7 +16,7 @@
         <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute"
                         Executed="SaveCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute"
-                        Executed="OpenCommand_Executed" />
+                        Executed="OpenCommand_Executed" />    
         <CommandBinding Command="self:CustomCommands.SaveAs" CanExecute="SaveAsCommand_CanExecute"
                         Executed="SaveAsCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Transpile" CanExecute="TranspileCommand_CanExecute"
@@ -100,21 +100,27 @@
                             Name="python_id_"
                             Text=""
                             IsReadOnly="True"
+                            LineNumbersForeground="Black"
+                            ShowLineNumbers="True"
                             SyntaxHighlighting="Python"
                             FontFamily="Consolas"
-                            FontSize="10pt" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            FontSize="9pt" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         <Grid Name="grid_codebox">
                             <avalonedit:TextEditor
                                 Name="CodeBox_id_"
                                 Text=""
-                                SyntaxHighlighting="NaturL"
+                                LineNumbersForeground="Black"
+                                ShowLineNumbers="True"
+                                SyntaxHighlighting="naturL"
                                 FontFamily="Consolas"
-                                FontSize="10pt" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                FontSize="9pt" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                 Margin="0,0,0,0" />
                         </Grid>
                         <Grid Grid.ColumnSpan="2" Height="120" VerticalAlignment="Stretch"
                               HorizontalAlignment="Stretch" Grid.Row="1" />
                         <avalonedit:TextEditor
+                            LineNumbersForeground="Black"
+                            ShowLineNumbers="True"
                             Text="" IsReadOnly="True" FontFamily="Segoe UI"
                             Name="STD_id_" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch"
                             Grid.Row="1" Grid.ColumnSpan="2" />
