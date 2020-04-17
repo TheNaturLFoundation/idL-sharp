@@ -7,8 +7,11 @@
     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" x:Class="IDL_for_NaturL.MainWindow"
     mc:Ignorable="d"
     Title="IdL for NaturL" Height="633" Width="1123"
-    Closing="IDL_Closing"
-    Icon="ressources\logoicon.png">
+    Icon="ressources\logoicon.png"
+    WindowStyle="None"
+    AllowsTransparency="True"
+    ResizeMode="CanResizeWithGrip"
+    MouseLeftButtonDown="Drag_Window">
 
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute"
@@ -16,7 +19,7 @@
         <CommandBinding Command="self:CustomCommands.Save" CanExecute="SaveCommand_CanExecute"
                         Executed="SaveCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Open" CanExecute="OpenCommand_CanExecute"
-                        Executed="OpenCommand_Executed" />    
+                        Executed="OpenCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.SaveAs" CanExecute="SaveAsCommand_CanExecute"
                         Executed="SaveAsCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Transpile" CanExecute="TranspileCommand_CanExecute"
@@ -31,6 +34,8 @@
                         Executed="NewCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.CloseTab" CanExecute="CloseTabCommand_CanExecute"
                         Executed="CloseTabCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Settings" CanExecute="SettingsCommand_CanExecute"
+                        Executed="SettingsCommand_Executed" />
 
 
     </Window.CommandBindings>
@@ -46,6 +51,56 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <DockPanel Grid.RowSpan="2">
+            <Grid DockPanel.Dock="Top" Height="29">
+                <!--- Close button-->
+                <Button Padding="0,0,0,0" BorderThickness="0,0,0,0" ClipToBounds="True" Click="IDL_Closing" Margin="0,0,0,-1" HorizontalAlignment="Right" Width="33" >
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Red"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Image Source="ressources/close1.png" Height="23" Width="24" RenderTransformOrigin="0.5,0.5"/>
+                </Button>
+
+
+                <!-- Minimize window -->
+                <Button Padding="0,0,0,0" BorderThickness="0,0,0,0" ClipToBounds="True" Click="Minimize_Window" Margin="1032,0,0,0" HorizontalAlignment="Left" Width="33" >
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="LightGray"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Image Source="ressources/minimize1.png" Height="23" Width="24" RenderTransformOrigin="0.5,0.5"/>
+                </Button>
+            </Grid>
             <Menu DockPanel.Dock="Top" Height="25">
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" Command="self:CustomCommands.New" />
@@ -55,6 +110,7 @@
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open" />
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save" />
                     <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs" />
+                    <MenuItem Header="_Settings" Command="self:CustomCommands.Settings"/>
                     <Separator />
                     <MenuItem Header="_Exit" Command="self:CustomCommands.Exit" />
                 </MenuItem>
@@ -70,6 +126,7 @@
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
                     <MenuItem Header="Redo" Command="ApplicationCommands.Redo"
                                CommandTarget="{Binding ElementName=CodeBox_id_}" />
+
                 </MenuItem>
                 <MenuItem Width="24" Command="self:CustomCommands.Execute">
                     <MenuItem.Icon>

@@ -1,1 +1,2 @@
 C:\Users\Adrian\Desktop\NaturLPull\naturL\example\compter.ntl
+C:\Users\Adrian\Desktop\NaturLPull\naturL\example\fact_rec.ntl

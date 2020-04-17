@@ -38,7 +38,7 @@
                     </Setter>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="TextElement.Foreground" Value="#109e06"/>
+                            <Setter Property="TextElement.Foreground" Value="#282828"/>
                             <Setter Property="Cursor" Value="Hand"/>
 
                         </Trigger>
@@ -67,7 +67,7 @@
                     </Setter>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="TextElement.Foreground" Value="#109e06"/>
+                            <Setter Property="TextElement.Foreground" Value="#282828"/>
                             <Setter Property="Cursor" Value="Hand"/>
                         </Trigger>
                     </Style.Triggers>
@@ -94,7 +94,7 @@
                     </Setter>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="TextElement.Foreground" Value="#109e06"/>
+                            <Setter Property="TextElement.Foreground" Value="#282828"/>
                             <Setter Property="Cursor" Value="Hand"/>
                         </Trigger>
                     </Style.Triggers>

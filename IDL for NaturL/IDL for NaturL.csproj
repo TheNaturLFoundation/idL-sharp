@@ -9,9 +9,11 @@
 
   <ItemGroup>
     <None Remove="ressources\close.png" />
+    <None Remove="ressources\close1.png" />
     <None Remove="ressources\logoicon.png" />
     <None Remove="ressources\logoiconsrc.png" />
     <None Remove="ressources\minimize.png" />
+    <None Remove="ressources\minimize1.png" />
     <None Remove="ressources\ouvrir.png" />
     <None Remove="ressources\plus.png" />
     <None Remove="ressources\recent.png" />
@@ -26,9 +28,11 @@
 
   <ItemGroup>
     <Resource Include="ressources\close.png" />
+    <Resource Include="ressources\close1.png" />
     <Resource Include="ressources\logoicon.png" />
     <Resource Include="ressources\logoiconsrc.png" />
     <Resource Include="ressources\minimize.png" />
+    <Resource Include="ressources\minimize1.png" />
     <Resource Include="ressources\ouvrir.png" />
     <Resource Include="ressources\plus.png" />
     <Resource Include="ressources\recent.png" />

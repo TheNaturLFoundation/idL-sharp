@@ -257,9 +257,10 @@ namespace IDL_for_NaturL
             return result;
         }
 
-        private void IDL_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void IDL_Closing(object sender, RoutedEventArgs e)
         {
             string paths = "";
+            bool cancelled = false;
             foreach (TabItem item in ((TabControl) FindName("TabControl")).Items)
             {
                 _currenttabId = item.Name.Replace("Tab", "");
@@ -281,7 +282,7 @@ namespace IDL_for_NaturL
                     }
                     else if (result == MessageBoxResult.Cancel)
                     {
-                        e.Cancel = true;
+                        cancelled = true;
                         break;
                     }
                 }
@@ -297,6 +298,15 @@ namespace IDL_for_NaturL
             }
             File.WriteAllText("../../../ressources/lastfiles.txt",
                 paths);
+            if (!cancelled)
+            {
+                Application.Current.Shutdown();
+            }
+        }
+
+        private void Minimize_Window(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
 
         // Function in order to unregister previous instances (used for closing a tab)
@@ -556,6 +566,29 @@ namespace IDL_for_NaturL
             CloseTab();
         }
 
+        private void SettingsCommand_CanExecute(object sender,CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void SettingsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        { 
+            SettingsWindow settingsWindow = new SettingsWindow();
+            // Used .Show() for debugging there but should use .ShowDialog()
+            settingsWindow.Show();
+        }
+
+        private void Drag_Window(object sender, MouseButtonEventArgs e)
+        {
+            Point p = e.GetPosition(this);
+            double x = p.X;
+            double y = p.Y;
+            if (y < 50)
+            {
+                this.DragMove();
+            }
+        }
+
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("TabControl On Selection Changed");
@@ -583,6 +616,8 @@ namespace IDL_for_NaturL
             }
         }
 
+        
+        
         #endregion
     }
 
@@ -698,6 +733,17 @@ namespace IDL_for_NaturL
             new InputGestureCollection()
             {
                 new KeyGesture(Key.W, ModifierKeys.Control)
+            }
+        );
+        
+        public static readonly RoutedUICommand Settings = new RoutedUICommand
+        (
+            "Settings",
+            "Settings",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt)
             }
         );
     }
