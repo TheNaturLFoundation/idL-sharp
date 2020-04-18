@@ -80,6 +80,7 @@
                 <Key word="booleen"/>
                 <Key word="?"/>
                 <Key word ="rien"/>
+		<Key word = "caractere"/>
             </KeyWords>
             <!-- ... -->
         </RuleSet>

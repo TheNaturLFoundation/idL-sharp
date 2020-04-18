@@ -12,11 +12,14 @@
     <Window.CommandBindings>
     </Window.CommandBindings>
     <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="25,24,0,0" Text="Please input new file name:" TextWrapping="Wrap" VerticalAlignment="Top" Width="148"/>
-        <TextBox x:Name="input" Margin="25,59,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Keyboard.KeyDown="KeyPressed"/>
-        <Button Content="OK" Margin="290,108,0,0" HorizontalAlignment="Left" Width="45" Height="25" VerticalAlignment="Top" Click="Created"/>
-        <Button Content="Cancel" Margin="365,108,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="45" Click="Cancelled"/>
+        <TextBlock HorizontalAlignment="Left" Margin="25,24,0,0" Text="Please input new file name:" TextWrapping="Wrap"
+                   VerticalAlignment="Top" Width="148" />
+        <TextBox x:Name="input" Margin="25,59,22,0" TextWrapping="Wrap" VerticalAlignment="Top"
+                 Keyboard.KeyDown="KeyPressed" />
+        <Button Content="OK" Margin="290,108,0,0" HorizontalAlignment="Left" Width="45" Height="25"
+                VerticalAlignment="Top" Click="Created" />
+        <Button Content="Cancel" Margin="365,108,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"
+                Width="45" Click="Cancelled" />
     </Grid>
 
 </Window>
-    

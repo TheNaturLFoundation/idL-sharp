@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows.Forms.VisualStyles;
+using Dragablz;
 using ICSharpCode.TextEditor.Document;
 using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
@@ -32,15 +33,16 @@ namespace IDL_for_NaturL
         //private bool _isSaved;
         //private bool _isFileSelected;
         //private string _file = "";
-        private int _tabInt;
+        private static int _tabInt;
         private int _currentTab;
         private string _currenttabId = "0";
         private string tabitem;
-        private Dictionary<string, TabHandling> attributes;
+        private static Dictionary<string, TabHandling> attributes = new Dictionary<string, TabHandling>();
         private TabHandling _currentTabHandler;
         private IHighlightingDefinition _highlightingDefinition;
         private bool _isFullSize;
         private double clickPosition;
+
         private class TabHandling
         {
             public TabHandling(string file, bool isSaved = false)
@@ -50,7 +52,7 @@ namespace IDL_for_NaturL
                 _isSaved = isSaved;
                 _file = file;
             }
-
+            
 
             //public TabHandling()
             public bool _isFileSelected { get; set; }
@@ -61,7 +63,7 @@ namespace IDL_for_NaturL
             public override string ToString() =>
                 $"(Is File Selected : {_isFileSelected}, FirstData : {"first_data"}, IsSaved : {_isSaved}, File : {_file})";
         }
-        
+
 
         public MainWindow()
         {
@@ -75,14 +77,14 @@ namespace IDL_for_NaturL
             textEditor.SyntaxHighlighting = _highlightingDefinition;
             reader.Close();
 
-            attributes = new Dictionary<string, TabHandling>();
+            //attributes = new Dictionary<string, TabHandling>();
             string[] paths = File.ReadAllLines("../../../ressources/lastfiles.txt");
             tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
-            ((TabControl) FindName("TabControl")).Items.RemoveAt(0);
+            ((TabablzControl) FindName("TabControl")).Items.RemoveAt(0);
             if (paths.Length == 0)
             {
                 NewTabItems(_tabInt++, null);
-                Console.WriteLine(_currentTabHandler._isFileSelected);
+                Console.WriteLine("isfileselected " + _currentTabHandler._isFileSelected);
             }
             else
             {
@@ -93,38 +95,38 @@ namespace IDL_for_NaturL
             }
         }
 
-        
-        
+
         public void RemoveTab(int tabindex)
         {
-            ((TabControl)FindName("TabControl")).Items.RemoveAt(tabindex);
+            ((TabablzControl) FindName("TabControl")).Items.RemoveAt(tabindex);
         }
 
         private void NewTabItems(int n, string path)
         {
-            Console.WriteLine("NewTabItems");
+            Console.WriteLine("NewTabItems" + n);
             StringReader stringReader = new StringReader(tabitem.Replace("_id_", n.ToString()));
             XmlReader xmlReader = XmlReader.Create(stringReader);
             TabItem newTabControl = (TabItem) XamlReader.Load(xmlReader);
             RegisterName("Tab" + n, newTabControl);
-            ((TabControl) FindName("TabControl"))?.Items.Add(newTabControl);
+            ((TabablzControl) FindName("TabControl"))?.Items.Add(newTabControl);
             RegisterName("CodeBox" + n,
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("grid_codebox")).Children[0]);
             RegisterName("python" + n,
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("python_grid")).Children[0]);
             RegisterName("STD" + n,
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("python_grid")).Children[3]);
-            
+
             TabHandling tabHandling = new TabHandling(path);
             attributes.Add(n.ToString(), tabHandling);
             ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("grid_codebox")).Children[0])
                 .SyntaxHighlighting = _highlightingDefinition;
-            
-            TabControl.SelectedIndex = ((TabControl) FindName("TabControl")).Items.Count - 1;
+
+            TabControl.SelectedIndex = ((TabablzControl) FindName("TabControl")).Items.Count - 1;
             if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
             {
                 Console.WriteLine("Warning in CurrenttabHandler (On selection changed)");
             }
+
             if (path != null)
             {
                 string s = File.ReadAllText(path);
@@ -143,7 +145,7 @@ namespace IDL_for_NaturL
             {
                 _currentTabHandler._isSaved = false;
             }
-            
+
             return _currentTabHandler._firstData != ((TextEditor) FindName("CodeBox" + _currenttabId)).Text;
         }
 
@@ -159,7 +161,7 @@ namespace IDL_for_NaturL
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
-                NewTabItems(_tabInt++,filename);
+                NewTabItems(_tabInt++, filename);
                 var text = File.ReadAllText(_currentTabHandler._file);
                 ((TextEditor) FindName("CodeBox" + _currenttabId)).Text = text;
                 _currentTabHandler._firstData = text;
@@ -190,7 +192,7 @@ namespace IDL_for_NaturL
                     filename += ".ntl";
                 Stream myfile = File.Create(filename);
                 myfile.Close();
-                NewTabItems(_tabInt++,filename);
+                NewTabItems(_tabInt++, filename);
                 _currentTabHandler._isSaved = false;
                 _currentTabHandler._isFileSelected = true;
                 ((TabItem) FindName("Tab" + _currenttabId)).Header =
@@ -267,13 +269,14 @@ namespace IDL_for_NaturL
         {
             string paths = "";
             bool cancelled = false;
-            foreach (TabItem item in ((TabControl) FindName("TabControl")).Items)
+            foreach (TabItem item in ((TabablzControl) FindName("TabControl")).Items)
             {
                 _currenttabId = item.Name.Replace("Tab", "");
                 if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
                 {
                     Console.WriteLine("Warning in CurrenttabHandler (On selection changed)");
                 }
+
                 if (!_currentTabHandler._isFileSelected && DataChanged())
                 {
                     MessageBoxResult result = messageOnClose("Your changes on the file: " + item.Header +
@@ -302,6 +305,7 @@ namespace IDL_for_NaturL
                     }
                 }
             }
+
             File.WriteAllText("../../../ressources/lastfiles.txt",
                 paths);
             if (!cancelled)
@@ -309,7 +313,7 @@ namespace IDL_for_NaturL
                 Application.Current.Shutdown();
             }
         }
-        
+
         private void Window_Resize(object sender, RoutedEventArgs e)
         {
             if (WindowState == WindowState.Maximized)
@@ -320,8 +324,8 @@ namespace IDL_for_NaturL
             {
                 this.WindowState = WindowState.Maximized;
             }
-            
         }
+
         private void Window_Minimize(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
@@ -331,12 +335,13 @@ namespace IDL_for_NaturL
         // Function in order to unregister previous instances (used for closing a tab)
         private void UnregisterNamesAndRemove()
         {
+            Console.WriteLine("Remove " + _currenttabId);
             UnregisterName("Tab" + _currenttabId);
             UnregisterName("CodeBox" + _currenttabId);
             UnregisterName("python" + _currenttabId);
             UnregisterName("STD" + _currenttabId);
-            ((TabControl) FindName("TabControl")).Items.RemoveAt(_currentTab);
-            TabControl.SelectedIndex = ((TabControl) FindName("TabControl")).Items.Count - 1;
+            ((TabablzControl) FindName("TabControl")).Items.RemoveAt(_currentTab);
+            TabControl.SelectedIndex = ((TabablzControl) FindName("TabControl")).Items.Count - 1;
             //attributes.Remove(_currenttabId);
         }
 
@@ -376,7 +381,8 @@ namespace IDL_for_NaturL
 
         private bool Transpile(object sender, RoutedEventArgs routedEventArgs)
         {
-            Console.WriteLine(_currentTabHandler._isFileSelected + " " + _currentTabHandler._isSaved + " " + DataChanged());
+            Console.WriteLine(_currentTabHandler._isFileSelected + " " + _currentTabHandler._isSaved + " " +
+                              DataChanged());
             if (!_currentTabHandler._isFileSelected || !_currentTabHandler._isSaved || DataChanged())
             {
                 Save_Click();
@@ -577,7 +583,7 @@ namespace IDL_for_NaturL
 
         private void CloseTabCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = ((TabControl) FindName("TabControl")).Items.Count > 1;
+            e.CanExecute = ((TabablzControl) FindName("TabControl")).Items.Count > 1;
         }
 
         private void CloseTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -585,18 +591,35 @@ namespace IDL_for_NaturL
             CloseTab();
         }
 
-        private void SettingsCommand_CanExecute(object sender,CanExecuteRoutedEventArgs e)
+        private void SettingsCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
-
+        
         private void SettingsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        { 
+        {
             SettingsWindow settingsWindow = new SettingsWindow();
             // Used .Show() for debugging there but should use .ShowDialog()
             settingsWindow.Show();
         }
 
+        private void DebugCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void DebugCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            foreach (KeyValuePair<string,TabHandling> att in attributes)
+            {
+                Console.WriteLine("Key is: " + att.Key + " Value is: "+ att.Value);
+            }
+            Console.WriteLine("CurrentTabHandler: "+ _currentTabHandler);
+            Console.WriteLine("Size: " + attributes.Count);
+        }
+        
+        
+        
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
@@ -608,7 +631,6 @@ namespace IDL_for_NaturL
             {
                 clickPosition = -1;
             }
-
         }
 
         private void Drag_Window(object sender, MouseButtonEventArgs e)
@@ -648,20 +670,20 @@ namespace IDL_for_NaturL
                 }
             }
         }
-        
-        
+
+
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("TabControl On Selection Changed");
-            if (((TabControl) e.Source).SelectedIndex == -1)
+            if (((TabablzControl) e.Source).SelectedIndex == -1)
             {
-                ((TabControl) e.Source).SelectedIndex = 0;
+                ((TabablzControl) e.Source).SelectedIndex = 0;
             }
 
             if (e.AddedItems.Count != 0)
             {
                 var source = (TabItem) e.AddedItems[0];
-                _currentTab = ((TabControl) e.Source).SelectedIndex;
+                _currentTab = ((TabablzControl) e.Source).SelectedIndex;
                 _currenttabId = source.Name.Replace("Tab", "");
                 Console.WriteLine("Current tab id " + _currenttabId);
                 if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
@@ -669,17 +691,21 @@ namespace IDL_for_NaturL
                     Console.WriteLine("Warning in CurrenttabHandler (On selection changed)");
                 }
             }
-            else
+            /*else
             {
                 var source = (TabItem) e.RemovedItems[0];
                 string i = source.Name.Replace("Tab", "");
                 attributes.Remove(i);
-            }
+                Console.WriteLine("salut salut c'est moi baise ta mere stp");
+            }*/
         }
 
-        
-        
         #endregion
+
+        private void TabControl_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
     //------------------------------------------------------------------------------------------
@@ -796,7 +822,7 @@ namespace IDL_for_NaturL
                 new KeyGesture(Key.W, ModifierKeys.Control)
             }
         );
-        
+
         public static readonly RoutedUICommand Settings = new RoutedUICommand
         (
             "Settings",
@@ -805,6 +831,17 @@ namespace IDL_for_NaturL
             new InputGestureCollection()
             {
                 new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt)
+            }
+        );
+        
+        public static readonly RoutedUICommand Debug = new RoutedUICommand
+        (
+            "Debug",
+            "Debug",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.D, ModifierKeys.Control)
             }
         );
     }

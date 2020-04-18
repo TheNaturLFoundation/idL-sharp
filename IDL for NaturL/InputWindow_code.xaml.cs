@@ -28,6 +28,7 @@ namespace IDL_for_NaturL
         {
             InitializeComponent();
         }
+
         private void KeyPressed(object sender, KeyEventArgs e)
         {
             if (Key.Enter == e?.Key)
@@ -35,6 +36,7 @@ namespace IDL_for_NaturL
                 Created(sender, null);
             }
         }
+
         private void Created(object sender, RoutedEventArgs e)
         {
             if (input.Text.EndsWith(".ntl"))
@@ -47,8 +49,10 @@ namespace IDL_for_NaturL
                 var myfile = File.Create(input.Text + ".ntl");
                 myfile.Close();
             }
+
             this.Close();
         }
+
         private void Cancelled(object sender, RoutedEventArgs e)
         {
             this.Close();

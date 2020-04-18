@@ -6,6 +6,7 @@
     xmlns:self="clr-namespace:IDL_for_NaturL"
     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:shell="clr-namespace:Microsoft.Windows.Shell;assembly=Xceed.Wpf.AvalonDock"
+    xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
     x:Class="IDL_for_NaturL.MainWindow"
     mc:Ignorable="d"
     Title="IdL for NaturL" Height="633" Width="1123"
@@ -17,64 +18,48 @@
     MouseDoubleClick="Double_Click"
     >
 
+    
+    
     <Window.Resources>
-        <SolidColorBrush x:Key="StandardBorderBrush" Color="#888" />
-        <SolidColorBrush x:Key="StandardBackgroundBrush" Color="Black" />
-        <SolidColorBrush x:Key="HoverBorderBrush" Color="#DDD" />
-        <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="Gray"/>
-        <SolidColorBrush x:Key="SelectedForegroundBrush" Color="White" />
+        <!-- This is the ressource for the current SCROLLBARS-->
         <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
         <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
         <SolidColorBrush x:Key="NormalBrush" Color="#888" />
         <SolidColorBrush x:Key="NormalBorderBrush" Color="#888" />
-        <SolidColorBrush x:Key="HorizontalNormalBrush" Color="#FF686868" Opacity="0.7"/>
+        <SolidColorBrush x:Key="HorizontalNormalBrush" Color="#FF686868" Opacity="0.7" />
         <SolidColorBrush x:Key="HorizontalNormalBorderBrush" Color="#888" />
-
-        <LinearGradientBrush x:Key="ListBoxBackgroundBrush" StartPoint="0,0" EndPoint="1,0.001">
-            <GradientBrush.GradientStops>
-                <GradientStopCollection>
-                    <GradientStop Color="White" Offset="0.0" />
-                    <GradientStop Color="White" Offset="0.6" />
-                    <GradientStop Color="#DDDDDD" Offset="1.2"/>
-                </GradientStopCollection>
-            </GradientBrush.GradientStops>
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="StandardBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
-                <GradientStopCollection>
-                    <GradientStop Color="#FFF" Offset="0.0"/>
-                    <GradientStop Color="#CCC" Offset="1.0"/>
-                </GradientStopCollection>
-            </GradientBrush.GradientStops>
-        </LinearGradientBrush>
+        
         <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1">
             <GradientBrush.GradientStops>
                 <GradientStopCollection>
-                    <GradientStop Color="#BBB" Offset="0.0"/>
-                    <GradientStop Color="#EEE" Offset="0.1"/>
-                    <GradientStop Color="#EEE" Offset="0.9"/>
-                    <GradientStop Color="#FFF" Offset="1.0"/>
+                    <GradientStop Color="#BBB" Offset="0.0" />
+                    <GradientStop Color="#EEE" Offset="0.1" />
+                    <GradientStop Color="#EEE" Offset="0.9" />
+                    <GradientStop Color="#FFF" Offset="1.0" />
                 </GradientStopCollection>
             </GradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <Style x:Key="ScrollBarLineButton" TargetType="{x:Type RepeatButton}">
-            <Setter Property="Visibility" Value="Hidden"/>
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
-            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="Visibility" Value="Hidden" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Focusable" Value="false" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RepeatButton}">
-                        <Border Name="Border" Margin="1" CornerRadius="2" Background="{StaticResource NormalBrush}" BorderBrush="{StaticResource NormalBorderBrush}" BorderThickness="1">
-                            <Path HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{StaticResource GlyphBrush}" Data="{Binding Path=Content, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Border Name="Border" Margin="1" CornerRadius="2" Background="{StaticResource NormalBrush}"
+                                BorderBrush="{StaticResource NormalBorderBrush}" BorderThickness="1">
+                            <Path HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  Fill="{StaticResource GlyphBrush}"
+                                  Data="{Binding Path=Content, RelativeSource={RelativeSource TemplatedParent}}" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsPressed" Value="true">
                                 <Setter TargetName="Border" Property="Background" Value="{StaticResource PressedBrush}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -82,11 +67,11 @@
             </Setter>
         </Style>
         <Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">
-            <Setter Property="Visibility" Value="Hidden"/>
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
-            <Setter Property="IsTabStop" Value="false"/>
-            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="Visibility" Value="Hidden" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RepeatButton}">
@@ -97,14 +82,16 @@
         </Style>
 
         <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
-            <Setter Property="IsTabStop" Value="false"/>
-            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Border CornerRadius="4" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0"  Width="8" Margin="8,0,-2,0"/>
+                        <Border CornerRadius="4" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Width="8"
+                                Margin="8,0,-2,0" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -113,88 +100,76 @@
         <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="0"/>
-                    <RowDefinition Height="0.00001*"/>
-                    <RowDefinition MaxHeight="0"/>
+                    <RowDefinition MaxHeight="0" />
+                    <RowDefinition Height="0.00001*" />
+                    <RowDefinition MaxHeight="0" />
                 </Grid.RowDefinitions>
                 <Border Grid.RowSpan="3" CornerRadius="2" Background="Transparent" />
-                <RepeatButton Grid.Row="0" Style="{StaticResource ScrollBarLineButton}" Height="18" Command="ScrollBar.LineUpCommand" Content="M 0 4 L 8 4 L 4 0 Z" />
+                <RepeatButton Grid.Row="0" Style="{StaticResource ScrollBarLineButton}" Height="18"
+                              Command="ScrollBar.LineUpCommand" Content="M 0 4 L 8 4 L 4 0 Z" />
                 <Track Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
                     <Track.DecreaseRepeatButton>
                         <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageUpCommand" />
                     </Track.DecreaseRepeatButton>
                     <Track.Thumb>
-                        <Thumb Style="{StaticResource ScrollBarThumb}" Margin="1,0,1,0" Background="{StaticResource HorizontalNormalBrush}" BorderBrush="{StaticResource HorizontalNormalBorderBrush}" />
+                        <Thumb Style="{StaticResource ScrollBarThumb}" Margin="1,0,1,0"
+                               Background="{StaticResource HorizontalNormalBrush}"
+                               BorderBrush="{StaticResource HorizontalNormalBorderBrush}" />
                     </Track.Thumb>
                     <Track.IncreaseRepeatButton>
                         <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageDownCommand" />
                     </Track.IncreaseRepeatButton>
                 </Track>
-                <RepeatButton Grid.Row="3" Style="{StaticResource ScrollBarLineButton}" Height="18" Command="ScrollBar.LineDownCommand" Content="M 0 0 L 4 4 L 8 0 Z"/>
+                <RepeatButton Grid.Row="3" Style="{StaticResource ScrollBarLineButton}" Height="18"
+                              Command="ScrollBar.LineDownCommand" Content="M 0 0 L 4 4 L 8 0 Z" />
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="HorizontalScrollBar" TargetType="{x:Type ScrollBar}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MaxWidth="18"/>
-                    <ColumnDefinition Width="0.00001*"/>
-                    <ColumnDefinition MaxWidth="18"/>
+                    <ColumnDefinition MaxWidth="18" />
+                    <ColumnDefinition Width="0.00001*" />
+                    <ColumnDefinition MaxWidth="18" />
                 </Grid.ColumnDefinitions>
-                <Border Grid.ColumnSpan="3" CornerRadius="2" Background="#F0F0F0"/>
-                <RepeatButton Grid.Column="0"  Style="{StaticResource ScrollBarLineButton}" Width="18" Command="ScrollBar.LineLeftCommand" Content="M 4 0 L 4 8 L 0 4 Z" />
+                <Border Grid.ColumnSpan="3" CornerRadius="2" Background="#F0F0F0" />
+                <RepeatButton Grid.Column="0" Style="{StaticResource ScrollBarLineButton}" Width="18"
+                              Command="ScrollBar.LineLeftCommand" Content="M 4 0 L 4 8 L 0 4 Z" />
                 <Track Name="PART_Track" Grid.Column="1" IsDirectionReversed="False">
                     <Track.DecreaseRepeatButton>
                         <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageLeftCommand" />
                     </Track.DecreaseRepeatButton>
                     <Track.Thumb>
-                        <Thumb Style="{StaticResource ScrollBarThumb}" Margin="0,1,0,1" Background="{StaticResource NormalBrush}" BorderBrush="{StaticResource NormalBorderBrush}" />
+                        <Thumb Style="{StaticResource ScrollBarThumb}" Margin="0,1,0,1"
+                               Background="{StaticResource NormalBrush}"
+                               BorderBrush="{StaticResource NormalBorderBrush}" />
                     </Track.Thumb>
                     <Track.IncreaseRepeatButton>
                         <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageRightCommand" />
                     </Track.IncreaseRepeatButton>
                 </Track>
-                <RepeatButton Grid.Column="3" Style="{StaticResource ScrollBarLineButton}" Width="18" Command="ScrollBar.LineRightCommand" Content="M 0 0 L 4 4 L 0 8 Z"/>
+                <RepeatButton Grid.Column="3" Style="{StaticResource ScrollBarLineButton}" Width="18"
+                              Command="ScrollBar.LineRightCommand" Content="M 0 0 L 4 4 L 0 8 Z" />
             </Grid>
         </ControlTemplate>
         <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
             <Style.Triggers>
                 <Trigger Property="Orientation" Value="Horizontal">
-                    <Setter Property="Width" Value="Auto"/>
+                    <Setter Property="Width" Value="Auto" />
                     <Setter Property="Height" Value="18" />
                     <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
                 </Trigger>
                 <Trigger Property="Orientation" Value="Vertical">
-                    <Setter Property="Width" Value="18"/>
+                    <Setter Property="Width" Value="18" />
                     <Setter Property="Height" Value="Auto" />
                     <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-        <Style x:Key="FavsScrollViewer" TargetType="{x:Type ScrollViewer}">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <ScrollContentPresenter Grid.Column="1"/>
-                            <ScrollBar Name="PART_VerticalScrollBar" Value="{TemplateBinding VerticalOffset}" Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
-                            <ScrollBar Name="PART_HorizontalScrollBar" Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Value="{TemplateBinding HorizontalOffset}" Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <!--END FOR SCROLLBAR RESSOURCES-->
+        
+        <!-- TAB RESSOURCES-->
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Exit" CanExecute="ExitCommand_CanExecute"
@@ -219,6 +194,8 @@
                         Executed="CloseTabCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Settings" CanExecute="SettingsCommand_CanExecute"
                         Executed="SettingsCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Debug" CanExecute="DebugCommand_CanExecute"
+                        Executed="DebugCommand_Executed" />
 
 
     </Window.CommandBindings>
@@ -236,82 +213,87 @@
         <DockPanel Grid.RowSpan="2">
             <!-- White -->
             <Grid DockPanel.Dock="Top" Height="30">
-                <Image Source="ressources/logoicon.png" HorizontalAlignment="Left" Width="25" Height="25" Margin="10,2,0,2"/>
-                <Button VerticalAlignment="Center" Height="30" Click="IDL_Closing" HorizontalAlignment="Right" Width="30">
+                <Image Source="ressources/logoicon.png" HorizontalAlignment="Left" Width="25" Height="25"
+                       Margin="10,2,0,2" />
+                <Button VerticalAlignment="Center" Height="30" Click="IDL_Closing" HorizontalAlignment="Right"
+                        Width="30">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Background" Value="White" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type Button}">
                                         <Border Background="{TemplateBinding Background}">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Border>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="Red"/>
+                                    <Setter Property="Background" Value="Red" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-                    <Image Source="ressources/close1.png" Height="24" Width="31"/>
+                    <Image Source="ressources/close1.png" Height="24" Width="31" />
                 </Button>
-                <Button Margin="0,0,30,0" VerticalAlignment="Center" Height="30" Click="Window_Resize" HorizontalAlignment="Right" Width="30">
+                <Button Margin="0,0,30,0" VerticalAlignment="Center" Height="30" Click="Window_Resize"
+                        HorizontalAlignment="Right" Width="30">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Background" Value="White" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type Button}">
                                         <Border Background="{TemplateBinding Background}">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Border>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="LightGray"/>
+                                    <Setter Property="Background" Value="LightGray" />
 
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-                    <Image Source="ressources/resize1.png" Height="21" Width="24"/>
+                    <Image Source="ressources/resize1.png" Height="21" Width="24" />
                 </Button>
-                <Button Margin="0,0,60,0" VerticalAlignment="Center" Height="30" Click="Window_Minimize" HorizontalAlignment="Right" Width="33">
+                <Button Margin="0,0,60,0" VerticalAlignment="Center" Height="30" Click="Window_Minimize"
+                        HorizontalAlignment="Right" Width="33">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Background" Value="White" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type Button}">
                                         <Border Background="{TemplateBinding Background}">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Border>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="LightGray"/>
+                                    <Setter Property="Background" Value="LightGray" />
 
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-                    <Image Source="ressources/minimize1.png" Height="25" Width="29"/>
+                    <Image Source="ressources/minimize1.png" Height="25" Width="29" />
                 </Button>
-                <TextBlock Text="idL for naturL" HorizontalAlignment="Left" Margin="51,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                <TextBlock Text="idL for naturL" HorizontalAlignment="Left" Margin="51,0,0,0" TextWrapping="Wrap"
+                           VerticalAlignment="Center" />
 
 
             </Grid>
             <Menu DockPanel.Dock="Top" Height="25">
                 <!-- White -->
-                <MenuItem Header="_File" >
+                <MenuItem Header="_File" Height="24">
                     <MenuItem Header="_New" Command="self:CustomCommands.New" />
                     <MenuItem Header="_New Window" Command="self:CustomCommands.NewWindow" />
                     <MenuItem Header="_New Tab" Command="self:CustomCommands.NewTab" />
@@ -319,12 +301,12 @@
                     <MenuItem Header="_Open" Command="self:CustomCommands.Open" />
                     <MenuItem Header="_Save" Command="self:CustomCommands.Save" />
                     <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs" />
-                    <MenuItem Header="_Settings" Command="self:CustomCommands.Settings"/>
+                    <MenuItem Header="_Settings" Command="self:CustomCommands.Settings" />
                     <Separator />
                     <MenuItem Header="_Exit" Command="self:CustomCommands.Exit" />
                 </MenuItem>
 
-                <MenuItem Header="Edit" >
+                <MenuItem Header="Edit" Height="24">
                     <MenuItem Header="_Copy" Command="ApplicationCommands.Copy"
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
                     <MenuItem Header="_Paste" Command="ApplicationCommands.Paste"
@@ -334,15 +316,15 @@
                     <MenuItem Header="_Undo" Command="ApplicationCommands.Undo"
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
                     <MenuItem Header="Redo" Command="ApplicationCommands.Redo"
-                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
 
                 </MenuItem>
-                <MenuItem Width="24" Command="self:CustomCommands.Execute">
+                <MenuItem Width="24" Command="self:CustomCommands.Execute" Height="24">
                     <MenuItem.Icon>
-                        <Image Source="ressources/Untitled.png"/>
+                        <Image Source="ressources/Untitled.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Width="25" Command="self:CustomCommands.Transpile">
+                <MenuItem Width="25" Command="self:CustomCommands.Transpile" Height="24">
                     <MenuItem.Icon>
                         <Image Source="ressources/transpile.png" />
                     </MenuItem.Icon>
@@ -350,9 +332,12 @@
 
 
             </Menu>
-            <TabControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged">
+            <dragablz:TabablzControl Unloaded="TabControl_OnUnloaded" Name="TabControl" DockPanel.Dock="Top"  SelectionChanged="TabControl_OnSelectionChanged">
+                <dragablz:TabablzControl.InterTabController>
+                    <dragablz:InterTabController />
+                </dragablz:TabablzControl.InterTabController>
                 <!-- White -->
-                <TabItem Header="No File" Name="Tab_id_" Margin="-2,-2,2,0">
+                <TabItem Header="No File" Name="Tab_id_" Margin="-2,-2,2,0" >
                     <!-- White -->
 
                     <Grid Name="python_grid">
@@ -365,62 +350,58 @@
                             <ColumnDefinition Width="565*" />
                         </Grid.ColumnDefinitions>
                         <!-- White -->
-                        <avalonedit:TextEditor     
-                                                   Name="python_id_"
-                                                   ShowLineNumbers="True"
-                                                   SyntaxHighlighting="Python"
-                                                   FontFamily="Consolas"
-                                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                                   Margin="0,0,0,0"
-                                                   FontSize="9pt"
-                                                   Text=""
-                                                   Grid.Column="1"
-                                                        HorizontalScrollBarVisibility="Hidden"
-
-/>
+                        <avalonedit:TextEditor
+                            Name="python_id_"
+                            ShowLineNumbers="True"
+                            SyntaxHighlighting="Python"
+                            FontFamily="Consolas"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Margin="0,0,0,0"
+                            FontSize="9pt"
+                            Text=""
+                            Grid.Column="1"
+                            HorizontalScrollBarVisibility="Hidden" />
                         <Grid Name="grid_codebox">
                             <!-- White -->
-                            <avalonedit:TextEditor  
-                                                   Name="CodeBox_id_"
-                                                   
-                                                   ShowLineNumbers="True"
-                                                   SyntaxHighlighting="naturL"
-                                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                                   Margin="0,0,0,0"
-                                                   FontSize="9pt"
-                                                   Text=""
-                                                            HorizontalScrollBarVisibility="Hidden"
+                            <avalonedit:TextEditor
+                                Name="CodeBox_id_"
 
-                                />
+                                ShowLineNumbers="True"
+                                SyntaxHighlighting="naturL"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                Margin="0,0,0,0"
+                                FontSize="9pt"
+                                Text=""
+                                HorizontalScrollBarVisibility="Hidden" />
 
                         </Grid>
                         <Grid Grid.ColumnSpan="2" Height="120" VerticalAlignment="Stretch"
-                              HorizontalAlignment="Stretch" Grid.Row="1"/>
+                              HorizontalAlignment="Stretch" Grid.Row="1" />
                         <!-- White -->
-                        <avalonedit:TextEditor 
-                                               Name="STD_id_"
-                                               
-                                               ShowLineNumbers="False"
-                                               FontFamily="Segoe UI"
-                                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                               Margin="0,0,0,0"
-                                               FontSize="9pt"
-                                               Text=""
-                                               IsReadOnly="True"
-                                               Grid.Row="1" Grid.ColumnSpan="2"
+                        <avalonedit:TextEditor
+                            Name="STD_id_"
+
+                            ShowLineNumbers="False"
+                            FontFamily="Segoe UI"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Margin="0,0,0,0"
+                            FontSize="9pt"
+                            Text=""
+                            IsReadOnly="True"
+                            Grid.Row="1" Grid.ColumnSpan="2"
                             BorderThickness="1"
                             BorderBrush="Gray"
-                            HorizontalScrollBarVisibility="Hidden"
-                            />
-                        <Separator Grid.Column="1" Margin="5,0,10,5" RenderTransformOrigin="0.5,0.5" Height="0" VerticalAlignment="Bottom">
-
-                        </Separator>
-                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" RenderTransformOrigin="0.5,0.5" Margin="0,0,2,0" HorizontalAlignment="Right" Width="5"/>
+                            HorizontalScrollBarVisibility="Hidden" />
+                        <Separator Grid.Column="1" Margin="5,0,10,5" RenderTransformOrigin="0.5,0.5" Height="0"
+                                   VerticalAlignment="Bottom" />
+                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                                   RenderTransformOrigin="0.5,0.5" Margin="0,0,2,0" HorizontalAlignment="Right"
+                                   Width="5" />
 
                     </Grid>
 
                 </TabItem>
-            </TabControl>
+            </dragablz:TabablzControl>
         </DockPanel>
     </Grid>
 

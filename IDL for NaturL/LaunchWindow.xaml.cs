@@ -10,6 +10,7 @@ namespace IDL_for_NaturL
     public partial class LaunchWindow : Window
     {
         MainWindow mainWindow;
+
         public LaunchWindow()
         {
             InitializeComponent();
@@ -34,6 +35,7 @@ namespace IDL_for_NaturL
             mainWindow.Open_Click();
             mainWindow.RemoveTab(0);
         }
+
         private void Window_MouseDown(object sender, RoutedEventArgs e)
         {
             this.DragMove();
