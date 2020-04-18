@@ -14,6 +14,7 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Windows.Forms.VisualStyles;
 using ICSharpCode.TextEditor.Document;
@@ -38,6 +39,8 @@ namespace IDL_for_NaturL
         private Dictionary<string, TabHandling> attributes;
         private TabHandling _currentTabHandler;
         private IHighlightingDefinition _highlightingDefinition;
+        private bool _isFullSize;
+        private double clickPosition;
         private class TabHandling
         {
             public TabHandling(string file, bool isSaved = false)
@@ -62,6 +65,7 @@ namespace IDL_for_NaturL
 
         public MainWindow()
         {
+            this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             InitializeComponent();
             Console.WriteLine("Initialized MainWindow");
             TextEditor textEditor =
@@ -89,6 +93,8 @@ namespace IDL_for_NaturL
             }
         }
 
+        
+        
         public void RemoveTab(int tabindex)
         {
             ((TabControl)FindName("TabControl")).Items.RemoveAt(tabindex);
@@ -257,7 +263,7 @@ namespace IDL_for_NaturL
             return result;
         }
 
-        private void IDL_Closing(object sender, RoutedEventArgs e)
+        private void IDL_Closing(object sender, RoutedEventArgs cancelEventArgs)
         {
             string paths = "";
             bool cancelled = false;
@@ -303,11 +309,24 @@ namespace IDL_for_NaturL
                 Application.Current.Shutdown();
             }
         }
-
-        private void Minimize_Window(object sender, RoutedEventArgs e)
+        
+        private void Window_Resize(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+            }
+            else if (WindowState == WindowState.Normal)
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+            
+        }
+        private void Window_Minimize(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
         }
+
 
         // Function in order to unregister previous instances (used for closing a tab)
         private void UnregisterNamesAndRemove()
@@ -578,17 +597,59 @@ namespace IDL_for_NaturL
             settingsWindow.Show();
         }
 
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            if (e.GetPosition(this).Y < 50 && e.ClickCount == 1)
+            {
+                clickPosition = e.GetPosition(this).Y;
+            }
+            else
+            {
+                clickPosition = -1;
+            }
+
+        }
+
         private void Drag_Window(object sender, MouseButtonEventArgs e)
         {
-            Point p = e.GetPosition(this);
-            double x = p.X;
-            double y = p.Y;
-            if (y < 50)
+            Point position = e.GetPosition(this);
+            if (position.Y < 50)
             {
                 this.DragMove();
             }
         }
 
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseUp(e);
+            double yVel = e.GetPosition(this).Y - clickPosition;
+            if (yVel > 0 && clickPosition > 0 && WindowState == WindowState.Maximized && e.ClickCount == 1)
+            {
+                WindowState = WindowState.Normal;
+            }
+            else
+                clickPosition = -1;
+        }
+
+        private void Double_Click(object sender, MouseButtonEventArgs e)
+        {
+            Point p = e.GetPosition(this);
+            double y = p.Y;
+            if (y < 50)
+            {
+                if (WindowState == WindowState.Maximized)
+                {
+                    WindowState = WindowState.Normal;
+                }
+                else if (WindowState == WindowState.Normal)
+                {
+                    WindowState = WindowState.Maximized;
+                }
+            }
+        }
+        
+        
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("TabControl On Selection Changed");

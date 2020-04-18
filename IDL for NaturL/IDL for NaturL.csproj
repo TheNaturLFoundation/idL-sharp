@@ -17,12 +17,16 @@
     <None Remove="ressources\ouvrir.png" />
     <None Remove="ressources\plus.png" />
     <None Remove="ressources\recent.png" />
+    <None Remove="ressources\resize.png" />
+    <None Remove="ressources\resize1.png" />
     <None Remove="ressources\transpile.png" />
     <None Remove="ressources\Untitled.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.0.1" />
+    <PackageReference Include="Custom.Windows" Version="1.1.0.1" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
     <PackageReference Include="ICSharpCode.TextEditor" Version="3.2.1.6466" />
   </ItemGroup>
 
@@ -36,6 +40,7 @@
     <Resource Include="ressources\ouvrir.png" />
     <Resource Include="ressources\plus.png" />
     <Resource Include="ressources\recent.png" />
+    <Resource Include="ressources\resize1.png" />
     <Resource Include="ressources\transpile.png" />
     <Resource Include="ressources\Untitled.png" />
   </ItemGroup>
@@ -48,6 +53,10 @@
     </Compile>
     <Compile Remove="HashMap.cs" />
     <Compile Remove="ressourceLoader.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="ressources\resize.png" />
   </ItemGroup>
 
   <ItemGroup>
