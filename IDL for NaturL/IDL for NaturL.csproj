@@ -44,8 +44,8 @@
         <Resource Include="ressources\plus.png" />
         <Resource Include="ressources\recent.png" />
         <Resource Include="ressources\resize1.png" />
-        <Resource Include="ressources\transpile.png" />
-        <Resource Include="ressources\Untitled.png" />
+        <EmbeddedResource Include="ressources\transpile.png" />
+        <DesignData Include="ressources\Untitled.png" />
     </ItemGroup>
 
     <ItemGroup>

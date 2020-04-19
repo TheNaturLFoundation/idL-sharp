@@ -440,8 +440,8 @@ namespace IDL_for_NaturL
                         RedirectStandardError = true
                     }
                 };
-                process.EnableRaisingEvents = true;
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                process.EnableRaisingEvents = true;
                 process.Start();
                 process.WaitForExit();
                 StreamReader errorReader = process.StandardError;
@@ -674,12 +674,11 @@ namespace IDL_for_NaturL
 
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Console.WriteLine("TabControl On Selection Changed");
             if (((TabablzControl) e.Source).SelectedIndex == -1)
             {
                 ((TabablzControl) e.Source).SelectedIndex = 0;
             }
-
+            Console.WriteLine("Added items " + e.AddedItems.Count+", Removed items " + e.RemovedItems.Count);
             if (e.AddedItems.Count != 0)
             {
                 var source = (TabItem) e.AddedItems[0];
@@ -691,20 +690,35 @@ namespace IDL_for_NaturL
                     Console.WriteLine("Warning in CurrenttabHandler (On selection changed)");
                 }
             }
-            /*else
+            else
             {
                 var source = (TabItem) e.RemovedItems[0];
                 string i = source.Name.Replace("Tab", "");
                 attributes.Remove(i);
-                Console.WriteLine("salut salut c'est moi baise ta mere stp");
-            }*/
+                
+            }
         }
 
         #endregion
 
-        private void TabControl_OnUnloaded(object sender, RoutedEventArgs e)
+        private void DragEnter(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Drag enter");
+        }
+        
+        private void DragLeave(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Drag leave");
+        }
+        
+        private void DraggingChanged(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Dragging changed");
+        }
+        
+        private void DragOver(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Drag over");
         }
     }
 

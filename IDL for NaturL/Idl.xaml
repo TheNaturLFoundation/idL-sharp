@@ -26,7 +26,7 @@
         <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
         <SolidColorBrush x:Key="NormalBrush" Color="#888" />
         <SolidColorBrush x:Key="NormalBorderBrush" Color="#888" />
-        <SolidColorBrush x:Key="HorizontalNormalBrush" Color="#FF686868" Opacity="0.7" />
+        <SolidColorBrush x:Key="HorizontalNormalBrush" Color="#ed9200" Opacity="0.7" />
         <SolidColorBrush x:Key="HorizontalNormalBorderBrush" Color="#888" />
         
         <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1">
@@ -167,6 +167,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
         <!--END FOR SCROLLBAR RESSOURCES-->
         
         <!-- TAB RESSOURCES-->
@@ -291,7 +292,7 @@
 
 
             </Grid>
-            <Menu DockPanel.Dock="Top" Height="25">
+            <Menu DockPanel.Dock="Top" Height="35" Background="White">
                 <!-- White -->
                 <MenuItem Header="_File" Height="24">
                     <MenuItem Header="_New" Command="self:CustomCommands.New" />
@@ -319,25 +320,18 @@
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
 
                 </MenuItem>
-                <MenuItem Width="24" Command="self:CustomCommands.Execute" Height="24">
-                    <MenuItem.Icon>
+                <Button Width="24" Command="self:CustomCommands.Execute" Height="24" Background="White">
                         <Image Source="ressources/Untitled.png" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Width="25" Command="self:CustomCommands.Transpile" Height="24">
-                    <MenuItem.Icon>
+                </Button>
+                <Button Width="25" Command="self:CustomCommands.Transpile" Height="24" Foreground="White" Background="White">
                         <Image Source="ressources/transpile.png" />
-                    </MenuItem.Icon>
-                </MenuItem>
+                </Button>
 
 
             </Menu>
-            <dragablz:TabablzControl Unloaded="TabControl_OnUnloaded" Name="TabControl" DockPanel.Dock="Top"  SelectionChanged="TabControl_OnSelectionChanged">
-                <dragablz:TabablzControl.InterTabController>
-                    <dragablz:InterTabController />
-                </dragablz:TabablzControl.InterTabController>
+            <dragablz:TabablzControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged" >
                 <!-- White -->
-                <TabItem Header="No File" Name="Tab_id_" Margin="-2,-2,2,0" >
+                <TabItem Header="No File" Name="Tab_id_" Height="10">
                     <!-- White -->
 
                     <Grid Name="python_grid">
@@ -380,7 +374,7 @@
                         <!-- White -->
                         <avalonedit:TextEditor
                             Name="STD_id_"
-
+                            
                             ShowLineNumbers="False"
                             FontFamily="Segoe UI"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
@@ -392,14 +386,12 @@
                             BorderThickness="1"
                             BorderBrush="Gray"
                             HorizontalScrollBarVisibility="Hidden" />
-                        <Separator Grid.Column="1" Margin="5,0,10,5" RenderTransformOrigin="0.5,0.5" Height="0"
+                        <Separator Grid.Column="1" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" Height="0"
                                    VerticalAlignment="Bottom" />
                         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
-                                   RenderTransformOrigin="0.5,0.5" Margin="0,0,2,0" HorizontalAlignment="Right"
-                                   Width="5" />
-
+                                   RenderTransformOrigin="0.5,0.5" Margin="0,0,-2,0" HorizontalAlignment="Right"
+                                   Width="2" />
                     </Grid>
-
                 </TabItem>
             </dragablz:TabablzControl>
         </DockPanel>
