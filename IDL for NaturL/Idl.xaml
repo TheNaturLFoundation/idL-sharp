@@ -293,7 +293,7 @@
             </Grid>
             <Menu DockPanel.Dock="Top" Height="39" Background="White">
                 <!-- White -->
-                <MenuItem Header="_File" Height="24">
+                <MenuItem Header="_File" Height="38">
                     <MenuItem Header="_New" Command="self:CustomCommands.New" />
                     <MenuItem Header="_New Window" Command="self:CustomCommands.NewWindow" />
                     <MenuItem Header="_New Tab" Command="self:CustomCommands.NewTab" />
@@ -306,7 +306,7 @@
                     <MenuItem Header="_Exit" Command="self:CustomCommands.Exit" />
                 </MenuItem>
 
-                <MenuItem Header="Edit" Height="24">
+                <MenuItem Header="Edit" Height="38">
                     <MenuItem Header="_Copy" Command="ApplicationCommands.Copy"
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
                     <MenuItem Header="_Paste" Command="ApplicationCommands.Paste"
