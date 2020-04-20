@@ -20,6 +20,15 @@
                 <Begin>/*</Begin>
                 <End>*/</End>
             </Span>
+            <Span name="Strings" color="Green">
+                <Begin>"</Begin>
+                <End>"</End>
+            </Span>
+
+            <Span name="Char" color="Green">
+                <Begin>'</Begin>
+                <End>'</End>
+            </Span>
 
             <MarkPrevious bold ="true" italic = "false" color = "#ff9940">(</MarkPrevious>
 
