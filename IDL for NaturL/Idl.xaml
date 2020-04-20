@@ -5,7 +5,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:self="clr-namespace:IDL_for_NaturL"
     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
-    xmlns:shell="clr-namespace:Microsoft.Windows.Shell;assembly=Xceed.Wpf.AvalonDock"
     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
     x:Class="IDL_for_NaturL.MainWindow"
     mc:Ignorable="d"
