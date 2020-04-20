@@ -17,8 +17,8 @@
         </Span>
 
         <Keywords fontWeight="bold" foreground="Blue">
-            <Word>if</Word>
-            <Word>else</Word>
+            <Key word="if"/>
+            <Key word="else"/>
             <!-- ... -->
         </Keywords>
 

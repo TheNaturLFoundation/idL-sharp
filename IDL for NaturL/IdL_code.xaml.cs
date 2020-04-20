@@ -120,6 +120,9 @@ namespace IDL_for_NaturL
             attributes.Add(n.ToString(), tabHandling);
             ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("grid_codebox")).Children[0])
                 .SyntaxHighlighting = _highlightingDefinition;
+            ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("python_grid")).Children[0])
+                .SyntaxHighlighting = _highlightingDefinition;
+
 
             TabControl.SelectedIndex = ((TabablzControl) FindName("TabControl")).Items.Count - 1;
             if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))

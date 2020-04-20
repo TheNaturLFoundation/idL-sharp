@@ -351,7 +351,7 @@
                             Background="#FAFAFA"
                             ShowLineNumbers="True"
                             LineNumbersForeground="#399ee6"
-                            SyntaxHighlighting="Python"
+                            SyntaxHighlighting="naturL"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Margin="0,0,0,0"
                             FontSize="12pt"
