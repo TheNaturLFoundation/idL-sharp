@@ -331,7 +331,7 @@
             </Menu>
             <dragablz:TabablzControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged" >
                 <!-- White -->
-                <TabItem Header="No File" Name="Tab_id_" Height="10" FontSize="12">
+                <TabItem Header="No File" Name="Tab_id_" Height="10">
                     <!-- White -->
 
                     <Grid Name="python_grid">
