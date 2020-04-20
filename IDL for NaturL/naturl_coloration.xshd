@@ -7,10 +7,11 @@
         <Property name="LineComment" value="//"/>
     </Properties>
 
-    <Digits name = "Digits" bold = "false" italic = "false" color = "DarkBlue"/>
+    <Digits name = "Digits" bold = "true" italic = "false" color = "#a37acc"/>
 
     <RuleSets>
         <RuleSet ignorecase="false">
+          
             <Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' ,	.?</Delimiters>
             
             <!-- ... -->
@@ -20,9 +21,9 @@
                 <End>*/</End>
             </Span>
 
-            <MarkPrevious bold = "false" italic = "false" color = "#581dab">(</MarkPrevious>
+            <MarkPrevious bold ="true" italic = "true" color = "#ff9940">(</MarkPrevious>
 
-            <KeyWords name = "Punctuation" bold = "false" italic = "false" color = "DarkGreen">
+            <KeyWords name = "Punctuation" bold = "true" italic = "false" color = "#ed9366">
                 <Key word = "," />
                 <Key word = "." />
                 <Key word = ";" />
@@ -51,8 +52,8 @@
                 <Key word = "this" />
                 <Key word = "base" />
             </KeyWords>
-            
-            <KeyWords name="structure_words" bold="true" color="#0278e6">
+
+            <KeyWords name="structure_words" bold="true" color="#fa8d3e">
                 <Key word = "fonction"/>
                 <Key word = "variables"/>
                 <Key word = "debut"/>
@@ -70,8 +71,9 @@
                 <Key word = "faux"/>
                 <Key word = "procedure"/>
             </KeyWords>
+
             
-            <KeyWords name="types" bold = "true" color = "#d91ac6">
+            <KeyWords name="types" bold = "true" color = "#399ee6">
                 <Key word="entier"/>
                 <Key word="reel"/>
                 <Key word="chaine"/>

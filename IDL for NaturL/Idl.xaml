@@ -18,8 +18,8 @@
     MouseDoubleClick="Double_Click"
     >
 
-    
-    
+
+
     <Window.Resources>
         <!-- This is the ressource for the current SCROLLBARS-->
         <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
@@ -28,7 +28,7 @@
         <SolidColorBrush x:Key="NormalBorderBrush" Color="#888" />
         <SolidColorBrush x:Key="HorizontalNormalBrush" Color="#ed9200" Opacity="0.7" />
         <SolidColorBrush x:Key="HorizontalNormalBorderBrush" Color="#888" />
-        
+
         <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1">
             <GradientBrush.GradientStops>
                 <GradientStopCollection>
@@ -167,9 +167,9 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
         <!--END FOR SCROLLBAR RESSOURCES-->
-        
+
         <!-- TAB RESSOURCES-->
     </Window.Resources>
     <Window.CommandBindings>
@@ -287,12 +287,12 @@
                     </Button.Style>
                     <Image Source="ressources/minimize1.png" Height="25" Width="29" />
                 </Button>
-                <TextBlock Text="idL for naturL" HorizontalAlignment="Left" Margin="51,0,0,0" TextWrapping="Wrap"
+                <TextBlock Text="idL for naturL" HorizontalAlignment="Left" Margin="51,0,0,0" TextWrapping="Wrap" FontWeight="Bold" FontSize="15"
                            VerticalAlignment="Center" />
 
 
             </Grid>
-            <Menu DockPanel.Dock="Top" Height="35" Background="White">
+            <Menu DockPanel.Dock="Top" Height="39" Background="White">
                 <!-- White -->
                 <MenuItem Header="_File" Height="24">
                     <MenuItem Header="_New" Command="self:CustomCommands.New" />
@@ -318,16 +318,17 @@
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
                     <MenuItem Header="Redo" Command="ApplicationCommands.Redo"
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
-
                 </MenuItem>
-                <Button Width="24" Command="self:CustomCommands.Execute" Height="24" Background="White">
-                        <Image Source="ressources/Untitled.png" />
-                </Button>
-                <Button Width="25" Command="self:CustomCommands.Transpile" Height="24" Foreground="White" Background="White">
-                        <Image Source="ressources/transpile.png" />
-                </Button>
-
-
+                <MenuItem Height="39" Width="51" Header="" Command="self:CustomCommands.Execute">
+                    <MenuItem.Icon>
+                        <Image Source="ressources/Untitled.png" Margin="-14,-8,-16,-8"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Height="39" Width="51" Header="" Command="self:CustomCommands.Transpile">
+                    <MenuItem.Icon>
+                        <Image Source="ressources/transpile.png" Margin="-14,-8,-16,-8"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </Menu>
             <dragablz:TabablzControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged" >
                 <!-- White -->
@@ -351,7 +352,7 @@
                             FontFamily="Consolas"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Margin="0,0,0,0"
-                            FontSize="9pt"
+                            FontSize="12pt"
                             Text=""
                             Grid.Column="1"
                             HorizontalScrollBarVisibility="Hidden" />
@@ -364,7 +365,7 @@
                                 SyntaxHighlighting="naturL"
                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                 Margin="0,0,0,0"
-                                FontSize="9pt"
+                                FontSize="12pt"
                                 Text=""
                                 HorizontalScrollBarVisibility="Hidden" />
 
@@ -379,7 +380,7 @@
                             FontFamily="Segoe UI"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Margin="0,0,0,0"
-                            FontSize="9pt"
+                            FontSize="12pt"
                             Text=""
                             IsReadOnly="True"
                             Grid.Row="1" Grid.ColumnSpan="2"
