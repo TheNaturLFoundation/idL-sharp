@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-    <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>IDL_for_NaturL</RootNamespace>
-        <UseWPF>true</UseWPF>
-    </PropertyGroup>
-
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>IDL_for_NaturL</RootNamespace>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
     <ItemGroup>
         <None Remove="ressources\close.png" />
         <None Remove="ressources\close1.png" />
+        <None Remove="ressources\FiraCode-Medium.ttf" />
         <None Remove="ressources\logoicon.png" />
         <None Remove="ressources\logoiconsrc.png" />
         <None Remove="ressources\minimize.png" />
@@ -34,6 +34,7 @@
     <ItemGroup>
         <Resource Include="ressources\close.png" />
         <Resource Include="ressources\close1.png" />
+        <Resource Include="ressources\FiraCode-Medium.ttf" />
         <Resource Include="ressources\logoicon.png" />
         <Resource Include="ressources\logoiconsrc.png" />
         <Resource Include="ressources\minimize.png" />

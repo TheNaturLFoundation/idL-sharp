@@ -27,8 +27,6 @@
                 <Key word = "," />
                 <Key word = "." />
                 <Key word = ";" />
-                <Key word = "(" />
-                <Key word = ")" />
                 <Key word = "[" />
                 <Key word = "]" />
                 <Key word = "{" />
@@ -47,7 +45,11 @@
                 <Key word = "|" />
                 <Key word = "&amp;" />
             </KeyWords>
-
+          <KeyWords name ="Parenthesis" bold="true" italic ="false" color="#ff7171">
+            <Key word = "(" />
+            <Key word = ")" />
+          </KeyWords>
+          
             <KeyWords name = "AccessKeywords" bold="false" italic="false" color="Black">
                 <Key word = "this" />
                 <Key word = "base" />

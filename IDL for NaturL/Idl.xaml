@@ -331,7 +331,7 @@
             </Menu>
             <dragablz:TabablzControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged" >
                 <!-- White -->
-                <TabItem Header="No File" Name="Tab_id_" Height="10">
+                <TabItem Header="No File" Name="Tab_id_" Height="10" FontSize="12">
                     <!-- White -->
 
                     <Grid Name="python_grid">
@@ -345,21 +345,28 @@
                         </Grid.ColumnDefinitions>
                         <!-- White -->
                         <avalonedit:TextEditor
-                            Name="python_id_"
-                            ShowLineNumbers="True"
-                            SyntaxHighlighting="Python"
+                            Typography.StandardLigatures="True"
                             FontFamily="Consolas"
+                            Name="python_id_"
+                            Background="#FAFAFA"
+                            ShowLineNumbers="True"
+                            LineNumbersForeground="#399ee6"
+                            SyntaxHighlighting="Python"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Margin="0,0,0,0"
                             FontSize="12pt"
                             Text=""
                             Grid.Column="1"
-                            HorizontalScrollBarVisibility="Hidden" />
+                            HorizontalScrollBarVisibility="Hidden">
+                        </avalonedit:TextEditor>
                         <Grid Name="grid_codebox">
                             <!-- White -->
                             <avalonedit:TextEditor
+                                FontFamily="Consolas"
+                                Typography.StandardLigatures="True"
+                                Background="#FAFAFA"
                                 Name="CodeBox_id_"
-
+                                LineNumbersForeground="#399ee6"
                                 ShowLineNumbers="True"
                                 SyntaxHighlighting="naturL"
                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
@@ -373,10 +380,10 @@
                               HorizontalAlignment="Stretch" Grid.Row="1" />
                         <!-- White -->
                         <avalonedit:TextEditor
+                            FontFamily="Consolas"
                             Name="STD_id_"
-                            
+                            Background="#FAFAFA"
                             ShowLineNumbers="False"
-                            FontFamily="Segoe UI"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Margin="0,0,0,0"
                             FontSize="12pt"
@@ -394,6 +401,7 @@
                     </Grid>
                 </TabItem>
             </dragablz:TabablzControl>
+
         </DockPanel>
     </Grid>
 

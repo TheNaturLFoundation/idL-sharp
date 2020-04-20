@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:IDL_for_NaturL"
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
-             StartupUri="LaunchWindow.xaml">
+             StartupUri="idl.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                
                 <!-- primary color -->
                 <ResourceDictionary>
                     <!-- include your primary palette -->
@@ -48,5 +49,6 @@
             <!-- tell Dragablz tab control to use the Material Design theme -->
             <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}"/>
         </ResourceDictionary>
+        
     </Application.Resources>
 </Application>
