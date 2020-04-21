@@ -17,7 +17,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows.Forms.VisualStyles;
+using System.Windows.Media;
 using Dragablz;
+using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
 using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
@@ -52,7 +54,7 @@ namespace IDL_for_NaturL
                 _isSaved = isSaved;
                 _file = file;
             }
-            
+
 
             //public TabHandling()
             public bool _isFileSelected { get; set; }
@@ -144,6 +146,9 @@ namespace IDL_for_NaturL
         //THESE ARE THE METHODS THAT MANAGE THE INTERFACE BASIC COMMANDS-------------------------
         private bool DataChanged()
         {
+            Console.WriteLine("First data is:" + _currentTabHandler._firstData + "//");
+            Console.WriteLine("Current data is:" + ((TextEditor) FindName("CodeBox" + _currenttabId)).Text + "//");
+            Console.WriteLine(((TextEditor) FindName("CodeBox" + _currenttabId)).Text == _currentTabHandler._firstData);
             if (_currentTabHandler._firstData != ((TextEditor) FindName("CodeBox" + _currenttabId)).Text)
             {
                 _currentTabHandler._isSaved = false;
@@ -213,13 +218,9 @@ namespace IDL_for_NaturL
         //Functiom in order to write all text in a file
         private void WriteAllTextSafe()
         {
-            if (!string.IsNullOrEmpty(_currentTabHandler?._file))
+            if (!string.IsNullOrEmpty(_currentTabHandler._file))
             {
                 File.WriteAllText(_currentTabHandler._file, ((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
-            }
-            else
-            {
-                NewFile(null, null);
             }
         }
 
@@ -350,7 +351,7 @@ namespace IDL_for_NaturL
 
         private void CloseTab()
         {
-            if (DataChanged() && !_currentTabHandler._isSaved)
+            if (!_currentTabHandler._isFileSelected && DataChanged())
             {
                 string msg = "Do you want to save your changes ?\n";
                 MessageBoxResult result = MessageBox.Show(msg, "Data App", MessageBoxButton.YesNoCancel,
@@ -367,6 +368,7 @@ namespace IDL_for_NaturL
             }
             else
             {
+                WriteAllTextSafe();
                 UnregisterNamesAndRemove();
             }
         }
@@ -391,33 +393,42 @@ namespace IDL_for_NaturL
                 Save_Click();
             }
 
-            if (((TextEditor) FindName("CodeBox" + _currenttabId)).Text != "")
+            if (!string.IsNullOrEmpty(((TextEditor) FindName("CodeBox" + _currenttabId)).Text))
             {
+                if (string.IsNullOrEmpty(_currentTabHandler._file))
+                {
+                    return false;
+                }
+
                 string path = Path.GetFullPath(_currentTabHandler._file);
-                string pythonFile = Path.ChangeExtension(path, ".py");
                 Process process = new Process
                 {
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
-                        Arguments = "--input " + Quote(path) + " --output " + Quote(pythonFile),
+                        Arguments = "--input " + Quote(path),
                         UseShellExecute = false,
-                        RedirectStandardError = true
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true
                     }
                 };
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
                 process.WaitForExit();
                 StreamReader reader = process.StandardError;
+                StreamReader outputreader = process.StandardOutput;
                 string error = reader.ReadLine();
-
+                string output = outputreader.ReadToEnd();
                 if (error == null)
                 {
+                    
+                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.ForestGreen;
                     ((TextEditor) FindName("STD" + _currenttabId)).Text = "Transpilation succeded";
-                    ((TextEditor) FindName("python" + _currenttabId)).Text = File.ReadAllText(pythonFile);
+                    ((TextEditor) FindName("python" + _currenttabId)).Text = output;
                 }
                 else
                 {
+                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
                     ((TextEditor) FindName("STD" + _currenttabId)).Text = error;
                 }
 
@@ -429,31 +440,79 @@ namespace IDL_for_NaturL
 
         private void Execute(object sender, RoutedEventArgs e)
         {
-            if (Transpile(sender, e))
+            if (!_currentTabHandler._isFileSelected || !_currentTabHandler._isSaved || DataChanged())
             {
+                Save_Click();
+            }
+            
+            if (!string.IsNullOrEmpty(((TextEditor) FindName("CodeBox" + _currenttabId)).Text))
+            {
+                if (string.IsNullOrEmpty(_currentTabHandler._file))
+                {
+                    return;
+                }
+
                 string path = Path.GetFullPath(_currentTabHandler._file);
                 Process process = new Process
                 {
                     StartInfo =
                     {
-                        FileName = "python",
-                        Arguments = Quote(Path.ChangeExtension(path, ".py")),
+                        FileName = "../../../ressources/naturL.exe",
+                        Arguments = "--input " + Quote(path),
                         UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true
                     }
                 };
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                process.EnableRaisingEvents = true;
                 process.Start();
                 process.WaitForExit();
-                StreamReader errorReader = process.StandardError;
-                string error = errorReader.ReadToEnd();
-                StreamReader outputReader = process.StandardOutput;
-                string output = outputReader.ReadToEnd();
-                ((TextEditor) FindName("STD" + _currenttabId)).Text = error;
-                ((TextEditor) FindName("STD" + _currenttabId)).Text += output;
+                StreamReader reader = process.StandardError;
+                StreamReader outputreader = process.StandardOutput;
+                string errorTranspile = reader.ReadLine();
+                string outputTranspile = outputreader.ReadToEnd();
+                if (errorTranspile == null)
+                {
+                    Process processPython = new Process
+                    {
+                        StartInfo =
+                        {
+                            FileName = "python",
+                            UseShellExecute = false,
+                            RedirectStandardInput = true,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true
+                        }
+                    };
+                    processPython.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    processPython.EnableRaisingEvents = true;
+                    processPython.Start();
+                    StreamWriter inputWriter = processPython.StandardInput;
+                    inputWriter.Write(outputTranspile);
+                    inputWriter.Close();
+                    processPython.WaitForExit();
+                    StreamReader errorReader = processPython.StandardError;
+                    string error = errorReader.ReadToEnd();
+                    StreamReader outputReader = processPython.StandardOutput;
+                    string output = outputReader.ReadToEnd();
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Black;
+                    }
+                    ((TextEditor) FindName("STD" + _currenttabId)).Text = error;
+                    ((TextEditor) FindName("STD" + _currenttabId)).Text += output;
+                }
+                else
+                {
+                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
+                    ((TextEditor) FindName("STD" + _currenttabId)).Text = errorTranspile;
+                }
             }
+
         }
 
         //-----------------------------------------------------------------------------------------
@@ -547,6 +606,7 @@ namespace IDL_for_NaturL
         private void NewTabCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
+            //((TabablzControl) FindName("TabControl")).Items.Count < 9;
         }
 
         private void NewTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -598,7 +658,7 @@ namespace IDL_for_NaturL
         {
             e.CanExecute = true;
         }
-        
+
         private void SettingsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             SettingsWindow settingsWindow = new SettingsWindow();
@@ -613,16 +673,16 @@ namespace IDL_for_NaturL
 
         private void DebugCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            foreach (KeyValuePair<string,TabHandling> att in attributes)
+            foreach (KeyValuePair<string, TabHandling> att in attributes)
             {
-                Console.WriteLine("Key is: " + att.Key + " Value is: "+ att.Value);
+                Console.WriteLine("Key is: " + att.Key + " Value is: " + att.Value);
             }
-            Console.WriteLine("CurrentTabHandler: "+ _currentTabHandler);
+
+            Console.WriteLine("CurrentTabHandler: " + _currentTabHandler);
             Console.WriteLine("Size: " + attributes.Count);
         }
-        
-        
-        
+
+
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
@@ -681,7 +741,8 @@ namespace IDL_for_NaturL
             {
                 ((TabablzControl) e.Source).SelectedIndex = 0;
             }
-            Console.WriteLine("Added items " + e.AddedItems.Count+", Removed items " + e.RemovedItems.Count);
+
+            Console.WriteLine("Added items " + e.AddedItems.Count + ", Removed items " + e.RemovedItems.Count);
             if (e.AddedItems.Count != 0)
             {
                 var source = (TabItem) e.AddedItems[0];
@@ -698,30 +759,42 @@ namespace IDL_for_NaturL
                 var source = (TabItem) e.RemovedItems[0];
                 string i = source.Name.Replace("Tab", "");
                 attributes.Remove(i);
-                
             }
         }
 
         #endregion
 
-        private void DragEnter(object sender, RoutedEventArgs e)
+        private void Set_Tab(int n)
         {
-            Console.WriteLine("Drag enter");
+            TabControl.SelectedIndex = n;
+            if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
+            {
+                Console.WriteLine("Warning in CurrenttabHandler (On selection changed)");
+            }
         }
-        
-        private void DragLeave(object sender, RoutedEventArgs e)
+
+        private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
-            Console.WriteLine("Drag leave");
-        }
-        
-        private void DraggingChanged(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("Dragging changed");
-        }
-        
-        private void DragOver(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("Drag over");
+            {
+                if (e.Key == Key.D1 && Keyboard.Modifiers == ModifierKeys.Control)
+                    Set_Tab(1);
+                if (e.Key == Key.D2 && Keyboard.Modifiers == ModifierKeys.Control)
+                    Set_Tab(2);
+                if (e.Key == Key.D3 && Keyboard.Modifiers == ModifierKeys.Control)
+                    Set_Tab(3);
+                if (e.Key == Key.D4 && Keyboard.Modifiers == ModifierKeys.Control)
+                    Set_Tab(4);
+                if (e.Key == Key.D5 && Keyboard.Modifiers == ModifierKeys.Control)
+                    Set_Tab(5);
+                if (e.Key == Key.D6 && Keyboard.Modifiers == ModifierKeys.Control)
+                    Set_Tab(6);
+                if (e.Key == Key.D7 && Keyboard.Modifiers == ModifierKeys.Control)
+                    Set_Tab(7);
+                if (e.Key == Key.D8 && Keyboard.Modifiers == ModifierKeys.Control)
+                    Set_Tab(8);
+                if (e.Key == Key.D9 && Keyboard.Modifiers == ModifierKeys.Control)
+                    Set_Tab(9);
+            }
         }
     }
 
@@ -850,7 +923,7 @@ namespace IDL_for_NaturL
                 new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt)
             }
         );
-        
+
         public static readonly RoutedUICommand Debug = new RoutedUICommand
         (
             "Debug",

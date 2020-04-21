@@ -78,9 +78,10 @@
                 <Key word="sinon_si"/>
                 <Key word = "tant_que"/>
                 <Key word = "alors"/>
-                <Key word = "vrai"/>
-                <Key word = "faux"/>
                 <Key word = "procedure"/>
+                <Key word = "jusqu_a"/>
+                <Key word = "utiliser"/>
+                <Key word = "sinon"/>
                 <Key word="and" />
                 <Key word="as"/>
                 <Key word="assert"/>
@@ -119,8 +120,10 @@
                 <Key word="async"/>
                 <Key word="await"/>
             </KeyWords>
-
-            
+<KeyWords name ="booleen" color = "#a37acc">
+            <Key word = "vrai"/>
+            <Key word = "faux"/>
+</KeyWords>
             <KeyWords name="types" bold = "true" color = "#399ee6">
                 <Key word="entier"/>
                 <Key word="reel"/>
@@ -134,7 +137,7 @@
             </KeyWords>
             <!-- ... -->
         </RuleSet>
-
+        
         <RuleSet name = "CommentMarkerSet" ignorecase = "false">
             <Delimiters>&lt;&gt;~!@%^*()-+=|\#/{}[]:;"' ,	.?</Delimiters>
             <KeyWords name = "ErrorWords" bold="true" italic="false" color="Red">

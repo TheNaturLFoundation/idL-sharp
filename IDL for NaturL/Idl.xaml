@@ -15,7 +15,7 @@
     ResizeMode="CanResize"
     MouseLeftButtonDown="Drag_Window"
     MouseDoubleClick="Double_Click"
-    >
+    KeyDown="MainWindow_OnKeyDown">
 
 
 
@@ -384,6 +384,7 @@
                             Name="STD_id_"
                             Background="#FAFAFA"
                             ShowLineNumbers="False"
+                            Foreground="Black"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Margin="0,0,0,0"
                             FontSize="12pt"
