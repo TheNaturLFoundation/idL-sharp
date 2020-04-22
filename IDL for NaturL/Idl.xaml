@@ -318,6 +318,12 @@
                     <MenuItem Header="Redo" Command="ApplicationCommands.Redo"
                               CommandTarget="{Binding ElementName=CodeBox_id_}" />
                 </MenuItem>
+                <MenuItem Header="Language" Height="38">
+                    <MenuItem Header="Francais" Height="38" IsCheckable="True" Name="FrenchBox" Click="FrenchBoxClicked">
+                    </MenuItem>
+                    <MenuItem Header="English" Height="38" IsCheckable="True" Name="EngBox" Click="EngBoxClicked" IsChecked="True">
+                    </MenuItem>
+                </MenuItem>
                 <MenuItem Height="39" Width="51" Header="" Command="self:CustomCommands.Execute">
                     <MenuItem.Icon>
                         <Image Source="ressources/Untitled.png" Margin="-14,-8,-16,-8"/>
@@ -328,10 +334,6 @@
                         <Image Source="ressources/transpile.png" Margin="-14,-8,-16,-8"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <Menu>
-                    <CheckBox Name="FrenchBox">
-                    </CheckBox>
-                </Menu>
             </Menu>
             <dragablz:TabablzControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged" >
                 <!-- White -->

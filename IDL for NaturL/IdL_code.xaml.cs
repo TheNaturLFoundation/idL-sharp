@@ -383,6 +383,22 @@ namespace IDL_for_NaturL
             return null;
         }
 
+        private void FrenchBoxClicked(object sender, RoutedEventArgs e)
+        {
+            if (FrenchBox.IsChecked)
+            {
+                EngBox.IsChecked = false;
+            }
+        }
+
+        private void EngBoxClicked(object sender, RoutedEventArgs e)
+        {
+            if (FrenchBox.IsChecked)
+            {
+                FrenchBox.IsChecked = false;
+            }
+        }
+
         private bool Transpile(object sender, RoutedEventArgs routedEventArgs)
         {
             if (!string.IsNullOrEmpty(((TextEditor) FindName("CodeBox" + _currenttabId)).Text))
