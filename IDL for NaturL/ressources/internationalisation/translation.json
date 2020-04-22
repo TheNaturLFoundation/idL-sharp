@@ -1,0 +1,182 @@
+{
+	"SyntaxError": {
+		"fr": "Erreur de Syntaxe",
+		"en": "Syntax Error"
+	},
+	"TypeError": {
+		"fr": "Erreur de Type",
+		"en": "Type Error"
+	},
+	"NameError": {
+		"fr": "Erreur de nommage",
+		"en": "Name error"
+	},
+  "ImportError":{
+      "fr": "Erreur d'importation",
+      "en": "Import Error"
+  },
+	"NameTypeMessage": {
+		"fr": "Une expression de type '",
+		"en": "Expected an expression of type '"
+	},
+	"NameButGotMessage": {
+		"fr": "' était attendue mais cette expression est de type '",
+		"en": "' but got '"
+	},
+	"HasTypeMessage": {
+		"fr": "' a le type '",
+		"en": "' has type '"
+	},
+	"ButGotMessage": {
+		"fr": "' mais le type attendu était '",
+		"en": "' but got '"
+	},
+	"ReturnTypeMatchMessage": {
+		"fr": "La type de retour n'est pas le même que celui de la fonction",
+		"en": "The return type does not match the function type"
+	},
+	"UnexpectedReturn": {
+		"fr": "Instruction 'retouner' non attendue ",
+		"en": "Unexpected instruction 'retourner' "
+	},
+	"UnexpectedToken": {
+		"fr": "Token inconnu '",
+		"en": "Unexpected token '"
+	},
+	"UnexpectedEOF": {
+		"fr": "Fin de fichier non attendue",
+		"end": "Unexpected end of file"
+	},
+	"ExpectedDebut": {
+		"fr": "Mot clé 'debut' attendu après la définition de la fonction",
+		"end": "Expected 'debut' after function definition"
+	},
+	"UnexpectedDebut": {
+		"fr": "Mot clé 'debut' non attendu",
+		"en": "Unexpected token 'debut'"
+	},
+	"UnexpectedFin": {
+		"fr": "Mot clé 'fin' non attendu",
+		"en": "Unexpected token 'fin' "
+	},
+	"ExpectedReturn": {
+		"fr": "Une fonction doit forcément retourner une valeur",
+		"en": "A return value is expected in a function"
+	},
+	"ExpectedFin": {
+		"fr": "Bloc de code non terminé : mot clé 'fin' attendu",
+		"en": "Open control structure : 'fin' keyword expected"
+	},
+	"UnexpectedChar": {
+		"fr": "Caractère non attendu '",
+		"en": "Unexpected character"
+	},
+	"InFunctionDefinition": {
+		"fr": "' dans la définition de la fonction",
+		"en": "' in function definition"
+	},
+	"BreakingReturn": {
+		"fr": "Retour débranchant",
+		"en": "'retourner' inside a loop"
+	},
+	"AlwaysTrue": {
+		"fr": "Cette expression est toujours vraie",
+		"en": "This expression is always true"
+	},
+	"AlwaysFalse": {
+		"fr": "Cette expression est toujours fausse",
+		"en": "This expression is always false"
+	},
+	"MissingKeyword": {
+		"fr": "Mot clé manquant '",
+		"en": "Missing keyword '"
+	},
+	"InvalidFunctionDefiniton": {
+		"fr": "Définition de fonction invalide",
+		"en": "Invalid function defintion"
+	},
+	"UnknownVariable": {
+		"fr": "Variable inconnue ",
+		"en": "Unknwown variable "
+	},
+	"UnknownType": {
+		"fr": "Type inconnu '",
+		"en": "Unknown type '"
+	},
+	"ExpectedOperand": {
+		"fr": "Opérande attendue",
+		"en": "Expected operand"
+	},
+	"InvalidExpression": {
+		"fr": "Expression invalide",
+		"en": "Invalid expression"
+	},
+	"InvalidTokenExpresion": {
+		"fr": "Indentificateur invalide dans l'expression: '",
+		"en": "Invalid token in expression: '"
+	},
+	"ReservedKeyword": {
+		"fr": "' est un mot clé réservé",
+		"en": "' is a reserved keyword"
+	},
+	"TokenCapture": {
+		"fr": "Impossible de capturer l'identificateur inconnu",
+		"en": "Could not capture the unknown token"
+	},
+	"MissingClosingParenthesis": {
+		"fr": "Parenthèse fermante manquante : ')'",
+		"en": "Missing closing parenthesis : ')'"
+	},
+	"MissingClosingBracket": {
+		"fr": "Crochet fermant manquant : ']'",
+		"en": "Missing closing bracket : ']'"
+	},
+	"UnexpectedParenthesis": {
+		"fr": "Identificateur inattendu : ')'",
+		"en": "Unexpected token : ')'"
+	},
+	"UnexpectedBracket": {
+		"fr": "Identificateur inattendu : ']'",
+		"en": "Unexpected token : ']'"
+	},
+	"UnknownOperator": {
+		"fr": "Opérateur inconnu '",
+		"en": "Unknown operator '"
+	},
+	"InvalidOperation": {
+		"fr": "Opération invalide pour les expression de type ",
+		"en": "Invalid operation for expressions of type "
+	},
+	"AndType": {
+		"fr": " et de type ",
+		"en": " and type "
+	},
+	"CannotCompare": {
+		"fr": "Impossible de comparer une expression de type ",
+		"en": "Cannot compare expressions of type "
+	},
+	"VariablesOfType": {
+		"fr": "Les variables de type ",
+		"en": "Variables of type "
+	},
+	"NotCallable": {
+		"fr": " ne sont pas applicables",
+		"en": " are not callable"
+	},
+	"UnknownFunction": {
+		"fr": "Fonction ou procédure inconnue: '",
+		"en": "Unknown function or procedure: '"
+	},
+	"TheType": {
+		"fr": "Le type '",
+		"en": "The type '"
+	},
+	"NotSubscriptable": {
+		"fr": "' n'est pas énumérable",
+		"en": "' is not subscriptable"
+	},
+	"ListIndicesIntegers": {
+	   "fr": "Les indices d'accès aux listes doivent êtres entiers",
+     "en": "List indices must be integers"
+  }
+}

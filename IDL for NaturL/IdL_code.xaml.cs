@@ -15,6 +15,7 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Media;
@@ -116,7 +117,6 @@ namespace IDL_for_NaturL
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("python_grid")).Children[0]);
             RegisterName("STD" + n,
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("python_grid")).Children[3]);
-
             TabHandling tabHandling = new TabHandling(path);
             attributes.Add(n.ToString(), tabHandling);
             ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName("grid_codebox")).Children[0])
@@ -413,7 +413,10 @@ namespace IDL_for_NaturL
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
+                        WorkingDirectory = "../../../ressources/",
                         Arguments = arguments,
+                        StandardOutputEncoding = Encoding.UTF8,
+                        StandardErrorEncoding = Encoding.UTF8,
                         UseShellExecute = false,
                         RedirectStandardError = true,
                         RedirectStandardOutput = true,
@@ -425,6 +428,7 @@ namespace IDL_for_NaturL
                 StreamWriter inputWriter = process.StandardInput;
                 StreamReader reader = process.StandardError;
                 StreamReader outputreader = process.StandardOutput;
+                Console.WriteLine(outputreader.CurrentEncoding);
                 Console.WriteLine("petit ");
                 inputWriter.Write(((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
                 Console.WriteLine("yop");
@@ -460,6 +464,9 @@ namespace IDL_for_NaturL
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
+                        WorkingDirectory = "../../../ressources/",
+                        StandardOutputEncoding = Encoding.UTF8,
+                        StandardErrorEncoding = Encoding.UTF8,
                         RedirectStandardInput = true,
                         UseShellExecute = false,
                         RedirectStandardError = true,
@@ -484,6 +491,8 @@ namespace IDL_for_NaturL
                         {
                             FileName = "python",
                             UseShellExecute = false,
+                            StandardOutputEncoding = Encoding.UTF8,
+                            StandardErrorEncoding = Encoding.UTF8,
                             RedirectStandardInput = true,
                             RedirectStandardOutput = true,
                             RedirectStandardError = true
