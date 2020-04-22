@@ -387,12 +387,17 @@ namespace IDL_for_NaturL
         {
             if (!string.IsNullOrEmpty(((TextEditor) FindName("CodeBox" + _currenttabId)).Text))
             {
-
+                string arguments = "";
+                if ((bool) FrenchBox.IsChecked)
+                {
+                    arguments = "--language french";
+                }
                 Process process = new Process
                 {
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
+                        Arguments = arguments,
                         UseShellExecute = false,
                         RedirectStandardError = true,
                         RedirectStandardOutput = true,

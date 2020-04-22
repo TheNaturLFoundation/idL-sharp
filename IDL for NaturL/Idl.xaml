@@ -328,6 +328,10 @@
                         <Image Source="ressources/transpile.png" Margin="-14,-8,-16,-8"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <Menu>
+                    <CheckBox Name="FrenchBox">
+                    </CheckBox>
+                </Menu>
             </Menu>
             <dragablz:TabablzControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged" >
                 <!-- White -->

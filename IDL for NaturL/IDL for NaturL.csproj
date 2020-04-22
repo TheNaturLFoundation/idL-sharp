@@ -70,9 +70,4 @@
             <LastGenOutput>Resources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\DragablzAdrian\Dragablz.net45.csproj" />
-    </ItemGroup>
-
 </Project>
