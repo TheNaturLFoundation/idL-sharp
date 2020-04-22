@@ -42,7 +42,6 @@ namespace IDL_for_NaturL
         private static Dictionary<string, TabHandling> attributes = new Dictionary<string, TabHandling>();
         private TabHandling _currentTabHandler;
         private IHighlightingDefinition _highlightingDefinition;
-        private bool _isFullSize;
         private double clickPosition;
 
         private class TabHandling
@@ -386,37 +385,30 @@ namespace IDL_for_NaturL
 
         private bool Transpile(object sender, RoutedEventArgs routedEventArgs)
         {
-            Console.WriteLine(_currentTabHandler._isFileSelected + " " + _currentTabHandler._isSaved + " " +
-                              DataChanged());
-            if (!_currentTabHandler._isFileSelected || !_currentTabHandler._isSaved || DataChanged())
-            {
-                Save_Click();
-            }
-
             if (!string.IsNullOrEmpty(((TextEditor) FindName("CodeBox" + _currenttabId)).Text))
             {
-                if (string.IsNullOrEmpty(_currentTabHandler._file))
-                {
-                    return false;
-                }
 
-                string path = Path.GetFullPath(_currentTabHandler._file);
                 Process process = new Process
                 {
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
-                        Arguments = "--input " + Quote(path),
                         UseShellExecute = false,
                         RedirectStandardError = true,
-                        RedirectStandardOutput = true
+                        RedirectStandardOutput = true,
+                        RedirectStandardInput = true
                     }
                 };
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
-                process.WaitForExit();
+                StreamWriter inputWriter = process.StandardInput;
                 StreamReader reader = process.StandardError;
                 StreamReader outputreader = process.StandardOutput;
+                Console.WriteLine("petit ");
+                inputWriter.Write(((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
+                Console.WriteLine("yop");
+                inputWriter.Close();
+                process.WaitForExit();
                 string error = reader.ReadLine();
                 string output = outputreader.ReadToEnd();
                 if (error == null)
@@ -440,25 +432,14 @@ namespace IDL_for_NaturL
 
         private void Execute(object sender, RoutedEventArgs e)
         {
-            if (!_currentTabHandler._isFileSelected || !_currentTabHandler._isSaved || DataChanged())
-            {
-                Save_Click();
-            }
-            
             if (!string.IsNullOrEmpty(((TextEditor) FindName("CodeBox" + _currenttabId)).Text))
             {
-                if (string.IsNullOrEmpty(_currentTabHandler._file))
-                {
-                    return;
-                }
-
-                string path = Path.GetFullPath(_currentTabHandler._file);
                 Process process = new Process
                 {
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
-                        Arguments = "--input " + Quote(path),
+                        RedirectStandardInput = true,
                         UseShellExecute = false,
                         RedirectStandardError = true,
                         RedirectStandardOutput = true
@@ -466,9 +447,12 @@ namespace IDL_for_NaturL
                 };
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
-                process.WaitForExit();
+                StreamWriter inputWriter = process.StandardInput;
                 StreamReader reader = process.StandardError;
                 StreamReader outputreader = process.StandardOutput;
+                inputWriter.Write(((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
+                inputWriter.Close();
+                process.WaitForExit();
                 string errorTranspile = reader.ReadLine();
                 string outputTranspile = outputreader.ReadToEnd();
                 if (errorTranspile == null)
@@ -487,7 +471,7 @@ namespace IDL_for_NaturL
                     processPython.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     processPython.EnableRaisingEvents = true;
                     processPython.Start();
-                    StreamWriter inputWriter = processPython.StandardInput;
+                    inputWriter = processPython.StandardInput;
                     inputWriter.Write(outputTranspile);
                     inputWriter.Close();
                     processPython.WaitForExit();
@@ -766,7 +750,7 @@ namespace IDL_for_NaturL
 
         private void Set_Tab(int n)
         {
-            TabControl.SelectedIndex = n;
+            TabControl.SelectedIndex = n-1;
             if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
             {
                 Console.WriteLine("Warning in CurrenttabHandler (On selection changed)");
