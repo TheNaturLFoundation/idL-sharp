@@ -415,7 +415,8 @@ namespace IDL_for_NaturL
                     {
                         FileName = "../../../ressources/naturL.exe",
                         WorkingDirectory = "../../../ressources/",
-                        EnvironmentVariables["NATURLPATH"] = Path.GetFulllPath("../../../ressources/naturL.exe"),
+                        EnvironmentVariables = { ["NATURLPATH"] =
+                            Path.GetFullPath("../../../ressources")},
                         Arguments = arguments,
                         StandardOutputEncoding = Encoding.UTF8,
                         StandardErrorEncoding = Encoding.UTF8,
@@ -441,7 +442,14 @@ namespace IDL_for_NaturL
                 if (error == null)
                 {
                     ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.ForestGreen;
-                    ((TextEditor) FindName("STD" + _currenttabId)).Text = "Transpilation succeded";
+                    if (FrenchBox.IsChecked)
+                    {
+                        ((TextEditor) FindName("STD" + _currenttabId)).Text = "Transpilation réussie";
+                    }
+                    else
+                    {
+                        ((TextEditor) FindName("STD" + _currenttabId)).Text = "Transpilation succeeded";
+                    }
                     ((TextEditor) FindName("python" + _currenttabId)).Text = output;
                 }
                 else
@@ -466,7 +474,8 @@ namespace IDL_for_NaturL
                     {
                         FileName = "../../../ressources/naturL.exe",
                         WorkingDirectory = "../../../ressources/",
-                        EnvironmentVariables["NATURLPATH"] = Path.GetFulllPath("../../../ressources/naturL.exe"),
+                        EnvironmentVariables = { ["NATURLPATH"] =
+                            Path.GetFullPath("../../../ressources")},
                         StandardOutputEncoding = Encoding.UTF8,
                         StandardErrorEncoding = Encoding.UTF8,
                         RedirectStandardInput = true,
@@ -475,6 +484,8 @@ namespace IDL_for_NaturL
                         RedirectStandardOutput = true
                     }
                 };
+                //process.StartInfo.EnvironmentVariables["NATURLPATH"] =
+                //    Path.GetFullPath("../../../ressources/naturL.exe");
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
                 StreamWriter inputWriter = process.StandardInput;
