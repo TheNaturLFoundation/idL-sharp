@@ -408,12 +408,14 @@ namespace IDL_for_NaturL
                 {
                     arguments = "--language french";
                 }
+
                 Process process = new Process
                 {
                     StartInfo =
                     {
                         FileName = "../../../ressources/naturL.exe",
                         WorkingDirectory = "../../../ressources/",
+                        EnvironmentVariables["NATURLPATH"] = Path.GetFulllPath("../../../ressources/naturL.exe"),
                         Arguments = arguments,
                         StandardOutputEncoding = Encoding.UTF8,
                         StandardErrorEncoding = Encoding.UTF8,
@@ -438,7 +440,6 @@ namespace IDL_for_NaturL
                 string output = outputreader.ReadToEnd();
                 if (error == null)
                 {
-                    
                     ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.ForestGreen;
                     ((TextEditor) FindName("STD" + _currenttabId)).Text = "Transpilation succeded";
                     ((TextEditor) FindName("python" + _currenttabId)).Text = output;
@@ -465,6 +466,7 @@ namespace IDL_for_NaturL
                     {
                         FileName = "../../../ressources/naturL.exe",
                         WorkingDirectory = "../../../ressources/",
+                        EnvironmentVariables["NATURLPATH"] = Path.GetFulllPath("../../../ressources/naturL.exe"),
                         StandardOutputEncoding = Encoding.UTF8,
                         StandardErrorEncoding = Encoding.UTF8,
                         RedirectStandardInput = true,
