@@ -454,8 +454,17 @@ namespace IDL_for_NaturL
                 }
                 else
                 {
-                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
-                    ((TextEditor) FindName("STD" + _currenttabId)).Text = error;
+                    if (error[0] == 'W')
+                    {
+                        ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Orange;
+                        ((TextEditor) FindName("STD" + _currenttabId)).Text = error;
+                        ((TextEditor) FindName("python" + _currenttabId)).Text = output;
+                    }
+                    else
+                    {
+                        ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
+                        ((TextEditor) FindName("STD" + _currenttabId)).Text = error;
+                    }
                 }
 
                 return true;
@@ -524,7 +533,14 @@ namespace IDL_for_NaturL
                     string output = outputReader.ReadToEnd();
                     if (!string.IsNullOrEmpty(error))
                     {
-                        ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
+                        if (error[0] == 'W')
+                        {
+                            ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Orange;
+                        }
+                        else
+                        {
+                            ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
+                        }
                     }
                     else
                     {
@@ -535,7 +551,14 @@ namespace IDL_for_NaturL
                 }
                 else
                 {
-                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
+                    if (errorTranspile[0] == 'W')
+                    {
+                        ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Orange;
+                    }
+                    else
+                    {
+                        ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
+                    }
                     ((TextEditor) FindName("STD" + _currenttabId)).Text = errorTranspile;
                 }
             }
