@@ -24,11 +24,11 @@ using System.Windows.Media;
 using Dragablz;
 using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
-using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
+using HighlightingManager =
+    ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
 namespace IDL_for_NaturL
 {
-
     public partial class MainWindow
     {
         private int _copyStart;
@@ -41,42 +41,33 @@ namespace IDL_for_NaturL
             foreach (var chr in currentEditor.Text)
             {
                 if (chr == '\n')
-                {
                     line++;
-                }
-
                 index--;
                 if (index == 0)
-                {
                     return line;
-                }
             }
 
             return line;
         }
+
         public void ResearchBoxGotFocus(object sender, RoutedEventArgs e)
         {
             if (ResearchBox.IsFocused)
-            {
                 ResearchBox.Text = "";
-            }
         }
 
         public void ResearchBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            if (!ResearchBox.IsFocused && !string.IsNullOrEmpty(ResearchBox.Text))
-            {
+            if (!ResearchBox.IsFocused &&
+                string.IsNullOrEmpty(ResearchBox.Text))
                 ResearchBox.Text = "Search (Ctrl + F)";
-            }
         }
+
 
         public void OnKeyPressed(object sender, KeyEventArgs e)
         {
-            
             if (e.Key == Key.Enter)
-            {
                 SearchInput(ResearchBox.Text);
-            }
         }
 
         public void SearchInput(string searched)
@@ -87,34 +78,34 @@ namespace IDL_for_NaturL
             int textlength = fulltext.Length;
             _copyStart = currentEditor.CaretOffset;
             if (_copyStart == textlength)
-            {
                 _copyStart = 0;
-            }
-            int index = fulltext.IndexOf(searched,_copyStart, textlength - _copyStart, StringComparison.Ordinal);
+            int index = fulltext.IndexOf(searched, _copyStart,
+                textlength - _copyStart, StringComparison.Ordinal);
             if (index == -1)
             {
-                MessageBoxResult messageBox = MessageBox.Show("No more occurences of \"" + searched + "\" found",
-                    "Research",MessageBoxButton.OK,MessageBoxImage.Information);
+                MessageBoxResult messageBox = MessageBox.Show(
+                    "No more occurences of \"" + searched + "\" found",
+                    "Research", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 if (messageBox == MessageBoxResult.OK)
                 {
-                    currentEditor.Select(0,0);
+                    currentEditor.Select(0, 0);
                     _copyStart = 0;
                     return;
                 }
             }
-            currentEditor.Select(index,searched.Length);
+
+            currentEditor.Select(index, searched.Length);
             Console.WriteLine("Caret Offset is: " + currentEditor.CaretOffset);
             if (GetLineFromIndex(index) > currentEditor.LineCount - 5)
-            {
                 currentEditor.ScrollToEnd();
-            }
             else
-            {
-                currentEditor.ScrollToVerticalOffset(currentEditor.CaretOffset - 250);
-            }
+                currentEditor.ScrollToVerticalOffset(
+                    currentEditor.CaretOffset - 250);
             index += searched.Length;
             _copyStart = index;
-            Console.WriteLine("Index is: " + index + " Length is: " + fulltext.Length);
+            Console.WriteLine("Index is: " + index + " Length is: " +
+                              fulltext.Length);
         }
     }
 }
