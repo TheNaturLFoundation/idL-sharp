@@ -291,50 +291,55 @@
 
 
             </Grid>
-            <Menu DockPanel.Dock="Top" Height="39" Background="White">
-                <!-- White -->
-                <MenuItem Header="_File" Height="38">
-                    <MenuItem Header="_New" Command="self:CustomCommands.New" />
-                    <MenuItem Header="_New Window" Command="self:CustomCommands.NewWindow" />
-                    <MenuItem Header="_New Tab" Command="self:CustomCommands.NewTab" />
-                    <MenuItem Header="_Close Tab" Command="self:CustomCommands.CloseTab" />
-                    <MenuItem Header="_Open" Command="self:CustomCommands.Open" />
-                    <MenuItem Header="_Save" Command="self:CustomCommands.Save" />
-                    <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs" />
-                    <MenuItem Header="_Settings" Command="self:CustomCommands.Settings" />
-                    <Separator />
-                    <MenuItem Header="_Exit" Command="self:CustomCommands.Exit" />
-                </MenuItem>
+            <Grid DockPanel.Dock="Top">
+                <Menu DockPanel.Dock="Top" Height="39" Background="White" HorizontalAlignment="Left">
+                    <!-- White -->
+                    <MenuItem Header="_File" Height="38">
+                        <MenuItem Header="_New" Command="self:CustomCommands.New" />
+                        <MenuItem Header="_New Window" Command="self:CustomCommands.NewWindow" />
+                        <MenuItem Header="_New Tab" Command="self:CustomCommands.NewTab" />
+                        <MenuItem Header="_Close Tab" Command="self:CustomCommands.CloseTab" />
+                        <MenuItem Header="_Open" Command="self:CustomCommands.Open" />
+                        <MenuItem Header="_Save" Command="self:CustomCommands.Save" />
+                        <MenuItem Header="_Save As..." Command="self:CustomCommands.SaveAs" />
+                        <MenuItem Header="_Settings" Command="self:CustomCommands.Settings" />
+                        <Separator />
+                        <MenuItem Header="_Exit" Command="self:CustomCommands.Exit" />
+                    </MenuItem>
 
-                <MenuItem Header="Edit" Height="38">
-                    <MenuItem Header="_Copy" Command="ApplicationCommands.Copy"
-                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
-                    <MenuItem Header="_Paste" Command="ApplicationCommands.Paste"
-                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
-                    <MenuItem Header="_Cut" Command="ApplicationCommands.Cut"
-                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
-                    <MenuItem Header="_Undo" Command="ApplicationCommands.Undo"
-                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
-                    <MenuItem Header="Redo" Command="ApplicationCommands.Redo"
-                              CommandTarget="{Binding ElementName=CodeBox_id_}" />
-                </MenuItem>
-                <MenuItem Header="Language" Height="38">
-                    <MenuItem Header="Francais" Height="38" IsCheckable="True" Name="FrenchBox" Click="FrenchBoxClicked">
+                    <MenuItem Header="Edit" Height="38">
+                        <MenuItem Header="_Copy" Command="ApplicationCommands.Copy"
+                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                        <MenuItem Header="_Paste" Command="ApplicationCommands.Paste"
+                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                        <MenuItem Header="_Cut" Command="ApplicationCommands.Cut"
+                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                        <MenuItem Header="_Undo" Command="ApplicationCommands.Undo"
+                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                        <MenuItem Header="Redo" Command="ApplicationCommands.Redo"
+                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
                     </MenuItem>
-                    <MenuItem Header="English" Height="38" IsCheckable="True" Name="EngBox" Click="EngBoxClicked" IsChecked="True">
+                    <MenuItem Header="Language" Height="38">
+                        <MenuItem Header="Francais" Height="38" IsCheckable="True" Name="FrenchBox" Click="FrenchBoxClicked">
+                        </MenuItem>
+                        <MenuItem Header="English" Height="38" IsCheckable="True" Name="EngBox" Click="EngBoxClicked" IsChecked="True">
+                        </MenuItem>
                     </MenuItem>
-                </MenuItem>
-                <MenuItem Height="39" Width="51" Header="" Command="self:CustomCommands.Execute">
-                    <MenuItem.Icon>
-                        <Image Source="ressources/Untitled.png" Margin="-14,-8,-16,-8"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Height="39" Width="51" Header="" Command="self:CustomCommands.Transpile">
-                    <MenuItem.Icon>
-                        <Image Source="ressources/transpile.png" Margin="-14,-8,-16,-8"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-            </Menu>
+                    <MenuItem Height="39" Width="51" Header="" Command="self:CustomCommands.Execute">
+                        <MenuItem.Icon>
+                            <Image Source="ressources/Untitled.png" Margin="-14,-8,-16,-8"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Height="39" Width="51" Header="" Command="self:CustomCommands.Transpile">
+                        <MenuItem.Icon>
+                            <Image Source="ressources/transpile.png" Margin="-14,-8,-16,-8"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </Menu>
+                <TextBox Name="ResearchBox" Foreground="Gray" FontSize="16" HorizontalAlignment="Left"
+                         Text="Search (Ctrl + F)" Margin="462,0,0,7" Width="150" BorderThickness="2" GotFocus="ResearchBoxGotFocus" LostFocus="ResearchBoxLostFocus"
+                         KeyDown="OnKeyPressed"/>
+            </Grid>
             <dragablz:TabablzControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged" >
                 <!-- White -->
                 <TabItem Header="No File" Name="Tab_id_" Height="10">
