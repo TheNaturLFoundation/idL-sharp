@@ -15,10 +15,9 @@
     ResizeMode="CanResize"
     MouseLeftButtonDown="Drag_Window"
     MouseDoubleClick="Double_Click"
-    KeyDown="MainWindow_OnKeyDown">
-
-
-
+    KeyDown="MainWindow_OnKeyDown"
+    MouseWheel="OnMouseDownMain">
+    
     <Window.Resources>
         <!-- This is the ressource for the current SCROLLBARS-->
         <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
@@ -196,6 +195,8 @@
                         Executed="SettingsCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Debug" CanExecute="DebugCommand_CanExecute"
                         Executed="DebugCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Research" CanExecute="ResearchCommand_CanExecute"
+                        Executed="ResearchCommand_Executed" />
 
 
     </Window.CommandBindings>
@@ -336,9 +337,11 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </Menu>
-                <TextBox Name="ResearchBox" Foreground="Gray" FontSize="16" HorizontalAlignment="Left"
+                <TextBox Name="ResearchBox" Foreground="Gray" FontSize="16" HorizontalAlignment="Left" AcceptsReturn="False"
                          Text="Search (Ctrl + F)" Margin="462,0,0,7" Width="150" BorderThickness="2" GotFocus="ResearchBoxGotFocus" LostFocus="ResearchBoxLostFocus"
-                         KeyDown="OnKeyPressed"/>
+                         KeyDown="OnKeyPressed" />
+                <TextBlock Name="Occurences" FontSize="16" HorizontalAlignment="Left" Margin="620,-12,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="113"
+                           Foreground="Gray" Height="20"/>
             </Grid>
             <dragablz:TabablzControl Name="TabControl" DockPanel.Dock="Top" SelectionChanged="TabControl_OnSelectionChanged" >
                 <!-- White -->
@@ -356,6 +359,7 @@
                         </Grid.ColumnDefinitions>
                         <!-- White -->
                         <avalonedit:TextEditor
+                            
                             Typography.StandardLigatures="True"
                             FontFamily="Consolas"
                             Name="python_id_"
@@ -370,7 +374,7 @@
                             Grid.Column="1"
                             HorizontalScrollBarVisibility="Hidden">
                         </avalonedit:TextEditor>
-                        <Grid Name="grid_codebox">
+                        <Grid Name="grid_codebox" GotMouseCapture="CodeBoxSetLastElement">
                             <!-- White -->
                             <avalonedit:TextEditor
                                 FontFamily="Consolas"
@@ -384,13 +388,15 @@
                                 Margin="0,0,0,0"
                                 FontSize="12pt"
                                 Text=""
-                                HorizontalScrollBarVisibility="Hidden" />
+                                HorizontalScrollBarVisibility="Hidden">
+                            </avalonedit:TextEditor>
 
                         </Grid>
                         <Grid Grid.ColumnSpan="2" Height="120" VerticalAlignment="Stretch"
                               HorizontalAlignment="Stretch" Grid.Row="1" />
                         <!-- White -->
                         <avalonedit:TextEditor
+                            
                             FontFamily="Consolas"
                             Name="STD_id_"
                             Background="#FAFAFA"

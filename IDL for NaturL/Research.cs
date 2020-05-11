@@ -22,6 +22,7 @@ using System.Threading;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Media;
 using Dragablz;
+using ICSharpCode.AvalonEdit.Search;
 using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
 using HighlightingManager =
@@ -32,7 +33,11 @@ namespace IDL_for_NaturL
     public partial class MainWindow
     {
         private int _copyStart;
-
+        private bool _codeboxgotfocus;
+        private bool _pythongotfocus;
+        private int _occurrences;
+        private TextEditor _lastFocusedTextEditor;
+        
         public int GetLineFromIndex(int index)
         {
             TextEditor currentEditor =
@@ -49,34 +54,38 @@ namespace IDL_for_NaturL
 
             return line;
         }
-
+        
         public void ResearchBoxGotFocus(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("ResearchBox is focused");
             if (ResearchBox.IsFocused)
                 ResearchBox.Text = "";
         }
 
         public void ResearchBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            if (!ResearchBox.IsFocused &&
-                string.IsNullOrEmpty(ResearchBox.Text))
+            if (!ResearchBox.IsFocused)
+            {
                 ResearchBox.Text = "Search (Ctrl + F)";
+                Occurences.Text = "";
+            }
         }
-
-
         public void OnKeyPressed(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-                SearchInput(ResearchBox.Text);
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(ResearchBox.Text))
+            {
+                
+                _occurrences = CountOccurences(_lastFocusedTextEditor.Text, ResearchBox.Text);
+                Occurences.Text = _occurrences + " occurrences";
+                SearchInput(ResearchBox.Text, _lastFocusedTextEditor);
+            }
         }
 
-        public void SearchInput(string searched)
+        public void SearchInput(string searched, TextEditor textEditor)
         {
-            TextEditor currentEditor =
-                (TextEditor) FindName("CodeBox" + _currenttabId);
-            string fulltext = currentEditor.Text;
+            string fulltext = textEditor.Text;
             int textlength = fulltext.Length;
-            _copyStart = currentEditor.CaretOffset;
+            _copyStart = textEditor.CaretOffset;
             if (_copyStart == textlength)
                 _copyStart = 0;
             int index = fulltext.IndexOf(searched, _copyStart,
@@ -89,23 +98,53 @@ namespace IDL_for_NaturL
                     MessageBoxImage.Information);
                 if (messageBox == MessageBoxResult.OK)
                 {
-                    currentEditor.Select(0, 0);
+                    textEditor.Select(0, 0);
                     _copyStart = 0;
                     return;
                 }
             }
 
-            currentEditor.Select(index, searched.Length);
-            Console.WriteLine("Caret Offset is: " + currentEditor.CaretOffset);
-            if (GetLineFromIndex(index) > currentEditor.LineCount - 5)
-                currentEditor.ScrollToEnd();
+            textEditor.Select(index, searched.Length);
+            if (GetLineFromIndex(index) > textEditor.LineCount - 5)
+                textEditor.ScrollToEnd();
             else
-                currentEditor.ScrollToVerticalOffset(
-                    currentEditor.CaretOffset - 250);
+                textEditor.ScrollToVerticalOffset(
+                    textEditor.CaretOffset - 250);
             index += searched.Length;
             _copyStart = index;
-            Console.WriteLine("Index is: " + index + " Length is: " +
-                              fulltext.Length);
+        }
+
+        private int CountOccurences(string fulltext, string input)
+        {
+            int textlength = fulltext.Length;
+            int count = 0;
+            int index = fulltext.IndexOf(input, 0,
+                textlength, StringComparison.Ordinal);
+            while (index != -1)
+            {
+                count++;
+                index = fulltext.IndexOf(input, index + input.Length,
+                    textlength - index - input.Length, StringComparison.Ordinal);
+            }
+
+            return count;
+        }
+
+
+        private void CodeBoxSetLastElement(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("CodeBox is last");
+            _lastFocusedTextEditor.Select(0,0);
+            _lastFocusedTextEditor =
+                (TextEditor) FindName("CodeBox" + _currenttabId);
+            
+        }
+        private void PythonBoxSetLastElement(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Python is last");
+            _lastFocusedTextEditor.Select(0,0);
+            _lastFocusedTextEditor =
+                (TextEditor) FindName("python" + _currenttabId);
         }
     }
 }

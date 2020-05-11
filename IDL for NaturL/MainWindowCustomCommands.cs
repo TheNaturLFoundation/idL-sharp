@@ -156,5 +156,15 @@ namespace IDL_for_NaturL
                     new KeyGesture(Key.D, ModifierKeys.Control)
                 }
             );
+            public static readonly RoutedUICommand Research = new RoutedUICommand
+            (
+                "Research",
+                "Research",
+                typeof(CustomCommands),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.F, ModifierKeys.Control)
+                }
+            );
         }
 }

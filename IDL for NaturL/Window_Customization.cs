@@ -1,17 +1,7 @@
-using System;
 using System.Windows;
-using System.Windows.Input;
-using System.IO;
-using Path = System.IO.Path;
 using System.Windows.Controls;
-using System.Windows.Markup;
-using System.Xml;
-using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Highlighting;
-using System.Collections.Generic;
-using Dragablz;
-using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
+using System.Windows.Input;
+
 namespace IDL_for_NaturL
 {
     public partial class MainWindow
@@ -84,6 +74,21 @@ namespace IDL_for_NaturL
                 }
             }
         }
-        
+
+        private void OnMouseDownMain(object sender, MouseWheelEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                _lastFocusedTextEditor.VerticalScrollBarVisibility =
+                    ScrollBarVisibility.Disabled;
+                _lastFocusedTextEditor.FontSize += e.Delta < 0 ? _lastFocusedTextEditor.FontSize > 5 ? -1 : 0 : 1;
+            }
+
+            if (Keyboard.Modifiers == ModifierKeys.None)
+            {
+                _lastFocusedTextEditor.VerticalScrollBarVisibility =
+                    ScrollBarVisibility.Visible;
+            }
+        }
     }
 }

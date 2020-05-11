@@ -168,5 +168,15 @@ namespace IDL_for_NaturL
             Console.WriteLine("CurrentTabHandler: " + _currentTabHandler);
             Console.WriteLine("Size: " + attributes.Count);
         }
+        
+        private void ResearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ResearchCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            ResearchBox.Focus();
+        }
     }
 }
