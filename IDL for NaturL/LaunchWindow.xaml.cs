@@ -20,7 +20,7 @@ namespace IDL_for_NaturL
         {
             File.WriteAllText("../../../ressources/lastfiles.txt", "");
             mainWindow = new MainWindow();
-            this.Close();
+            Close();
             mainWindow.Show();
             mainWindow.NewFile(sender, e);
             mainWindow.RemoveTab(0);
@@ -30,7 +30,7 @@ namespace IDL_for_NaturL
         {
             File.WriteAllText("../../../ressources/lastfiles.txt", "");
             mainWindow = new MainWindow();
-            this.Close();
+            Close();
             mainWindow.Show();
             mainWindow.Open_Click();
             mainWindow.RemoveTab(0);
@@ -38,7 +38,7 @@ namespace IDL_for_NaturL
 
         private void Window_MouseDown(object sender, RoutedEventArgs e)
         {
-            this.DragMove();
+            DragMove();
         }
 
         private void Close_Window(object sender, RoutedEventArgs e)
@@ -49,13 +49,13 @@ namespace IDL_for_NaturL
         private void Open_Recent(object sender, RoutedEventArgs e)
         {
             mainWindow = new MainWindow();
-            this.Close();
+            Close();
             mainWindow.Show();
         }
 
         private void Minimize_Window(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            WindowState = WindowState.Minimized;
         }
     }
 }

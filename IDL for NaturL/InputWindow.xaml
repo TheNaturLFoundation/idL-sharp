@@ -3,14 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IDL_for_NaturL"
-        xmlns:self="clr-namespace:IDL_for_NaturL"
         mc:Ignorable="d"
         Title="Input file name" Height="186" Width="462"
         Icon="ressources\logoicon.png"
         Keyboard.KeyDown="Cancelled_ESC">
-    <Window.CommandBindings>
-    </Window.CommandBindings>
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="25,24,0,0" Text="Please input new file name:" TextWrapping="Wrap"
                    VerticalAlignment="Top" Width="148" />

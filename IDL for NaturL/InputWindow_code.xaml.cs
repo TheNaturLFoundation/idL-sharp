@@ -49,8 +49,7 @@ namespace IDL_for_NaturL
                 var myfile = File.Create(input.Text + ".ntl");
                 myfile.Close();
             }
-
-            this.Close();
+            Close();
         }
 
         private void Cancelled(object sender, RoutedEventArgs e)
