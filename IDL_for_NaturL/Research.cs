@@ -19,12 +19,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Media;
 using Dragablz;
 using ICSharpCode.AvalonEdit.Search;
-using ICSharpCode.TextEditor.Actions;
-using ICSharpCode.TextEditor.Document;
+
 using HighlightingManager =
     ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
@@ -33,8 +31,6 @@ namespace IDL_for_NaturL
     public partial class MainWindow
     {
         private int _copyStart;
-        private bool _codeboxgotfocus;
-        private bool _pythongotfocus;
         private int _occurrences;
         private TextEditor _lastFocusedTextEditor;
         

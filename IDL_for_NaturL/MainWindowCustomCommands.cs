@@ -17,11 +17,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Media;
 using Dragablz;
-using ICSharpCode.TextEditor.Actions;
-using ICSharpCode.TextEditor.Document;
 using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
 namespace IDL_for_NaturL

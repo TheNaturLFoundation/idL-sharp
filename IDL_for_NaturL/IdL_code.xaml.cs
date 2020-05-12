@@ -157,24 +157,19 @@ namespace IDL_for_NaturL
             TextEditor PythonBox =
                 ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
                     "python_grid")).Children[0]);
+            
+            // Events called in order to update attributes for research
             CodeBox.TextArea.GotFocus += CodeBoxSetLastElement;
             PythonBox.TextArea.GotFocus += PythonBoxSetLastElement;
+            
+            // Events called in order to manage the CTRL + Scroll with mouse
             CodeBox.TextArea.MouseWheel += OnMouseDownMain;
             PythonBox.TextArea.MouseWheel += OnMouseDownMain;
+            
+            // Events called on text typing for autocompletion
+            CodeBox.TextArea.KeyDown += CodeBox_TextArea_TextEntering;
         }
-
-        //THESE ARE THE METHODS THAT MANAGE THE INTERFACE BASIC COMMANDS-------------------------
-
-        /*
-         Do not touch at the moment, it is a method for opening a new window at the moment it is an input box
-         Can be useful for a lot of stuff for next presentation
-         private void NewWindow(object sender, RoutedEventArgs e)
-        {
-            Window inputWindow = new InputWindow((arg) => { this._file = arg;TabControl_OnSelectionChangedShow();
-        }*/
-
-        // This function refers to the event handler "IDL_Closing" in "Window" attributes,
-        // Handles the window closing, asks whether the user wants to save his file before closing.
+        
 
         private MessageBoxResult messageOnClose(string message)
         {
@@ -251,7 +246,6 @@ namespace IDL_for_NaturL
                 _currentTab);
             TabControl.SelectedIndex =
                 ((TabablzControl) FindName("TabControl")).Items.Count - 1;
-            //attributes.Remove(_currenttabId);
         }
 
         private void CloseTab()
@@ -278,13 +272,7 @@ namespace IDL_for_NaturL
                 UnregisterNamesAndRemove();
             }
         }
-
-
-        //-----------------------------------------------------------------------------------------
-
-        //These are the basic commands
-
-
+        
         private void TabControl_OnSelectionChanged(object sender,
             SelectionChangedEventArgs e)
         {
@@ -348,6 +336,4 @@ namespace IDL_for_NaturL
                 Set_Tab(9);
         }
     }
-
-    //------------------------------------------------------------------------------------------
 }
