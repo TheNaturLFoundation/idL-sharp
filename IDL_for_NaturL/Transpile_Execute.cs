@@ -35,10 +35,10 @@ namespace IDL_for_NaturL
                 {
                     StartInfo =
                     {
-                        FileName = "../../../ressources/naturL.exe",
-                        WorkingDirectory = "../../../ressources/",
+                        FileName = "ressources/naturL.exe",
+                        WorkingDirectory = "ressources/",
                         EnvironmentVariables = { ["NATURLPATH"] =
-                            Path.GetFullPath("../../../ressources")},
+                            Path.GetFullPath("ressources")},
                         Arguments = arguments,
                         StandardOutputEncoding = Encoding.UTF8,
                         StandardErrorEncoding = Encoding.UTF8,
@@ -103,10 +103,10 @@ namespace IDL_for_NaturL
                 {
                     StartInfo =
                     {
-                        FileName = "../../../ressources/naturL.exe",
-                        WorkingDirectory = "../../../ressources/",
+                        FileName = "ressources/naturL.exe",
+                        WorkingDirectory = "ressources/",
                         EnvironmentVariables = { ["NATURLPATH"] =
-                            Path.GetFullPath("../../../ressources")},
+                            Path.GetFullPath("ressources")},
                         StandardOutputEncoding = Encoding.UTF8,
                         StandardErrorEncoding = Encoding.UTF8,
                         RedirectStandardInput = true,
@@ -116,7 +116,7 @@ namespace IDL_for_NaturL
                     }
                 };
                 //process.StartInfo.EnvironmentVariables["NATURLPATH"] =
-                //    Path.GetFullPath("../../../ressources/naturL.exe");
+                //    Path.GetFullPath("ressources/naturL.exe");
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
                 StreamWriter inputWriter = process.StandardInput;

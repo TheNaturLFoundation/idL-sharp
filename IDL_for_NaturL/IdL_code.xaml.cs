@@ -11,7 +11,9 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using Dragablz;
+using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Search;
+using MaterialDesignThemes.Wpf;
 using HighlightingManager =
     ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
@@ -34,7 +36,8 @@ namespace IDL_for_NaturL
 
         private static Dictionary<string, TabHandling> attributes =
             new Dictionary<string, TabHandling>();
-
+        
+        CompletionWindow completionWindow;
         private TabHandling _currentTabHandler;
         private IHighlightingDefinition _highlightingDefinition;
         private double clickPosition;
@@ -59,8 +62,7 @@ namespace IDL_for_NaturL
             public override string ToString() =>
                 $"(Is File Selected : {_isFileSelected}, FirstData : {"first_data"}, IsSaved : {_isSaved}, File : {_file})";
         }
-
-
+        //MyCompletionWindow myCompletionWindow;
         public MainWindow()
         {
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
@@ -70,7 +72,7 @@ namespace IDL_for_NaturL
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab_id_")).FindName(
                     "grid_codebox")).Children[0];
             XmlTextReader reader =
-                new XmlTextReader("../../../naturl_coloration.xshd");
+                new XmlTextReader("ressources/naturl_coloration.xshd");
             _highlightingDefinition =
                 HighlightingLoader.Load(reader, HighlightingManager.Instance);
             textEditor.SyntaxHighlighting = _highlightingDefinition;
@@ -78,7 +80,7 @@ namespace IDL_for_NaturL
 
             //attributes = new Dictionary<string, TabHandling>();
             string[] paths =
-                File.ReadAllLines("../../../ressources/lastfiles.txt");
+                File.ReadAllLines("ressources/lastfiles.txt");
             tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
             ((TabablzControl) FindName("TabControl")).Items.RemoveAt(0);
             if (paths.Length == 0)
@@ -165,7 +167,6 @@ namespace IDL_for_NaturL
             // Events called in order to manage the CTRL + Scroll with mouse
             CodeBox.TextArea.MouseWheel += OnMouseDownMain;
             PythonBox.TextArea.MouseWheel += OnMouseDownMain;
-            
             // Events called on text typing for autocompletion
             CodeBox.TextArea.KeyDown += CodeBox_TextArea_TextEntering;
         }
@@ -226,7 +227,7 @@ namespace IDL_for_NaturL
                 }
             }
 
-            File.WriteAllText("../../../ressources/lastfiles.txt",
+            File.WriteAllText("ressources/lastfiles.txt",
                 paths);
             if (!cancelled)
             {

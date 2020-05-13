@@ -32,7 +32,7 @@ namespace IDL_for_NaturL
     {
         private int _copyStart;
         private int _occurrences;
-        private TextEditor _lastFocusedTextEditor;
+        public static TextEditor _lastFocusedTextEditor;
         
         public int GetLineFromIndex(int index)
         {
