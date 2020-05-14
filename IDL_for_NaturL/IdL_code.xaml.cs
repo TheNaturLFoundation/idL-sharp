@@ -168,7 +168,7 @@ namespace IDL_for_NaturL
             CodeBox.TextArea.MouseWheel += OnMouseDownMain;
             PythonBox.TextArea.MouseWheel += OnMouseDownMain;
             // Events called on text typing for autocompletion
-            CodeBox.TextArea.KeyDown += CodeBox_TextArea_TextEntering;
+            CodeBox.TextArea.PreviewKeyDown += CodeBox_TextArea_TextEntering;
         }
         
 

@@ -64,7 +64,7 @@ namespace IDL_for_NaturL
         public void CodeBox_TextArea_TextEntering(object sender,
             KeyEventArgs e)
         {
-            if (e.Key == Key.Tab | e.Key == Key.System)
+            if (e.Key == Key.Tab)
             {
                 int i = _lastFocusedTextEditor.CaretOffset;
                 int countBn = 0; // Count Back-slash n
@@ -72,7 +72,6 @@ namespace IDL_for_NaturL
                 {
                     if (countBn == 4)
                     {
-                        e.Handled = true;
                         return;
                     }
                     if (_lastFocusedTextEditor.Text[i] == '\n')
@@ -99,12 +98,18 @@ namespace IDL_for_NaturL
             if (_lastFocusedTextEditor.CaretOffset > 0)
             {
                 int offset = _lastFocusedTextEditor.CaretOffset - 1;
-                while (offset > 0 && _lastFocusedTextEditor.Text[offset] != ' ' && _lastFocusedTextEditor.Text[offset] != '\n')
+                while (offset > -1 && _lastFocusedTextEditor.Text[offset] != ' ' 
+                                  && _lastFocusedTextEditor.Text[offset] != '\n'
+                                  && _lastFocusedTextEditor.Text[offset] != '\t'
+                                  && _lastFocusedTextEditor.Text[offset] != '\r'
+                                  && _lastFocusedTextEditor.Text[offset] != '('
+                                  && _lastFocusedTextEditor.Text[offset] != ')')
                 {
                     lastTypedWord = _lastFocusedTextEditor.Text[offset] + lastTypedWord;
                     offset--;
                 }
             }
+            Console.WriteLine(lastTypedWord);
             completionWindow = CompletionWindow.GetInstance(_lastFocusedTextEditor.TextArea);
             IList<ICompletionData> data =
                 completionWindow.CompletionList.CompletionData;
@@ -188,6 +193,7 @@ namespace IDL_for_NaturL
                     _lastFocusedTextEditor.CaretOffset = offset;
                 }
                 textArea.Document.Replace(mySegment, SetTextDep());
+                _lastFocusedTextEditor.CaretOffset = SetOffSet(offset, _lastFocusedTextEditor.Text);
             }
 
             public string SetTextDep()
@@ -196,8 +202,8 @@ namespace IDL_for_NaturL
                 {
                     case "fonction":
                         return "fonction \x1A(\x1A) -> \x1A\n" +
-                               "\tvariables\n\x1A\n" +
-                               "debut\n\x1A"+"\nretourner\nfin";
+                               "\tvariables\n\t\t\x1A\n" +
+                               "debut\n\t\x1A"+"\nretourner\nfin";
                     case "variables":
                         return "variables";
                     case "debut":
@@ -215,17 +221,17 @@ namespace IDL_for_NaturL
                     case "fin":
                         return "fin\n";
                     case "si":
-                        return "si \x1A alors\n\x001A\nfin\n";
+                        return "si \x1A alors\n\t\x001A\nfin\n";
                     case "sinon_si":
                         return "sinon_si \x1A alors\nfin";
                     case "tant_que":
-                        return "tant_que \x1A faire\nfin";
+                        return "tant_que \x1A faire\n\t\x001A\nfin";
                     case "alors":
                         return "alors";
                     case "procedure":
                         return "procedure \x1A(\x1A)\n" +
-                               "    variables\n\x1A\n" +
-                               "debut\n\x1A    \nfin";
+                               "\tvariables\n\t\t\x1A\n" +
+                               "debut\n\t\x1A\nfin";
                     case "utiliser":
                         return "utiliser \x1A";
                     case "sinon":
@@ -233,6 +239,30 @@ namespace IDL_for_NaturL
                     default:
                         return Text;
                 }
+            }
+
+            public int SetOffSet(int offset, string text)
+            {
+                int i = offset;
+                while (i < text.Length)
+                {
+                    Console.WriteLine(text[i]);
+                    if (text[i] == '\x1A')
+                    {
+                        Console.WriteLine("Returned Template");
+                        return offset;
+                    }
+
+                    if (text[i] == '\n')
+                    {
+                        Console.WriteLine("Returned i");
+                        return i;
+                    }
+
+                    i++;
+                }
+                Console.WriteLine("Default");
+                return i;
             }
         }
     }
