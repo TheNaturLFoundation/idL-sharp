@@ -229,9 +229,6 @@
         <CommandBinding Command="self:CustomCommands.Execute"
                         CanExecute="ExecuteCommand_CanExecute"
                         Executed="ExecuteCommand_Executed" />
-        <CommandBinding Command="self:CustomCommands.NewWindow"
-                        CanExecute="NewWindowCommand_CanExecute"
-                        Executed="NewWindowCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.NewTab"
                         CanExecute="NewTabCommand_CanExecute"
                         Executed="NewTabCommand_Executed" />
@@ -372,62 +369,61 @@
                 <Menu Name="Menu" DockPanel.Dock="Top" Height="39" Background="White"
                       HorizontalAlignment="Left">
                     <!-- White -->
-                    <MenuItem Header="_File" Height="38">
-                        <MenuItem Header="_New"
-                                  Command="self:CustomCommands.New" />
-                        <MenuItem Header="_New Window"
-                                  Command="self:CustomCommands.NewWindow" />
-                        <MenuItem Header="_New Tab"
-                                  Command="self:CustomCommands.NewTab" />
-                        <MenuItem Header="_Close Tab"
-                                  Command="self:CustomCommands.CloseTab" />
-                        <MenuItem Header="_Open"
-                                  Command="self:CustomCommands.Open" />
-                        <MenuItem Header="_Save"
-                                  Command="self:CustomCommands.Save" />
-                        <MenuItem Header="_Save As..."
-                                  Command="self:CustomCommands.SaveAs" />
-                        <MenuItem Header="_Settings"
-                                  Command="self:CustomCommands.Settings" />
+                    <MenuItem Header="_Fichier" Height="38">
+                        <MenuItem Header="_Nouveau Fichier"
+                                  Command="self:CustomCommands.New" ToolTip="Create a new file" />
+                        <MenuItem Header="_Nouvel Onglet"
+                                  Command="self:CustomCommands.NewTab" ToolTip="Open a new tab"/>
+                        <MenuItem Header="_Fermer l'onglet"
+                                  Command="self:CustomCommands.CloseTab" ToolTip="Close the current tab"/>
+                        <MenuItem Header="_Ouvrir un fichier"
+                                  Command="self:CustomCommands.Open" ToolTip="Open a file"/>
+                        <MenuItem Header="_Sauvegarder"
+                                  Command="self:CustomCommands.Save" ToolTip="Save the file"/>
+                        <MenuItem Header="_Sauvegarder sous"
+                                  Command="self:CustomCommands.SaveAs" ToolTip="Save the file as"/>
+                        <MenuItem Header="_Paramètres"
+                                  Command="self:CustomCommands.Settings" ToolTip="Open the settings window"/>
                         <Separator />
-                        <MenuItem Header="_Exit"
-                                  Command="self:CustomCommands.Exit" />
+                        <MenuItem Header="_Quitter idL"
+                                  Command="self:CustomCommands.Exit" ToolTip="Exit idL"/>
                     </MenuItem>
 
-                    <MenuItem Header="Edit" Height="38">
-                        <MenuItem Header="_Copy"
+                    <MenuItem Header="Editer" Height="39">
+                        <MenuItem Header="_Copier"
                                   Command="ApplicationCommands.Copy"
                                   CommandTarget="{Binding ElementName=CodeBox_id_}" />
-                        <MenuItem Header="_Paste"
+                        <MenuItem Header="_Coller"
                                   Command="ApplicationCommands.Paste"
                                   CommandTarget="{Binding ElementName=CodeBox_id_}" />
-                        <MenuItem Header="_Cut"
+                        <MenuItem Header="_Couper"
                                   Command="ApplicationCommands.Cut"
                                   CommandTarget="{Binding ElementName=CodeBox_id_}" />
-                        <MenuItem Header="_Undo"
+                        <MenuItem Header="_Annuler"
                                   Command="ApplicationCommands.Undo"
                                   CommandTarget="{Binding ElementName=CodeBox_id_}" />
-                        <MenuItem Header="Redo"
+                        <MenuItem Header="Rétablir"
                                   Command="ApplicationCommands.Redo"
                                   CommandTarget="{Binding ElementName=CodeBox_id_}" />
                     </MenuItem>
-                    <MenuItem Header="Language" Height="38">
+                    <MenuItem Header="Langue" Height="38">
                         <MenuItem Header="Francais" Height="38"
                                   IsCheckable="True" Name="FrenchBox"
+                                  IsChecked="True"
                                   Click="FrenchBoxClicked" />
                         <MenuItem Header="English" Height="38"
                                   IsCheckable="True" Name="EngBox"
-                                  Click="EngBoxClicked" IsChecked="True" />
+                                  Click="EngBoxClicked" IsChecked="False" />
                     </MenuItem>
                     <MenuItem Height="39" Width="51" Header=""
-                              Command="self:CustomCommands.Execute">
+                              Command="self:CustomCommands.Execute" ToolTip="Execute">
                         <MenuItem.Icon>
                             <Image Source="ressources/Untitled.png"
                                    Margin="-14,-8,-16,-8" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Height="39" Width="51" Header=""
-                              Command="self:CustomCommands.Transpile">
+                              Command="self:CustomCommands.Transpile" ToolTip="Transpile">
                         <MenuItem.Icon>
                             <Image Source="ressources/transpile.png"
                                    Margin="-14,-8,-16,-8" />

@@ -65,9 +65,9 @@ namespace IDL_for_NaturL
         //MyCompletionWindow myCompletionWindow;
         public MainWindow()
         {
+            Environment.SetEnvironmentVariable("NATURLPATH", Path.GetFullPath("ressources"));
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             InitializeComponent();
-            Console.WriteLine("Initialized MainWindow");
             TextEditor textEditor =
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab_id_")).FindName(
                     "grid_codebox")).Children[0];
@@ -86,8 +86,6 @@ namespace IDL_for_NaturL
             if (paths.Length == 0)
             {
                 NewTabItems(_tabInt++, null);
-                Console.WriteLine("isfileselected " +
-                                  _currentTabHandler._isFileSelected);
             }
             else
             {
@@ -108,7 +106,6 @@ namespace IDL_for_NaturL
 
         private void NewTabItems(int n, string path)
         {
-            Console.WriteLine("NewTabItems" + n);
             StringReader stringReader =
                 new StringReader(tabitem.Replace("_id_", n.ToString()));
             XmlReader xmlReader = XmlReader.Create(stringReader);
@@ -138,8 +135,7 @@ namespace IDL_for_NaturL
                 ((TabablzControl) FindName("TabControl")).Items.Count - 1;
             if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
             {
-                Console.WriteLine(
-                    "Warning in CurrenttabHandler (On selection changed)");
+                return;
             }
 
             if (path != null)
@@ -191,8 +187,7 @@ namespace IDL_for_NaturL
                 if (!attributes.TryGetValue(_currenttabId,
                     out _currentTabHandler))
                 {
-                    Console.WriteLine(
-                        "Warning in CurrenttabHandler (On selection changed)");
+                    return;
                 }
 
                 if (!_currentTabHandler._isFileSelected && DataChanged())
@@ -244,7 +239,6 @@ namespace IDL_for_NaturL
         {
             if (saved)
             {
-                Console.WriteLine("Remove " + _currenttabId);
                 UnregisterName("Tab" + _currenttabId);
                 UnregisterName("CodeBox" + _currenttabId);
                 UnregisterName("python" + _currenttabId);
@@ -288,20 +282,16 @@ namespace IDL_for_NaturL
             {
                 ((TabablzControl) e.Source).SelectedIndex = 0;
             }
-
-            Console.WriteLine("Added items " + e.AddedItems.Count +
-                              ", Removed items " + e.RemovedItems.Count);
+            
             if (e.AddedItems.Count != 0)
             {
                 var source = (TabItem) e.AddedItems[0];
                 _currentTab = ((TabablzControl) e.Source).SelectedIndex;
                 _currenttabId = source.Name.Replace("Tab", "");
-                Console.WriteLine("Current tab id " + _currenttabId);
                 if (!attributes.TryGetValue(_currenttabId,
                     out _currentTabHandler))
                 {
-                    Console.WriteLine(
-                        "Warning in CurrenttabHandler (On selection changed)");
+                    return;
                 }
             }
             else
@@ -317,8 +307,7 @@ namespace IDL_for_NaturL
             TabControl.SelectedIndex = n - 1;
             if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
             {
-                Console.WriteLine(
-                    "Warning in CurrenttabHandler (On selection changed)");
+                return;
             }
         }
 

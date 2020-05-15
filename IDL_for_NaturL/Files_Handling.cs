@@ -12,9 +12,6 @@ namespace IDL_for_NaturL
     {
         private bool DataChanged()
         {
-            Console.WriteLine("First data is:" + _currentTabHandler._firstData + "//");
-            Console.WriteLine("Current data is:" + ((TextEditor) FindName("CodeBox" + _currenttabId)).Text + "//");
-            Console.WriteLine(((TextEditor) FindName("CodeBox" + _currenttabId)).Text == _currentTabHandler._firstData);
             if (_currentTabHandler._firstData != ((TextEditor) FindName("CodeBox" + _currenttabId)).Text)
             {
                 _currentTabHandler._isSaved = false;
@@ -27,7 +24,6 @@ namespace IDL_for_NaturL
         // Content of the opened file is then showed in the codebox of idl
         public void Open_Click()
         {
-            Console.WriteLine("Open_Click");
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt| cs files (*.cs)|*.cs"
@@ -46,7 +42,6 @@ namespace IDL_for_NaturL
         
         public void NewFile(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("NewFile");
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "nl files (*.ntl)|*.ntl*|Text files (*.txt)|*.txt"
@@ -100,7 +95,6 @@ namespace IDL_for_NaturL
 
         private bool Save_AsClick()
         {
-            Console.WriteLine("Save_AsClick");
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "ntl files (*.ntl)|*.ntl*|Text files (*.txt)|*.txt"

@@ -53,7 +53,6 @@ namespace IDL_for_NaturL
         
         public void ResearchBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("ResearchBox is focused");
             if (ResearchBox.IsFocused)
                 ResearchBox.Text = "";
         }
@@ -129,7 +128,6 @@ namespace IDL_for_NaturL
 
         private void CodeBoxSetLastElement(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("CodeBox is last");
             _lastFocusedTextEditor.Select(0,0);
             _lastFocusedTextEditor =
                 (TextEditor) FindName("CodeBox" + _currenttabId);
@@ -137,7 +135,6 @@ namespace IDL_for_NaturL
         }
         private void PythonBoxSetLastElement(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Python is last");
             _lastFocusedTextEditor.Select(0,0);
             _lastFocusedTextEditor =
                 (TextEditor) FindName("python" + _currenttabId);

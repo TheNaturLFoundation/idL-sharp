@@ -58,7 +58,7 @@ namespace IDL_for_NaturL
             "vrai",
             "faux",
         };
-        
+
 
         // This function will get the last typed word and update an attribute
         public void CodeBox_TextArea_TextEntering(object sender,
@@ -72,9 +72,9 @@ namespace IDL_for_NaturL
                 {
                     if (countBn == 4)
                     {
-                        Console.WriteLine(countBn);
                         return;
                     }
+
                     if (_lastFocusedTextEditor.Text[i] == '\n')
                     {
                         countBn++;
@@ -86,50 +86,54 @@ namespace IDL_for_NaturL
                         int j = ++i;
                         while (j < _lastFocusedTextEditor.Text.Length && _lastFocusedTextEditor.Text[j] != '/')
                         {
-                            length ++;
+                            length++;
                             j++;
                         }
+
                         e.Handled = true;
-                        _lastFocusedTextEditor.Select(i-1,length+1);
+                        _lastFocusedTextEditor.Select(i - 1, length + 1);
                         return;
                     }
 
                     i++;
                 }
             }
+
             if (!char.IsLetterOrDigit(KeyUtil.KeyToChar(e.Key)) && e.Key != Key.Back && e.Key != Key.Delete)
             {
                 completionWindow?.Close();
                 return;
             }
+
             string lastTypedWord = KeyUtil.KeyToChar(e.Key).ToString();
             if (_lastFocusedTextEditor.CaretOffset > 0)
             {
                 int offset = _lastFocusedTextEditor.CaretOffset - 1;
-                while (offset > -1 && _lastFocusedTextEditor.Text[offset] != ' ' 
-                                  && _lastFocusedTextEditor.Text[offset] != '\n'
-                                  && _lastFocusedTextEditor.Text[offset] != '\t'
-                                  && _lastFocusedTextEditor.Text[offset] != '\r'
-                                  && _lastFocusedTextEditor.Text[offset] != '('
-                                  && _lastFocusedTextEditor.Text[offset] != ')')
+                while (offset > -1 && _lastFocusedTextEditor.Text[offset] != ' '
+                                   && _lastFocusedTextEditor.Text[offset] != '\n'
+                                   && _lastFocusedTextEditor.Text[offset] != '\t'
+                                   && _lastFocusedTextEditor.Text[offset] != '\r'
+                                   && _lastFocusedTextEditor.Text[offset] != '('
+                                   && _lastFocusedTextEditor.Text[offset] != ')')
                 {
                     lastTypedWord = _lastFocusedTextEditor.Text[offset] + lastTypedWord;
                     offset--;
                 }
             }
-            Console.WriteLine(lastTypedWord);
+
             completionWindow = CompletionWindow.GetInstance(_lastFocusedTextEditor.TextArea);
             IList<ICompletionData> data =
                 completionWindow.CompletionList.CompletionData;
             // filter for strict completion Where(keyword => CompletionScore(keyword,lastTypedWord) > 0).
-            var sorted = Keywords.Where(keyword => CompletionScore(keyword,lastTypedWord) >= 0)
+            var sorted = Keywords.Where(keyword => CompletionScore(keyword, lastTypedWord) >= 0)
                 .OrderBy
-            (keyword => CompletionScore(keyword, lastTypedWord));
+                    (keyword => CompletionScore(keyword, lastTypedWord));
             foreach (var keyword in sorted)
             {
-                MyCompletionData myCompletionData = new MyCompletionData(keyword,language,_lastFocusedTextEditor;
+                MyCompletionData myCompletionData = new MyCompletionData(keyword, language, _lastFocusedTextEditor);
                 data.Add(myCompletionData);
             }
+
             completionWindow.Show();
         }
 
@@ -139,12 +143,13 @@ namespace IDL_for_NaturL
             foreach (var chr in input)
             {
                 int index = reference.IndexOf(chr) + 1;
-                sum += index * 1.0f/(input.Length*0.5f);
+                sum += index * 1.0f / (input.Length * 0.5f);
                 if (index == 0)
                 {
                     return -1;
                 }
             }
+
             return sum;
         }
 
@@ -207,61 +212,53 @@ namespace IDL_for_NaturL
                 }
 
                 textArea.Document.Replace(mySegment, SetTextDep());
-                Lastfocusedtexteditor.CaretOffset =
-                    SetOffSet(offset, Lastfocusedtexteditor.Text, SetTextDep().Length);
+                Lastfocusedtexteditor.CaretOffset = SetOffSet(offset, Lastfocusedtexteditor.Text, SetTextDep().Length);
             }
 
             public string SetTextDep()
             {
-                // the language switch will be usefull if we translate naturL
-                switch (language)
+                switch (Text)
                 {
-                    case "french":
-                        switch (Text)
-                        {
-
-                            case "fonction":
-                                return "fonction \\NOM/(\\PARAMETRES/) -> \\TYPE_RETOUR/\n" +
-                                       "\tvariables\n\t\t\\VARIABLES/\n" +
-                                       "debut\n\t\\CODE/\n\tretourner\nfin";
-                            case "variables":
-                                return "variables";
-                            case "debut":
-                                return "debut\nfin";
-                            case "pour":
-                                return "pour \\VAR/ de \\DEBUT/ jusqu_a \\FIN/\nfin";
-                            case "de":
-                                return "de";
-                            case "jusqu_a":
-                                return "jusqu_a";
-                            case "faire":
-                                return "faire";
-                            case "retourner":
-                                return "retourner";
-                            case "fin":
-                                return "fin\n";
-                            case "si":
-                                return "si \\CONDITION/ alors\n\t\\CODE/\nfin\n";
-                            case "sinon_si":
-                                return "sinon_si \\CONDITION/ alors\n\t\\CODE/\n";
-                            case "tant_que":
-                                return "tant_que \\CONDITION/ faire\n\t\\CODE/\nfin";
-                            case "alors":
-                                return "alors";
-                            case "procedure":
-                                return "procedure \\NOM/(\\PARAMETRES/)\n" +
-                                       "\tvariables\n\t\t\\VARIABLES/\n" +
-                                       "debut\n\t\\CODE/\nfin";
-                            case "utiliser":
-                                return "utiliser";
-                            case "sinon":
-                                return "sinon\n\t\\CODE/";
-                            default:
-                                return Text;
-                        }
+                    case "fonction":
+                        return "fonction \\NOM/(\\PARAMETRES/) -> \\TYPE_RETOUR/\n" +
+                               "\tvariables\n\t\t\\VARIABLES/\n" +
+                               "debut\n\t\\CODE/\n\tretourner\nfin";
+                    case "variables":
+                        return "variables";
+                    case "debut":
+                        return "debut\nfin";
+                    case "pour":
+                        return "pour \\VAR/ de \\DEBUT/ jusqu_a \\FIN/\nfin";
+                    case "de":
+                        return "de";
+                    case "jusqu_a":
+                        return "jusqu_a";
+                    case "faire":
+                        return "faire";
+                    case "retourner":
+                        return "retourner";
+                    case "fin":
+                        return "fin\n";
+                    case "si":
+                        return "si \\CONDITION/ alors\n\t\\CODE/\nfin\n";
+                    case "sinon_si":
+                        return "sinon_si \\CONDITION/ alors\n\t\\CODE/\n";
+                    case "tant_que":
+                        return "tant_que \\CONDITION/ faire\n\t\\CODE/\nfin";
+                    case "alors":
+                        return "alors";
+                    case "procedure":
+                        return "procedure \\NOM/(\\PARAMETRES/)\n" +
+                               "\tvariables\n\t\t\\VARIABLES/\n" +
+                               "debut\n\t\\CODE/\nfin";
+                    case "utiliser":
+                        return "utiliser";
+                    case "sinon":
+                        return "sinon\n\t\\CODE/";
+                    default:
+                        return Text;
                 }
-        }
-
+            }
             public int SetOffSet(int offset, string text, int align)
             {
                 int i = offset;
@@ -276,6 +273,7 @@ namespace IDL_for_NaturL
                     {
                         return offset + align;
                     }
+
                     i++;
                 }
 
@@ -283,18 +281,18 @@ namespace IDL_for_NaturL
             }
         }
     }
+}
 
-    public class MySegment : ISegment
+public class MySegment : ISegment
+{
+    public int Offset { get; }
+    public int Length { get; }
+    public int EndOffset { get; }
+
+    public MySegment(int offset, int length, int endOffset)
     {
-        public int Offset { get; }
-        public int Length { get; }
-        public int EndOffset { get; }
-
-        public MySegment(int offset, int length, int endOffset)
-        {
-            Offset = offset;
-            Length = length;
-            EndOffset = endOffset;
-        }
+        Offset = offset;
+        Length = length;
+        EndOffset = endOffset;
     }
 }

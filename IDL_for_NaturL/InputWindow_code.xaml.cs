@@ -62,7 +62,6 @@ namespace IDL_for_NaturL
         {
             if (Key.Escape == e?.Key)
             {
-                Console.WriteLine("Escape");
                 this.Close();
                 cancelled = true;
             }

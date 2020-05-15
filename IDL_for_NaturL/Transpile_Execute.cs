@@ -53,10 +53,7 @@ namespace IDL_for_NaturL
                 StreamWriter inputWriter = process.StandardInput;
                 StreamReader reader = process.StandardError;
                 StreamReader outputreader = process.StandardOutput;
-                Console.WriteLine(outputreader.CurrentEncoding);
-                Console.WriteLine("petit ");
                 inputWriter.Write(((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
-                Console.WriteLine("yop");
                 inputWriter.Close();
                 process.WaitForExit();
                 string error = reader.ReadLine();

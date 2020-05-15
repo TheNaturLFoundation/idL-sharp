@@ -99,17 +99,6 @@ namespace IDL_for_NaturL
                 }
             );
 
-            public static readonly RoutedUICommand NewWindow = new RoutedUICommand
-            (
-                "NewWindow",
-                "NewWindow",
-                typeof(CustomCommands),
-                new InputGestureCollection()
-                {
-                    new KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift)
-                }
-            );
-
             public static readonly RoutedUICommand New = new RoutedUICommand
             (
                 "New",
