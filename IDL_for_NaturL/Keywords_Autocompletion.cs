@@ -72,6 +72,7 @@ namespace IDL_for_NaturL
                 {
                     if (countBn == 4)
                     {
+                        Console.WriteLine(countBn);
                         return;
                     }
                     if (_lastFocusedTextEditor.Text[i] == '\n')
@@ -79,10 +80,17 @@ namespace IDL_for_NaturL
                         countBn++;
                     }
 
-                    if (_lastFocusedTextEditor.Text[i] == '\x1A')
+                    if (_lastFocusedTextEditor.Text[i] == '\\')
                     {
+                        int length = 1;
+                        int j = ++i;
+                        while (j < _lastFocusedTextEditor.Text.Length && _lastFocusedTextEditor.Text[j] != '/')
+                        {
+                            length ++;
+                            j++;
+                        }
                         e.Handled = true;
-                        _lastFocusedTextEditor.Select(i,1);
+                        _lastFocusedTextEditor.Select(i-1,length+1);
                         return;
                     }
 
@@ -119,7 +127,7 @@ namespace IDL_for_NaturL
             (keyword => CompletionScore(keyword, lastTypedWord));
             foreach (var keyword in sorted)
             {
-                MyCompletionData myCompletionData = new MyCompletionData(keyword);
+                MyCompletionData myCompletionData = new MyCompletionData(keyword,language,_lastFocusedTextEditor;
                 data.Add(myCompletionData);
             }
             completionWindow.Show();
@@ -139,13 +147,15 @@ namespace IDL_for_NaturL
             }
             return sum;
         }
-        
-        
+
+
         public class MyCompletionData : ICompletionData
         {
-            public MyCompletionData(string text)
+            public MyCompletionData(string text, string language, TextEditor lastfocusedtexteditor)
             {
                 this.Text = text;
+                this.language = language;
+                this.Lastfocusedtexteditor = lastfocusedtexteditor;
             }
 
             public System.Windows.Media.ImageSource Image
@@ -153,6 +163,8 @@ namespace IDL_for_NaturL
                 get { return null; }
             }
 
+            public TextEditor Lastfocusedtexteditor { get; private set; }
+            public string language { get; private set; }
             public string Text { get; private set; }
 
             // Use this property if you want to show a fancy UIElement in the list.
@@ -163,7 +175,7 @@ namespace IDL_for_NaturL
 
             public object Description
             {
-                get { return "Description for " + this.Text ; }
+                get { return "Description for " + this.Text; }
             }
             //+ SetDesc(Text)
 
@@ -172,96 +184,101 @@ namespace IDL_for_NaturL
             public void Complete(TextArea textArea, ISegment completionSegment,
                 EventArgs insertionRequestEventArgs)
             {
-                int offset = _lastFocusedTextEditor.CaretOffset;
-                while (offset > 0 && (char.IsLetterOrDigit(_lastFocusedTextEditor.Text[offset - 1]) 
-                       || _lastFocusedTextEditor.Text[offset-1] == '_'))
+                int offset = Lastfocusedtexteditor.CaretOffset;
+                while (offset > 0 && (char.IsLetterOrDigit(Lastfocusedtexteditor.Text[offset - 1])
+                                      || Lastfocusedtexteditor.Text[offset - 1] == '_'))
                 {
                     offset--;
                 }
+
                 MySegment mySegment;
                 if (offset == 1)
                 {
-                       mySegment = new MySegment(0,0,0);
-                       textArea.Document.Text = "";
-                       _lastFocusedTextEditor.CaretOffset = 0;
+                    mySegment = new MySegment(0, 0, 0);
+                    textArea.Document.Text = "";
+                    Lastfocusedtexteditor.CaretOffset = 0;
                 }
                 else
                 {
                     mySegment = new MySegment(offset,
                         completionSegment.EndOffset - offset
                         , completionSegment.EndOffset);
-                    _lastFocusedTextEditor.CaretOffset = offset;
+                    Lastfocusedtexteditor.CaretOffset = offset;
                 }
+
                 textArea.Document.Replace(mySegment, SetTextDep());
-                _lastFocusedTextEditor.CaretOffset = SetOffSet(offset, _lastFocusedTextEditor.Text);
+                Lastfocusedtexteditor.CaretOffset =
+                    SetOffSet(offset, Lastfocusedtexteditor.Text, SetTextDep().Length);
             }
 
             public string SetTextDep()
             {
-                switch (Text) 
+                // the language switch will be usefull if we translate naturL
+                switch (language)
                 {
-                    case "fonction":
-                        return "fonction \x1A(\x1A) -> \x1A\n" +
-                               "\tvariables\n\t\t\x1A\n" +
-                               "debut\n\t\x1A"+"\nretourner\nfin";
-                    case "variables":
-                        return "variables";
-                    case "debut":
-                        return "debut \x1A\nfin";
-                    case "pour":
-                        return "pour \x1A de \x1A jusqu_a \x1A\nfin";
-                    case "de":
-                        return "de";
-                    case "jusqu_a":
-                        return "jusqu_a";
-                    case "faire":
-                        return "faire";
-                    case "retourner":
-                        return "retourner \x1A";
-                    case "fin":
-                        return "fin\n";
-                    case "si":
-                        return "si \x1A alors\n\t\x001A\nfin\n";
-                    case "sinon_si":
-                        return "sinon_si \x1A alors\nfin";
-                    case "tant_que":
-                        return "tant_que \x1A faire\n\t\x001A\nfin";
-                    case "alors":
-                        return "alors";
-                    case "procedure":
-                        return "procedure \x1A(\x1A)\n" +
-                               "\tvariables\n\t\t\x1A\n" +
-                               "debut\n\t\x1A\nfin";
-                    case "utiliser":
-                        return "utiliser \x1A";
-                    case "sinon":
-                        return "sinon\n\x1A";
-                    default:
-                        return Text;
-                }
-            }
+                    case "french":
+                        switch (Text)
+                        {
 
-            public int SetOffSet(int offset, string text)
+                            case "fonction":
+                                return "fonction \\NOM/(\\PARAMETRES/) -> \\TYPE_RETOUR/\n" +
+                                       "\tvariables\n\t\t\\VARIABLES/\n" +
+                                       "debut\n\t\\CODE/\n\tretourner\nfin";
+                            case "variables":
+                                return "variables";
+                            case "debut":
+                                return "debut\nfin";
+                            case "pour":
+                                return "pour \\VAR/ de \\DEBUT/ jusqu_a \\FIN/\nfin";
+                            case "de":
+                                return "de";
+                            case "jusqu_a":
+                                return "jusqu_a";
+                            case "faire":
+                                return "faire";
+                            case "retourner":
+                                return "retourner";
+                            case "fin":
+                                return "fin\n";
+                            case "si":
+                                return "si \\CONDITION/ alors\n\t\\CODE/\nfin\n";
+                            case "sinon_si":
+                                return "sinon_si \\CONDITION/ alors\n\t\\CODE/\n";
+                            case "tant_que":
+                                return "tant_que \\CONDITION/ faire\n\t\\CODE/\nfin";
+                            case "alors":
+                                return "alors";
+                            case "procedure":
+                                return "procedure \\NOM/(\\PARAMETRES/)\n" +
+                                       "\tvariables\n\t\t\\VARIABLES/\n" +
+                                       "debut\n\t\\CODE/\nfin";
+                            case "utiliser":
+                                return "utiliser";
+                            case "sinon":
+                                return "sinon\n\t\\CODE/";
+                            default:
+                                return Text;
+                        }
+                }
+        }
+
+            public int SetOffSet(int offset, string text, int align)
             {
                 int i = offset;
                 while (i < text.Length)
                 {
-                    Console.WriteLine(text[i]);
-                    if (text[i] == '\x1A')
+                    if (text[i] == '\\')
                     {
-                        Console.WriteLine("Returned Template");
                         return offset;
                     }
 
                     if (text[i] == '\n')
                     {
-                        Console.WriteLine("Returned i");
-                        return i;
+                        return offset + align;
                     }
-
                     i++;
                 }
-                Console.WriteLine("Default");
+
                 return i;
             }
         }

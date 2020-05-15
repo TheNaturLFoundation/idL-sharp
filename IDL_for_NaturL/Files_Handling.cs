@@ -83,28 +83,29 @@ namespace IDL_for_NaturL
         }
         
         // This function refers to the "Save" button in the toolbar, opens the file dialog and asks the user the file to overwrite
-        private void Save_Click()
+        private bool Save_Click()
         {
             if (!_currentTabHandler._isFileSelected)
             {
-                Save_AsClick();
+                return Save_AsClick();
             }
             else
             {
                 WriteAllTextSafe();
                 _currentTabHandler._isSaved = true;
                 _currentTabHandler._firstData = ((TextEditor) FindName("CodeBox" + _currenttabId)).Text;
+                return true;
             }
         }
 
-        private void Save_AsClick()
+        private bool Save_AsClick()
         {
             Console.WriteLine("Save_AsClick");
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "ntl files (*.ntl)|*.ntl*|Text files (*.txt)|*.txt"
             };
-            if (saveFileDialog.ShowDialog() != true) return;
+            if (saveFileDialog.ShowDialog() != true) return false;
             _currentTabHandler._file = saveFileDialog.FileName;
             if (!_currentTabHandler._file.Contains(".ntl"))
                 _currentTabHandler._file += ".ntl";
@@ -115,22 +116,7 @@ namespace IDL_for_NaturL
                 Path.GetFileNameWithoutExtension(_currentTabHandler._file);
             string text = File.ReadAllText(_currentTabHandler._file);
             _currentTabHandler._firstData = text.ToString();
-        }
-        
-        private void FrenchBoxClicked(object sender, RoutedEventArgs e)
-        {
-            if (FrenchBox.IsChecked)
-            {
-                EngBox.IsChecked = false;
-            }
-        }
-
-        private void EngBoxClicked(object sender, RoutedEventArgs e)
-        {
-            if (FrenchBox.IsChecked)
-            {
-                FrenchBox.IsChecked = false;
-            }
+            return true;
         }
     }
 }

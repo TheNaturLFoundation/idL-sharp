@@ -369,7 +369,7 @@
 
             </Grid>
             <Grid DockPanel.Dock="Top">
-                <Menu DockPanel.Dock="Top" Height="39" Background="White"
+                <Menu Name="Menu" DockPanel.Dock="Top" Height="39" Background="White"
                       HorizontalAlignment="Left">
                     <!-- White -->
                     <MenuItem Header="_File" Height="38">
@@ -480,6 +480,7 @@
                         <Grid Name="grid_codebox">
                             <!-- White -->
                             <avalonedit:TextEditor
+                                
                                 FontFamily="Consolas"
                                 Typography.StandardLigatures="True"
                                 Background="#FAFAFA"

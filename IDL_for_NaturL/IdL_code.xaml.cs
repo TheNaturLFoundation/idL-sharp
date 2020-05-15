@@ -202,7 +202,11 @@ namespace IDL_for_NaturL
                         " are not saved. \n Would you like to save them?");
                     if (result == MessageBoxResult.Yes)
                     {
-                        Save_Click();
+                        bool saved = Save_Click();
+                        if (!saved)
+                        {
+                            cancelled = true;
+                        }
                     }
                     else if (result == MessageBoxResult.No)
                     {
@@ -236,17 +240,20 @@ namespace IDL_for_NaturL
         }
 
         // Function in order to unregister previous instances (used for closing a tab)
-        private void UnregisterNamesAndRemove()
+        private void UnregisterNamesAndRemove(bool saved = true)
         {
-            Console.WriteLine("Remove " + _currenttabId);
-            UnregisterName("Tab" + _currenttabId);
-            UnregisterName("CodeBox" + _currenttabId);
-            UnregisterName("python" + _currenttabId);
-            UnregisterName("STD" + _currenttabId);
-            ((TabablzControl) FindName("TabControl")).Items.RemoveAt(
-                _currentTab);
-            TabControl.SelectedIndex =
-                ((TabablzControl) FindName("TabControl")).Items.Count - 1;
+            if (saved)
+            {
+                Console.WriteLine("Remove " + _currenttabId);
+                UnregisterName("Tab" + _currenttabId);
+                UnregisterName("CodeBox" + _currenttabId);
+                UnregisterName("python" + _currenttabId);
+                UnregisterName("STD" + _currenttabId);
+                ((TabablzControl) FindName("TabControl")).Items.RemoveAt(
+                    _currentTab);
+                TabControl.SelectedIndex =
+                    ((TabablzControl) FindName("TabControl")).Items.Count - 1;
+            }
         }
 
         private void CloseTab()
@@ -259,8 +266,8 @@ namespace IDL_for_NaturL
                     MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                    Save_Click();
-                    UnregisterNamesAndRemove();
+                   bool saved = Save_Click();
+                    UnregisterNamesAndRemove(saved);
                 }
                 else if (result == MessageBoxResult.No)
                 {

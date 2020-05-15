@@ -167,6 +167,7 @@ namespace IDL_for_NaturL
 
             Console.WriteLine("CurrentTabHandler: " + _currentTabHandler);
             Console.WriteLine("Size: " + attributes.Count);
+            _lastFocusedTextEditor.Text = _lastFocusedTextEditor.Text.Replace("hello", "    hello");
         }
         
         private void ResearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

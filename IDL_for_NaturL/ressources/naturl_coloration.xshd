@@ -29,9 +29,13 @@
                 <Begin>'</Begin>
                 <End>'</End>
             </Span>
-
+            <Span name="Comments" bold ="true" italic = "true" color ="#9caab8">
+                <Begin>\</Begin>
+                <End>/</End>
+            </Span>
+            
+            
             <MarkPrevious bold ="true" italic = "false" color = "#ff9940">(</MarkPrevious>
-
             <KeyWords name = "Punctuation" bold = "true" italic = "false" color = "#ed9366">
                 <Key word = "," />
                 <Key word = "." />
@@ -57,6 +61,9 @@
           <KeyWords name ="Parenthesis" bold="true" italic ="false" color="#ff7171">
             <Key word = "(" />
             <Key word = ")" />
+          </KeyWords>
+          <KeyWords name ="Templates" bold="false" italic="true" color="Blue">
+            <Key word="\u200C"/>
           </KeyWords>
           
             <KeyWords name = "AccessKeywords" bold="false" italic="false" color="Black">
