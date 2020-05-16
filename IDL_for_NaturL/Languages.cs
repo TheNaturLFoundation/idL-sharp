@@ -14,15 +14,22 @@ using System.Windows.Media;
 
 namespace IDL_for_NaturL
 {
+    
     public partial class MainWindow
     {
-        public string language;
+        public enum Language
+        {
+            English,
+            French
+        }
+
+        public Language language;
         private void FrenchBoxClicked(object sender, RoutedEventArgs e)
         {
             if (FrenchBox.IsChecked)
             {
                 EngBox.IsChecked = false;
-                language = "french";
+                language = Language.French;
                 UpdateLanguage(language);
             }
         }
@@ -32,12 +39,12 @@ namespace IDL_for_NaturL
             if (FrenchBox.IsChecked)
             {
                 FrenchBox.IsChecked = false;
-                language = "english";
+                language = Language.English;
                 UpdateLanguage(language);
             }
         }
 
-        public void UpdateLanguage(string language)
+        public void UpdateLanguage(Language language)
         {
             List<string> fileFrench = new List<string>()
             {
@@ -63,7 +70,7 @@ namespace IDL_for_NaturL
             Console.WriteLine(language);
             switch (language)
             {
-                case "french":
+                case Language.English:
                 {
                     ((MenuItem) Menu.Items[0]).Header = "_Fichier";
                     ((MenuItem) Menu.Items[1]).Header = "_Editer";
@@ -80,7 +87,7 @@ namespace IDL_for_NaturL
                     }
                 } 
                     break;
-                case "english":
+                case Language.French:
                 {
                     ((MenuItem) Menu.Items[0]).Header = "_File";
                     ((MenuItem) Menu.Items[1]).Header = "_Edit";

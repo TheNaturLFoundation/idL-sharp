@@ -156,7 +156,7 @@ namespace IDL_for_NaturL
 
         public class MyCompletionData : ICompletionData
         {
-            public MyCompletionData(string text, string language, TextEditor lastfocusedtexteditor)
+            public MyCompletionData(string text, Language language, TextEditor lastfocusedtexteditor)
             {
                 this.Text = text;
                 this.language = language;
@@ -169,7 +169,7 @@ namespace IDL_for_NaturL
             }
 
             public TextEditor Lastfocusedtexteditor { get; private set; }
-            public string language { get; private set; }
+            public Language language { get; private set; }
             public string Text { get; private set; }
 
             // Use this property if you want to show a fancy UIElement in the list.
