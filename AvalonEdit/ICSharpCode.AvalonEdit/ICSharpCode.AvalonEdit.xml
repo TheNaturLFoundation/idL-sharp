@@ -6819,6 +6819,11 @@
             Runtime: O(log n)
             </summary>
         </member>
+        <member name="M:ICSharpCode.AvalonEdit.Rendering.HeightTree.CheckAllContainedIn(System.Collections.Generic.IEnumerable{ICSharpCode.AvalonEdit.Rendering.CollapsedLineSection},System.Collections.Generic.ICollection{ICSharpCode.AvalonEdit.Rendering.CollapsedLineSection})">
+            <summary>
+            Checks that all elements in list1 are contained in list2.
+            </summary>
+        </member>
         <member name="P:ICSharpCode.AvalonEdit.Rendering.HeightTreeLineNode.TotalHeight">
             <summary>
             Returns 0 if the line is directly collapsed, otherwise, returns <see cref="F:ICSharpCode.AvalonEdit.Rendering.HeightTreeLineNode.height"/>.
@@ -11213,36 +11218,6 @@
         <member name="M:ICSharpCode.AvalonEdit.Utils.Win32.DestroyCaret">
             <summary>
             Destroys the caret previously created using <see cref="M:ICSharpCode.AvalonEdit.Utils.Win32.CreateCaret(System.Windows.Media.Visual,System.Windows.Size)"/>.
-            </summary>
-        </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
             </summary>
         </member>
     </members>

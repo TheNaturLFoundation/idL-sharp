@@ -409,11 +409,10 @@
                     <MenuItem Header="Langue" Height="38">
                         <MenuItem Header="Francais" Height="38"
                                   IsCheckable="True" Name="FrenchBox"
-                                  IsChecked="True"
                                   Click="FrenchBoxClicked" />
                         <MenuItem Header="English" Height="38"
                                   IsCheckable="True" Name="EngBox"
-                                  Click="EngBoxClicked" IsChecked="False" />
+                                  Click="EngBoxClicked" />
                     </MenuItem>
                     <MenuItem Height="39" Width="51" Header=""
                               Command="self:CustomCommands.Execute" ToolTip="Execute">

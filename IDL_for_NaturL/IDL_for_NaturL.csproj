@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>IDL_for_NaturL</RootNamespace>
     <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
     <ItemGroup>
         <None Remove="ressources\close.png" />

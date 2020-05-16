@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Dragablz;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Search;
+using IDL_for_NaturL.filemanager;
 using MaterialDesignThemes.Wpf;
 using HighlightingManager =
     ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
@@ -33,6 +34,7 @@ namespace IDL_for_NaturL
         private int _currentTab;
         private string _currenttabId = "0";
         private string tabitem;
+        private WarningSeverity _warningSeverity;
 
         private static Dictionary<string, TabHandling> attributes =
             new Dictionary<string, TabHandling>();
@@ -66,11 +68,17 @@ namespace IDL_for_NaturL
         public MainWindow()
         {
             Environment.SetEnvironmentVariable("NATURLPATH", Path.GetFullPath("ressources"));
-            this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            //Loading Settings configuration from XML 
+            UserSettings.LoadUserSettings("ressources/settings.xml");
+            language = UserSettings.language;
+            _warningSeverity= UserSettings.warningSeverity;
+            //Unused warning severity yet.
             InitializeComponent();
             TextEditor textEditor =
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab_id_")).FindName(
                     "grid_codebox")).Children[0];
+            
             XmlTextReader reader =
                 new XmlTextReader("ressources/naturl_coloration.xshd");
             _highlightingDefinition =
@@ -97,6 +105,7 @@ namespace IDL_for_NaturL
 
             _lastFocusedTextEditor =
                 (TextEditor) FindName("CodeBox" + _currenttabId);
+            InitialiseLanguageComponents(language);
         }
 
         public void RemoveTab(int tabindex)
@@ -232,6 +241,7 @@ namespace IDL_for_NaturL
             {
                 Application.Current.Shutdown();
             }
+            UserSettings.SaveUserSettings("ressources/settings.xml");
         }
 
         // Function in order to unregister previous instances (used for closing a tab)
