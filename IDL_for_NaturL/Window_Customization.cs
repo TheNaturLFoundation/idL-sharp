@@ -90,5 +90,7 @@ namespace IDL_for_NaturL
                     ScrollBarVisibility.Visible;
             }
         }
+
+
     }
 }

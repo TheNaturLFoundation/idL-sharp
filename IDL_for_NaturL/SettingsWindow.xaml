@@ -180,6 +180,9 @@
                         <Button Click="Save_Setting" Style="{DynamicResource RoundCorner}" Content="Save"
                                 Margin="0,360,174,0" Height="19" VerticalAlignment="Top" Foreground="White"
                                 HorizontalAlignment="Right" Width="73" />
+                        <Button Click="DefaultReset" Style="{DynamicResource RoundCornerGray}" Content="Reset colors"
+                                HorizontalAlignment="Right" Margin="120,50,25,50" VerticalAlignment="Top"
+                                Foreground="White" Width="73" Height="19" />
                         <Button Click="Cancel_Click" Style="{DynamicResource RoundCornerGray}" Content="Cancel"
                                 HorizontalAlignment="Right" Margin="0,360,86,0" VerticalAlignment="Top"
                                 Foreground="White" Width="73" Height="19" />
@@ -229,7 +232,7 @@
                                 HorizontalAlignment="Right" Margin="0,360,86,0" VerticalAlignment="Top"
                                 Foreground="White" Width="73" Height="19" />
                         <Button Click="OK_Click" Style="{DynamicResource RoundCornerOK}" Content="OK"
-                                Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
+                                Name="OkButton" Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
                     </Grid>
                 </TabItem>
             </dragablz:TabablzControl>

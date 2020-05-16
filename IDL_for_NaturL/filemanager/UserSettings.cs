@@ -13,7 +13,8 @@ namespace IDL_for_NaturL.filemanager
     {
         public static Language language;
         public static WarningSeverity warningSeverity;
-        
+        public static string syntaxFilePath;
+
         /// <summary>
         /// Function that loads the configuration from XML DataContract present in the class SettingsManager 
         /// </summary>
@@ -35,14 +36,18 @@ namespace IDL_for_NaturL.filemanager
                 fs.Close();
                 language = deserializedSettingsManager.GetLanguage();
                 warningSeverity = deserializedSettingsManager.GetSeverity();
-                Console.WriteLine(String.Format("Configuration loaded : language: {0} severity: {1}",
-                    deserializedSettingsManager.language, deserializedSettingsManager.severity));
+                syntaxFilePath = deserializedSettingsManager.syntaxFilePath;
+                Console.WriteLine(String.Format(
+                    "Configuration loaded : language: {0} severity: {1}, syntaxFilePath : {2}",
+                    deserializedSettingsManager.language, deserializedSettingsManager.severity,
+                    deserializedSettingsManager.syntaxFilePath));
             }
             catch (Exception e)
             {
                 Console.WriteLine("Deserialisation Error : No settings.xml found, will apply default configuration");
                 language = Language.French;
                 warningSeverity = WarningSeverity.Light;
+                syntaxFilePath = "/ressources/naturl_coloration.xshd";
             }
         }
 
@@ -55,7 +60,7 @@ namespace IDL_for_NaturL.filemanager
             Console.WriteLine(
                 "Configuration saved : saved user configuration in configuration.xml");
             SettingsManager S1 = new SettingsManager(language.ToStringRepresentation(),
-                warningSeverity.ToStringRepresentation());
+                warningSeverity.ToStringRepresentation(), syntaxFilePath);
             FileStream writer = new FileStream(fileName, FileMode.Create);
             DataContractSerializer ser =
                 new DataContractSerializer(typeof(SettingsManager));

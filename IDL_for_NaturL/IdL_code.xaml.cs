@@ -38,11 +38,12 @@ namespace IDL_for_NaturL
 
         private static Dictionary<string, TabHandling> attributes =
             new Dictionary<string, TabHandling>();
-        
+
         CompletionWindow completionWindow;
         private TabHandling _currentTabHandler;
         private IHighlightingDefinition _highlightingDefinition;
         private double clickPosition;
+        public static MainWindow Instance { get; set; }
 
         private class TabHandling
         {
@@ -64,25 +65,27 @@ namespace IDL_for_NaturL
             public override string ToString() =>
                 $"(Is File Selected : {_isFileSelected}, FirstData : {"first_data"}, IsSaved : {_isSaved}, File : {_file})";
         }
+
         //MyCompletionWindow myCompletionWindow;
         public MainWindow()
         {
+            Instance = this;
             Environment.SetEnvironmentVariable("NATURLPATH", Path.GetFullPath("ressources"));
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             //Loading Settings configuration from XML 
             UserSettings.LoadUserSettings("ressources/settings.xml");
             language = UserSettings.language;
-            _warningSeverity= UserSettings.warningSeverity;
+            _warningSeverity = UserSettings.warningSeverity;
             //Unused warning severity yet.
             InitializeComponent();
             TextEditor textEditor =
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab_id_")).FindName(
                     "grid_codebox")).Children[0];
-            
-            XmlTextReader reader =
-                new XmlTextReader("ressources/naturl_coloration.xshd");
+            XmlTextReader reader = new XmlTextReader(UserSettings.syntaxFilePath);
+
             _highlightingDefinition =
                 HighlightingLoader.Load(reader, HighlightingManager.Instance);
+
             textEditor.SyntaxHighlighting = _highlightingDefinition;
             reader.Close();
 
@@ -107,6 +110,7 @@ namespace IDL_for_NaturL
                 (TextEditor) FindName("CodeBox" + _currenttabId);
             InitialiseLanguageComponents(language);
         }
+
 
         public void RemoveTab(int tabindex)
         {
@@ -164,18 +168,29 @@ namespace IDL_for_NaturL
             TextEditor PythonBox =
                 ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
                     "python_grid")).Children[0]);
-            
+
             // Events called in order to update attributes for research
             CodeBox.TextArea.GotFocus += CodeBoxSetLastElement;
             PythonBox.TextArea.GotFocus += PythonBoxSetLastElement;
-            
+
             // Events called in order to manage the CTRL + Scroll with mouse
             CodeBox.TextArea.MouseWheel += OnMouseDownMain;
             PythonBox.TextArea.MouseWheel += OnMouseDownMain;
             // Events called on text typing for autocompletion
             CodeBox.TextArea.PreviewKeyDown += CodeBox_TextArea_TextEntering;
         }
-        
+
+        public void UpdateColorScheme()
+        {
+            for (int i = 0; i < _tabInt; i++)
+            {
+                TextEditor CodeBox =
+                    ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{i}")).FindName(
+                        "grid_codebox")).Children[0]);
+                CodeBox.SyntaxHighlighting = HighlightingLoader.Load(new XmlTextReader(UserSettings.syntaxFilePath),
+                    HighlightingManager.Instance);
+            }
+        }
 
         private MessageBoxResult messageOnClose(string message)
         {
@@ -241,6 +256,7 @@ namespace IDL_for_NaturL
             {
                 Application.Current.Shutdown();
             }
+
             UserSettings.SaveUserSettings("ressources/settings.xml");
         }
 
@@ -270,7 +286,7 @@ namespace IDL_for_NaturL
                     MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                   bool saved = Save_Click();
+                    bool saved = Save_Click();
                     UnregisterNamesAndRemove(saved);
                 }
                 else if (result == MessageBoxResult.No)
@@ -284,7 +300,7 @@ namespace IDL_for_NaturL
                 UnregisterNamesAndRemove();
             }
         }
-        
+
         private void TabControl_OnSelectionChanged(object sender,
             SelectionChangedEventArgs e)
         {
@@ -292,7 +308,7 @@ namespace IDL_for_NaturL
             {
                 ((TabablzControl) e.Source).SelectedIndex = 0;
             }
-            
+
             if (e.AddedItems.Count != 0)
             {
                 var source = (TabItem) e.AddedItems[0];

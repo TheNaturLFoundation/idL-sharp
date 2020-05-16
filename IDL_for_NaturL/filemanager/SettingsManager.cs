@@ -12,17 +12,23 @@ namespace IDL_for_NaturL.filemanager
     {
         [DataMember] public string language;
         [DataMember] public string severity;
+        [DataMember] public string syntaxFilePath;
+
         //TODO Change the way type attribute is managed.
         /// <summary>
         /// Constructor that takes string from the xml data contract to create the attributes.
         /// </summary>
         /// <param name="languageName"></param>
         /// <param name="warningSeverity"></param>
-        public SettingsManager(string languageName, string warningSeverity)
+        /// <param name="isDefaultHighlighting"></param>
+        public SettingsManager(string languageName, string warningSeverity,
+            string syntaxFilePath)
         {
             language = languageName;
             severity = warningSeverity;
+            this.syntaxFilePath = syntaxFilePath;
         }
+
         /// <summary>
         /// Get Severity element of the enum from the string attribute of the class.
         /// </summary>
@@ -42,6 +48,7 @@ namespace IDL_for_NaturL.filemanager
                     throw new ArgumentException("No such warning severity : " + severity);
             }
         }
+
         /// <summary>
         /// Get Language element of the enum from the string attribute of the class.
         /// </summary>
