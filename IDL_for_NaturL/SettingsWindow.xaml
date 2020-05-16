@@ -1,8 +1,10 @@
-<Window x:Class="IDL_for_NaturL.SettingsWindow"
+<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz" x:Class="IDL_for_NaturL.SettingsWindow"
         mc:Ignorable="d"
         Title="Settings" Height="450" Width="800"
         Icon="ressources/logoicon.png"
@@ -172,8 +174,8 @@
     </Window.Resources>
     <Grid>
         <DockPanel>
-            <TabControl TabStripPlacement="Left" HorizontalAlignment="Left" Width="776" Height="400">
-                <TabItem Header="FirstWindow">
+            <dragablz:TabablzControl TabStripPlacement="Left" Width="790" Height="417" RenderTransformOrigin="0.25,0.293">
+                <TabItem Header="Customiser" Margin="0,-2,0,-2">
                     <Grid Margin="0,9,0,0" Width="689" Height="412" VerticalAlignment="Top">
                         <Button Click="Save_Setting" Style="{DynamicResource RoundCorner}" Content="Save"
                                 Margin="0,360,174,0" Height="19" VerticalAlignment="Top" Foreground="White"
@@ -183,6 +185,27 @@
                                 Foreground="White" Width="73" Height="19" />
                         <Button Click="OK_Click" Style="{DynamicResource RoundCornerOK}" Content="OK"
                                 Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
+                        <materialDesign:ColorPicker Name="Color_Picker" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                                                    Height="215" Width="190" Margin="10,10,0,0"
+                                                    MouseMove="Color_Changed"/>
+                        <TextBlock x:Name="Color_keywords" Margin="382,18,236,336" Text="Mots clefs:&#x0a;fonction&#x0a;si&#x0a;sinon_si" Foreground="#fa8d3e" FontWeight="Bold" FontFamily="Consolas"/>
+                        <CheckBox Name="Bold_Keywords" Checked="Bold_Keywords_OnChecked"  Content="Gras" Foreground="#fa8d3e" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top"
+                                  BorderThickness="1" IsChecked="True"/>
+                        <TextBlock x:Name="Color_functions" Margin="498,18,123,336" Text="Fonctions:&#x0a;afficher&#x0a;longueur&#x0a;" Foreground="#ff9940" FontWeight="Bold" FontFamily="Consolas"/>
+                        <CheckBox Name="Bold_Types"  Content="Gras" Foreground="#ff9940" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="498,81,0,0" VerticalAlignment="Top"
+                                  BorderThickness="1" IsChecked="True" Checked="Bold_Types_OnChecked"/>
+                        <TextBlock x:Name="Color_types" Margin="378,132,244,222" Text="Types:&#x0a;entier&#x0a;booleen&#x0a;chaine" Foreground="#399ee6" FontWeight="Bold" FontFamily="Consolas"/>
+                        <CheckBox Name="Bold_Functions"  Content="Gras" Foreground="#399ee6" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="378,0,0,0" VerticalAlignment="Center"
+                                  BorderThickness="1" IsChecked="True" Checked="Bold_Functions_OnChecked"/>
+                        <TextBlock x:Name="Color_truefalse" Margin="498,132,123,222" Text="Booleens:&#x0a;vrai&#x0a;faux&#x0a;" Foreground="#a37acc" FontWeight="Bold" FontFamily="Consolas"/>
+                        <CheckBox Name="Bold_TrueFalse"  Content="Gras" Foreground="#a37acc" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="498,195,0,0" VerticalAlignment="Top"
+                                  BorderThickness="1" IsChecked="True" Checked="Bold_TrueFalse_OnChecked"/>
+                        <ComboBox Name="Selected_Combo" HorizontalAlignment="Left" Margin="224,19,0,0" VerticalAlignment="Top" Width="120" Visibility="Visible" SelectionChanged="Selected_Combo_OnSelected">
+                            <ComboBoxItem Content="Mots clefs" IsSelected="True"/>
+                            <ComboBoxItem Content="Fonctions"/>
+                            <ComboBoxItem Content="Types"/>
+                            <ComboBoxItem Content="Vrai Faux"/>
+                        </ComboBox>
                     </Grid>
                 </TabItem>
                 <TabItem Header="SecondWindow">
@@ -209,7 +232,7 @@
                                 Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
                     </Grid>
                 </TabItem>
-            </TabControl>
+            </dragablz:TabablzControl>
         </DockPanel>
     </Grid>
 </Window>

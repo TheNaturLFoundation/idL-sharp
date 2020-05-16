@@ -433,7 +433,7 @@
                 <TextBox Name="ResearchBox" Foreground="Gray" FontSize="16"
                          HorizontalAlignment="Left" AcceptsReturn="False"
                          Text="Search (Ctrl + F)" Margin="462,0,0,7"
-                         Width="150" BorderThickness="2"
+                         Width="150"
                          GotFocus="ResearchBoxGotFocus"
                          LostFocus="ResearchBoxLostFocus"
                          KeyDown="OnKeyPressed" />
