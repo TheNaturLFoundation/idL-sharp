@@ -47,7 +47,7 @@ namespace IDL_for_NaturL.filemanager
                 Console.WriteLine("Deserialisation Error : No settings.xml found, will apply default configuration");
                 language = Language.French;
                 warningSeverity = WarningSeverity.Light;
-                syntaxFilePath = "/ressources/naturl_coloration.xshd";
+                syntaxFilePath = "ressources/naturl_coloration.xshd";
             }
         }
 
