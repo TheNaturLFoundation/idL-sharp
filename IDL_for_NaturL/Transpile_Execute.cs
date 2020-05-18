@@ -153,7 +153,7 @@ namespace IDL_for_NaturL
                 inputWriter = _processPython.StandardInput;
                 inputWriter.Write(outputTranspile);
                 inputWriter.Close();
-                _processPython.OutputDataReceived += (sender, e) =>
+                _processPython.OutputDataReceived += (sender2, e2) =>
                 {
                     _processPython.Suspend();
                     Thread.Sleep(10);
@@ -162,18 +162,18 @@ namespace IDL_for_NaturL
                     {
                         if (!_processPythonRunning) return;
                         ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Black;
-                        ((TextEditor) FindName("STD" + _currenttabId)).Text += e.Data + '\n';
+                        ((TextEditor) FindName("STD" + _currenttabId)).Text += e2.Data + '\n';
                         ((TextEditor) FindName("STD" + _currenttabId)).ScrollToEnd();
                     });
                 };
-                _processPython.ErrorDataReceived += (sender, e) => Dispatcher.Invoke(() =>
+                _processPython.ErrorDataReceived += (sender1, e1) => Dispatcher.Invoke(() =>
                 {
-                    if (string.IsNullOrEmpty(e.Data) || _processPythonRunning) return;
-                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = e.Data[0] == 'W' ? Brushes.Orange : Brushes.Red;
-                    ((TextEditor) FindName("STD" + _currenttabId)).Text += e.Data;
+                    if (string.IsNullOrEmpty(e1.Data) || _processPythonRunning) return;
+                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = e1.Data[0] == 'W' ? Brushes.Orange : Brushes.Red;
+                    ((TextEditor) FindName("STD" + _currenttabId)).Text += e1.Data;
 
                 });
-                _processPython.Exited += (sender, e) => _processPythonRunning = false;
+                _processPython.Exited += (sender3, e3) => _processPythonRunning = false;
                 Console.WriteLine(_processPython.Responding);
                 _processPython.BeginOutputReadLine();
                 _processPython.BeginErrorReadLine();

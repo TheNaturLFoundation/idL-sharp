@@ -58,16 +58,10 @@ namespace IDL_for_NaturL
                     }
                 }
             }
-
             Thread thread = new Thread(() => doc.Save("ressources/user_coloration.xshd"));
-            while (thread.IsAlive)
-            {
-                OkButton.IsEnabled = false;
-            }
-
-            OkButton.IsEnabled = true;
+            thread.Start();
             UserSettings.syntaxFilePath = "ressources/user_coloration.xshd";
-            MainWindow.Instance.UpdateColorScheme();
+            MainWindow.Instance.UpdateColorScheme(doc);
         }
 
         private string GetHexFromBrush(TextBlock colorBlock)
@@ -150,7 +144,9 @@ namespace IDL_for_NaturL
         private void DefaultReset(object sender, RoutedEventArgs e)
         {
             UserSettings.syntaxFilePath = "ressources/naturl_coloration.xshd";
-            MainWindow.Instance.UpdateColorScheme();
+            XmlDocument doc = new XmlDocument();
+            doc.Load("ressources/naturl_coloration.xshd");
+            MainWindow.Instance.UpdateColorScheme(doc);
             Close();
         }
 

@@ -181,14 +181,14 @@ namespace IDL_for_NaturL
             CodeBox.TextArea.PreviewKeyDown += CodeBox_TextArea_TextEntering;
         }
 
-        public void UpdateColorScheme()
+        public void UpdateColorScheme(XmlDocument doc)
         {
             for (int i = 0; i < _tabInt; i++)
             {
                 TextEditor CodeBox =
                     ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{i}")).FindName(
                         "grid_codebox")).Children[0]);
-                CodeBox.SyntaxHighlighting = HighlightingLoader.Load(new XmlTextReader(UserSettings.syntaxFilePath),
+                CodeBox.SyntaxHighlighting = HighlightingLoader.Load(new XmlNodeReader(doc),
                     HighlightingManager.Instance);
             }
         }
