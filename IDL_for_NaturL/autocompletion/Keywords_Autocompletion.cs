@@ -312,11 +312,8 @@ namespace IDL_for_NaturL
             }
             public void ScrollIfIsLastsLines(int offset)
             {
-                Console.WriteLine("Current Line is: " + GetLineFromIndex(offset));
-                Console.WriteLine("Number of lines is: " + CountLines());
                 if (GetLineFromIndex(offset) + 10 >= CountLines())
                 {
-                    Console.WriteLine("Last lines");
                     _lastFocusedTextEditor.ScrollToEnd();
                 }
             }

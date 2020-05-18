@@ -59,7 +59,7 @@
         <Key word="this" />
         <Key word="base" />
       </KeyWords>
-      <KeyWords name="structure_words" bold="true" color="#c22626">
+      <KeyWords name="structure_words" bold="true" color="#e05a5a">
         <Key word="fonction" />
         <Key word="variables" />
         <Key word="debut" />

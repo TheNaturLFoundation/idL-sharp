@@ -93,6 +93,10 @@
         <EmbeddedResource Include="ressources\internationalisation\translation.ml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Remove="ressources\user_coloration.xshd" />
+        <EmbeddedResource Include="ressources\user_coloration.xshd">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
