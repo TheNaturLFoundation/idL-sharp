@@ -30,6 +30,7 @@ namespace IDL_for_NaturL
     {
         public string[] Keywords =
         {
+            "afficher",
             "fonction",
             "variables",
             "debut",
@@ -57,12 +58,12 @@ namespace IDL_for_NaturL
             "rien",
             "vrai",
             "faux",
+            "longueur"
         };
 
 
         // This function will get the last typed word and update an attribute
-        public void CodeBox_TextArea_TextEntering(object sender,
-            KeyEventArgs e)
+        public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Tab)
             {
@@ -143,7 +144,7 @@ namespace IDL_for_NaturL
             foreach (var chr in input)
             {
                 int index = reference.IndexOf(chr) + 1;
-                sum += index * 1.0f / (input.Length * 0.5f);
+                sum += index * 1.0f / (input.Length);
                 if (index == 0)
                 {
                     return -1;

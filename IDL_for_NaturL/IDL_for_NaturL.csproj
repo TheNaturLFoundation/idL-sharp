@@ -78,6 +78,8 @@
         <EmbeddedResource Include="ressources\naturl_coloration.xshd">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Remove="ressources\red_square.png" />
+        <Resource Include="ressources\red_square.png" />
     </ItemGroup>
 
     <ItemGroup>

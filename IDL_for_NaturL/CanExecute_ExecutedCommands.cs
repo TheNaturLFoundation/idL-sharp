@@ -2,12 +2,13 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Dragablz;
 using MaterialDesignThemes.Wpf;
 
 namespace IDL_for_NaturL
 {
-    public partial class MainWindow 
+    public partial class MainWindow
     {
         #region ExitCommand
 
@@ -15,7 +16,7 @@ namespace IDL_for_NaturL
         {
             e.CanExecute = true;
         }
-        
+
         private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -79,7 +80,7 @@ namespace IDL_for_NaturL
 
         private void ExecuteCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            e.CanExecute = !_processPythonRunning;
         }
 
         private void ExecuteCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -169,7 +170,7 @@ namespace IDL_for_NaturL
             Console.WriteLine("CurrentTabHandler: " + _currentTabHandler);
             Console.WriteLine("Size: " + attributes.Count);
         }
-        
+
         private void ResearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -178,6 +179,16 @@ namespace IDL_for_NaturL
         private void ResearchCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             ResearchBox.Focus();
+        }
+
+        private void Cancel_ProcessCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _processPythonRunning;
+        }
+
+        private void Cancel_ProcessCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Cancel_Process(null, null);
         }
     }
 }

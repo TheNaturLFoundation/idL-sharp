@@ -247,6 +247,9 @@
         <CommandBinding Command="self:CustomCommands.Research"
                         CanExecute="ResearchCommand_CanExecute"
                         Executed="ResearchCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Cancel_Process"
+                        CanExecute="Cancel_ProcessCommand_CanExecute"
+                        Executed="Cancel_ProcessCommand_Executed"/>
 
 
     </Window.CommandBindings>
@@ -427,6 +430,12 @@
                             <Image Source="ressources/transpile.png"
                                    Margin="-14,-8,-16,-8" />
                         </MenuItem.Icon>
+                    </MenuItem><MenuItem Height="39" Width="55" Header=""
+                                         ToolTip="Cancel" Command="self:CustomCommands.Cancel_Process" >
+                        <MenuItem.Icon>
+                            <Image Source="ressources/red_square.png"
+                                   Margin="-2,-8,-7,-8" />
+                        </MenuItem.Icon>
                     </MenuItem>
                 </Menu>
                 <TextBox Name="ResearchBox" Foreground="Gray" FontSize="16"
@@ -496,7 +505,8 @@
                               HorizontalAlignment="Stretch" Grid.Row="1" />
                         <!-- White -->
                         <avalonedit:TextEditor
-
+                            
+                            WordWrap="True"
                             FontFamily="Consolas"
                             Name="STD_id_"
                             Background="#FAFAFA"

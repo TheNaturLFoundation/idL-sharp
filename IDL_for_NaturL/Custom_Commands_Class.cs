@@ -132,5 +132,16 @@ namespace IDL_for_NaturL
                 new KeyGesture(Key.F, ModifierKeys.Control)
             }
         );
+        
+        public static readonly RoutedUICommand Cancel_Process = new RoutedUICommand
+        (
+            "Cancel_Process",
+            "Cancel_Process",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.F5, ModifierKeys.Shift)
+            }
+        );
     }
 }
