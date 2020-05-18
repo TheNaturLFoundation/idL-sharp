@@ -81,6 +81,18 @@
         </EmbeddedResource>
         <None Remove="ressources\red_square.png" />
         <Resource Include="ressources\red_square.png" />
+        <None Remove="ressources\internationalisation\dune" />
+        <EmbeddedResource Include="ressources\internationalisation\dune">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ressources\internationalisation\translation.json" />
+        <EmbeddedResource Include="ressources\internationalisation\translation.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ressources\internationalisation\translation.ml" />
+        <EmbeddedResource Include="ressources\internationalisation\translation.ml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>

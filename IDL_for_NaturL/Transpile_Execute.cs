@@ -54,7 +54,8 @@ namespace IDL_for_NaturL
                     UseShellExecute = false,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
-                    RedirectStandardInput = true
+                    RedirectStandardInput = true,
+                    CreateNoWindow = true
                 }
             };
             _process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -120,6 +121,7 @@ namespace IDL_for_NaturL
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
                     WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true
                 }
             };
             _process.Start();
@@ -143,7 +145,8 @@ namespace IDL_for_NaturL
                         RedirectStandardInput = true,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
-                        WindowStyle = ProcessWindowStyle.Hidden
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        CreateNoWindow = true
                     },
                     EnableRaisingEvents = true,
                 };
