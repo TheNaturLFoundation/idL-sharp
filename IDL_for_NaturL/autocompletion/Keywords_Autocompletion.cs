@@ -154,6 +154,7 @@ namespace IDL_for_NaturL
             return sum;
         }
 
+        
 
         public class MyCompletionData : ICompletionData
         {
@@ -212,8 +213,10 @@ namespace IDL_for_NaturL
                     Lastfocusedtexteditor.CaretOffset = offset;
                 }
 
+                int copyoffset = offset;
                 textArea.Document.Replace(mySegment, SetTextDep());
                 Lastfocusedtexteditor.CaretOffset = SetOffSet(offset, Lastfocusedtexteditor.Text, SetTextDep().Length);
+                ScrollIfIsLastsLines(copyoffset);
             }
 
             public string SetTextDep()
@@ -279,6 +282,43 @@ namespace IDL_for_NaturL
                 }
 
                 return i;
+            }
+            public int GetLineFromIndex(int index)
+            {
+                int line = 0;
+                foreach (var chr in _lastFocusedTextEditor.Text)
+                {
+                    if (chr == '\n')
+                        line++;
+                    index--;
+                    if (index == 0)
+                        return line;
+                }
+
+                return line;
+            }
+            public int CountLines()
+            {
+                int count = 0;
+                foreach (var chr in _lastFocusedTextEditor.Text)
+                {
+                    if (chr == '\n')
+                    {
+                        count++;
+                    }
+                }
+
+                return count;
+            }
+            public void ScrollIfIsLastsLines(int offset)
+            {
+                Console.WriteLine("Current Line is: " + GetLineFromIndex(offset));
+                Console.WriteLine("Number of lines is: " + CountLines());
+                if (GetLineFromIndex(offset) + 10 >= CountLines())
+                {
+                    Console.WriteLine("Last lines");
+                    _lastFocusedTextEditor.ScrollToEnd();
+                }
             }
         }
     }
