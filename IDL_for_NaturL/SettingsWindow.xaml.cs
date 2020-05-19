@@ -10,7 +10,7 @@ using IDL_for_NaturL.filemanager;
 
 namespace IDL_for_NaturL
 {
-    public partial class SettingsWindow : Window
+    public partial class SettingsWindow
     {
         public string selected_item = "Mots clefs";
 
@@ -150,8 +150,6 @@ namespace IDL_for_NaturL
             Close();
         }
 
-        private void TabablzControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
+        
     }
 }

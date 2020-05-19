@@ -174,7 +174,7 @@
     </Window.Resources>
     <Grid>
         <DockPanel>
-            <dragablz:TabablzControl TabStripPlacement="Left" Width="790" Height="417" RenderTransformOrigin="0.25,0.293">
+            <TabControl TabStripPlacement="Left" Width="790" Height="417" RenderTransformOrigin="0.25,0.293">
                 <TabItem Header="Customiser" Margin="0,-2,0,-2">
                     <Grid Margin="0,9,0,0" Width="689" Height="412" VerticalAlignment="Top">
                         <Button Click="Save_Setting" Style="{DynamicResource RoundCorner}" Content="Save"
@@ -211,7 +211,7 @@
                         </ComboBox>
                     </Grid>
                 </TabItem>
-                <TabItem Header="SecondWindow">
+                <TabItem Header="Warnings">
                     <Grid Margin="0,9,0,0" Width="689" Height="412" VerticalAlignment="Top">
                         <Button Click="Save_Setting" Style="{DynamicResource RoundCorner}" Content="Save"
                                 Margin="0,360,174,0" Height="19" VerticalAlignment="Top" Foreground="White"
@@ -221,9 +221,17 @@
                                 Foreground="White" Width="73" Height="19" />
                         <Button Click="OK_Click" Style="{DynamicResource RoundCornerOK}" Content="OK"
                                 Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
+                        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" Text="Selectionnez la séverité des avertissements" 
+                                   TextWrapping="Wrap" VerticalAlignment="Top" Height="55" Width="282"
+                                   FontSize="18"/>
+                        <ComboBox HorizontalAlignment="Left" Margin="31,65,0,0" VerticalAlignment="Top" Width="120">
+                            <ComboBoxItem Content="Faible"/>
+                            <ComboBoxItem Content="Moyenne"/>
+                            <ComboBoxItem Content="Forte"/>
+                        </ComboBox>
                     </Grid>
                 </TabItem>
-                <TabItem Header="ThirdWindow">
+                <!--<TabItem Header="Language">
                     <Grid Margin="0,9,0,0" Width="689" Height="412" VerticalAlignment="Top">
                         <Button Click="Save_Setting" Style="{DynamicResource RoundCorner}" Content="Save"
                                 Margin="0,360,174,0" Height="19" VerticalAlignment="Top" Foreground="White"
@@ -234,8 +242,8 @@
                         <Button Click="OK_Click" Style="{DynamicResource RoundCornerOK}" Content="OK"
                                 Name="OkButton" Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
                     </Grid>
-                </TabItem>
-            </dragablz:TabablzControl>
+                </TabItem>-->
+            </TabControl>
         </DockPanel>
     </Grid>
 </Window>

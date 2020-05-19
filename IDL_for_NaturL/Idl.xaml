@@ -430,7 +430,8 @@
                             <Image Source="ressources/transpile.png"
                                    Margin="-14,-8,-16,-8" />
                         </MenuItem.Icon>
-                    </MenuItem><MenuItem Height="39" Width="55" Header=""
+                    </MenuItem>
+                    <MenuItem Height="39" Width="55" Header=""
                                          ToolTip="Cancel" Command="self:CustomCommands.Cancel_Process" >
                         <MenuItem.Icon>
                             <Image Source="ressources/red_square.png"
@@ -530,6 +531,10 @@
                             RenderTransformOrigin="0.5,0.5" Margin="0,0,-2,0"
                             HorizontalAlignment="Right"
                             Width="2" />
+                        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left"/>
+                        <GridSplitter  Grid.Row="1" Height="5" Grid.ColumnSpan ="3" HorizontalAlignment="Stretch" VerticalAlignment="Top"></GridSplitter>
+
+
                     </Grid>
                 </TabItem>
             </dragablz:TabablzControl>

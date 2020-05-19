@@ -151,7 +151,6 @@ namespace IDL_for_NaturL
         private void SettingsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             SettingsWindow settingsWindow = new SettingsWindow();
-            // Used .Show() for debugging there but should use .ShowDialog()
             settingsWindow.Show();
         }
 
