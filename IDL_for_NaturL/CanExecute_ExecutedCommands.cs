@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Dragablz;
+using ICSharpCode.AvalonEdit.Editing;
 using MaterialDesignThemes.Wpf;
 
 namespace IDL_for_NaturL
@@ -189,5 +190,6 @@ namespace IDL_for_NaturL
         {
             Cancel_Process(null, null);
         }
+        
     }
 }

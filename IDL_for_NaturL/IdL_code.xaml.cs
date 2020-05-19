@@ -11,6 +11,7 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using Dragablz;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Search;
@@ -24,7 +25,7 @@ namespace IDL_for_NaturL
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : Lsp_Receiver
     {
         //Constants in order to determine if the data is dirty or know
         //private string _firstData = "";
@@ -110,6 +111,24 @@ namespace IDL_for_NaturL
             _lastFocusedTextEditor =
                 (TextEditor) FindName("CodeBox" + _currenttabId);
             InitialiseLanguageComponents(language);
+            Process processServer = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "ocaml",
+                    Arguments = "ressources/testspurposes.ml",
+                    UseShellExecute = false,
+                    StandardOutputEncoding = Encoding.UTF8,
+                    StandardErrorEncoding = Encoding.UTF8,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true
+                },
+                EnableRaisingEvents = true
+            };
+            LspSender = new Lsp_Handler(this, processServer);
         }
 
 
@@ -179,6 +198,9 @@ namespace IDL_for_NaturL
             PythonBox.TextArea.MouseWheel += OnMouseDownMain;
             // Events called on text typing for autocompletion
             CodeBox.TextArea.PreviewKeyDown += CodeBox_TextArea_TextEntering;
+            
+            // Events called on click
+            CodeBox.TextArea.PreviewMouseDown += JumpToCommand_Executed;
         }
 
         public void UpdateColorScheme(XmlDocument doc)

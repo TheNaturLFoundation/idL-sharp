@@ -16,7 +16,9 @@
     MouseLeftButtonDown="Drag_Window"
     MouseDoubleClick="Double_Click"
     KeyDown="MainWindow_OnKeyDown"
-    MouseWheel="OnMouseDownMain">
+    MouseWheel="OnMouseDownMain"
+    MinWidth="150"
+    MinHeight="50">
 
     <Window.Resources>
         <!-- This is the ressource for the current SCROLLBARS-->

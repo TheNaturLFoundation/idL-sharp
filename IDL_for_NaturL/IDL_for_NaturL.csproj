@@ -31,6 +31,7 @@
 
     <ItemGroup>
         <PackageReference Include="Dragablz" Version="0.0.3.203" />
+        <PackageReference Include="Json.NET.Web" Version="1.0.49" />
         <PackageReference Include="MaterialDesignColors" Version="1.2.4-ci1276" />
         <PackageReference Include="MaterialDesignThemes" Version="3.1.1-ci1276" />
     </ItemGroup>
@@ -97,6 +98,11 @@
         <EmbeddedResource Include="ressources\user_coloration.xshd">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Remove="ressources\testspurposes.py" />
+        <None Remove="ressources\settings.xml" />
+        <EmbeddedResource Include="ressources\settings.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -107,6 +113,9 @@
         </Compile>
         <Compile Remove="HashMap.cs" />
         <Compile Remove="ressourceLoader.cs" />
+        <EmbeddedResource Include="ressources\testspurposes.ml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
