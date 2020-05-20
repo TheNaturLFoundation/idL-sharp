@@ -1,2 +1,3 @@
 C:\Users\Adrian\Desktop\NaturLPull\naturL\example\dichotomie.ntl
 C:\Users\Adrian\Desktop\NaturLPull\naturL\example\fact_rec.ntl
+C:\Users\Adrian\Desktop\NaturLPull\naturL\example\dichotomie.ntl

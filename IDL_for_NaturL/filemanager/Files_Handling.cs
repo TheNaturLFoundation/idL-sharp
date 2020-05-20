@@ -83,19 +83,13 @@ namespace IDL_for_NaturL
             int index = 0;
             foreach (var element in Dispatcher.Invoke(() => tabAttributes))
             {
-                if (uriType == "file" && element.Value._file == path.Replace("file://",""))
+                string path1 = path.Replace("file://", "");
+                if (element.Value._file == path1 || element.Value.playground == path)
                 {
                     return index;
                 }
-                if (uriType == "playground" && element.Value.playground == path)
-                {
-                    return index;
-                }
-                Console.WriteLine("Dictionnary contains: " + element.Value._file);
-                Console.WriteLine("Path contains: " + Path.GetFileName(path.Replace("file://","")));
                 index++;
             }
-            Console.WriteLine("not found");
             return -1;
         }
         
