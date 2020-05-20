@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 using IDL_for_NaturL.colorscheme;
@@ -12,7 +13,8 @@ namespace IDL_for_NaturL
 {
     public partial class SettingsWindow
     {
-        public string selected_item = "Mots clefs";
+        public bool clicked;
+        public int selected_item = 0;
 
         public SettingsWindow()
         {
@@ -81,25 +83,36 @@ namespace IDL_for_NaturL
             Cancel_Click(null, null);
         }
 
+        public void MouseLeftDown(object sender, MouseEventArgs e)
+        {
+            clicked = true;
+        }
+
+        public void MouseLeftUp(object sender, MouseEventArgs e)
+        {
+            clicked = false;
+        }
 
         public void Color_Changed(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("Color Changed");
+            if (!clicked) return;
             SolidColorBrush brush = new SolidColorBrush(Color_Picker.Color);
             switch (selected_item)
             {
-                case "Mots clefs":
+                case 0:
                     Color_keywords.Foreground = brush;
                     Bold_Keywords.Foreground = brush;
                     break;
-                case "Fonctions":
+                case 1:
                     Color_functions.Foreground = brush;
                     Bold_Functions.Foreground = brush;
                     break;
-                case "Types":
+                case 2:
                     Color_types.Foreground = brush;
                     Bold_Types.Foreground = brush;
                     break;
-                case "Vrai Faux":
+                case 3:
                     Color_truefalse.Foreground = brush;
                     Bold_TrueFalse.Foreground = brush;
                     break;
@@ -108,9 +121,7 @@ namespace IDL_for_NaturL
 
         private void Selected_Combo_OnSelected(object sender, RoutedEventArgs e)
         {
-            ComboBoxItem typeItem = (ComboBoxItem) Selected_Combo.SelectedItem;
-            string value = typeItem.Content.ToString();
-            selected_item = value;
+            selected_item = Selected_Combo.SelectedIndex;
         }
 
         private void Bold_Keywords_OnChecked(object sender, RoutedEventArgs e)

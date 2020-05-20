@@ -3,9 +3,9 @@ using System.IO;
 
 namespace IDL_for_NaturL
 {
-    public interface Lsp_Receiver
+    public interface LspReceiver
     {
-        void ReceiveKeywords(List<string> keywords);
         void JumpToDefinition(Location location);
+        void Completion(IList<CompletionItem> completionList);
     }
 }

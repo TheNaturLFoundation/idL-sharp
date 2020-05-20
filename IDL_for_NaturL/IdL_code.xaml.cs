@@ -25,7 +25,7 @@ namespace IDL_for_NaturL
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Lsp_Receiver
+    public partial class MainWindow : LspReceiver
     {
         //Constants in order to determine if the data is dirty or know
         //private string _firstData = "";
@@ -38,7 +38,7 @@ namespace IDL_for_NaturL
         private string tabitem;
         private WarningSeverity _warningSeverity;
 
-        private static Dictionary<string, TabHandling> attributes =
+        private static Dictionary<string, TabHandling> tabAttributes =
             new Dictionary<string, TabHandling>();
 
         CompletionWindow completionWindow;
@@ -128,7 +128,7 @@ namespace IDL_for_NaturL
                 },
                 EnableRaisingEvents = true
             };
-            LspSender = new Lsp_Handler(this, processServer);
+            LspSender = new LspHandler(this, processServer);
         }
 
 
@@ -136,9 +136,10 @@ namespace IDL_for_NaturL
         {
             ((TabablzControl) FindName("TabControl")).Items.RemoveAt(tabindex);
         }
-
+        [STAThread]
         private void NewTabItems(int n, string path)
         {
+            Console.WriteLine("Tabid: " + n + " Path: " + path);
             StringReader stringReader =
                 new StringReader(tabitem.Replace("_id_", n.ToString()));
             XmlReader xmlReader = XmlReader.Create(stringReader);
@@ -155,7 +156,7 @@ namespace IDL_for_NaturL
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
                     "python_grid")).Children[3]);
             TabHandling tabHandling = new TabHandling(path);
-            attributes.Add(n.ToString(), tabHandling);
+            tabAttributes.Add(n.ToString(), tabHandling);
             ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
                     "grid_codebox")).Children[0])
                 .SyntaxHighlighting = _highlightingDefinition;
@@ -166,7 +167,7 @@ namespace IDL_for_NaturL
 
             TabControl.SelectedIndex =
                 ((TabablzControl) FindName("TabControl")).Items.Count - 1;
-            if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
+            if (!tabAttributes.TryGetValue(_currenttabId, out _currentTabHandler))
             {
                 return;
             }
@@ -231,12 +232,12 @@ namespace IDL_for_NaturL
                 .Items)
             {
                 _currenttabId = item.Name.Replace("Tab", "");
-                if (!attributes.TryGetValue(_currenttabId,
+                if (!tabAttributes.TryGetValue(_currenttabId,
                     out _currentTabHandler))
                 {
                     return;
                 }
-
+                    
                 if (!_currentTabHandler._isFileSelected && DataChanged())
                 {
                     MessageBoxResult result = messageOnClose(
@@ -337,7 +338,7 @@ namespace IDL_for_NaturL
                 var source = (TabItem) e.AddedItems[0];
                 _currentTab = ((TabablzControl) e.Source).SelectedIndex;
                 _currenttabId = source.Name.Replace("Tab", "");
-                if (!attributes.TryGetValue(_currenttabId,
+                if (!tabAttributes.TryGetValue(_currenttabId,
                     out _currentTabHandler))
                 {
                     return;
@@ -347,14 +348,14 @@ namespace IDL_for_NaturL
             {
                 var source = (TabItem) e.RemovedItems[0];
                 string i = source.Name.Replace("Tab", "");
-                attributes.Remove(i);
+                tabAttributes.Remove(i);
             }
         }
 
         private void Set_Tab(int n)
         {
             TabControl.SelectedIndex = n - 1;
-            if (!attributes.TryGetValue(_currenttabId, out _currentTabHandler))
+            if (!tabAttributes.TryGetValue(_currenttabId, out _currentTabHandler))
             {
                 return;
             }

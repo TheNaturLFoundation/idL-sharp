@@ -20,15 +20,6 @@ namespace IDL_for_NaturL
         private Process _processPython = new Process();
         private bool _processPythonRunning;
         //Function in order to quote paths as the cmd doesn't understand what a path with spaces is
-        private string Quote(string toBeQuoted)
-        {
-            if (toBeQuoted != null)
-            {
-                return '"' + toBeQuoted + '"';
-            }
-
-            return null;
-        }
 
         private void Transpile(object sender, RoutedEventArgs routedEventArgs)
         {

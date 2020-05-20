@@ -131,7 +131,7 @@ namespace IDL_for_NaturL
             _lastFocusedTextEditor.Select(0,0);
             _lastFocusedTextEditor =
                 (TextEditor) FindName("CodeBox" + _currenttabId);
-            
+                        
         }
         private void PythonBoxSetLastElement(object sender, RoutedEventArgs e)
         {

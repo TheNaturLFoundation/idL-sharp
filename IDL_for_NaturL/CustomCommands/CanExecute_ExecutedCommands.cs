@@ -162,13 +162,13 @@ namespace IDL_for_NaturL
 
         private void DebugCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            foreach (KeyValuePair<string, TabHandling> att in attributes)
+            foreach (KeyValuePair<string, TabHandling> att in tabAttributes)
             {
                 Console.WriteLine("Key is: " + att.Key + " Value is: " + att.Value);
             }
 
             Console.WriteLine("CurrentTabHandler: " + _currentTabHandler);
-            Console.WriteLine("Size: " + attributes.Count);
+            Console.WriteLine("Size: " + tabAttributes.Count);
         }
 
         private void ResearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

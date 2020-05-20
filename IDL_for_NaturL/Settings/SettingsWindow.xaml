@@ -7,7 +7,7 @@
     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz" x:Class="IDL_for_NaturL.SettingsWindow"
         mc:Ignorable="d"
         Title="Settings" Height="450" Width="800"
-        Icon="ressources/logoicon.png"
+        Icon="../ressources/logoicon.png"
         ResizeMode="CanMinimize">
     <Window.Resources>
         <Style x:Key="RoundCorner" TargetType="{x:Type Button}">
@@ -174,7 +174,7 @@
     </Window.Resources>
     <Grid>
         <DockPanel>
-            <TabControl TabStripPlacement="Left" Width="790" Height="417" RenderTransformOrigin="0.25,0.293">
+            <dragablz:TabablzControl TabStripPlacement="Left" Width="790" Height="417" RenderTransformOrigin="0.25,0.293">
                 <TabItem Header="Customiser" Margin="0,-2,0,-2">
                     <Grid Margin="0,9,0,0" Width="689" Height="412" VerticalAlignment="Top">
                         <Button Click="Save_Setting" Style="{DynamicResource RoundCorner}" Content="Save"
@@ -190,7 +190,7 @@
                                 Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
                         <materialDesign:ColorPicker Name="Color_Picker" HorizontalAlignment="Left" VerticalAlignment="Top" 
                                                     Height="215" Width="190" Margin="10,10,0,0"
-                                                    MouseMove="Color_Changed"/>
+                                                    MouseMove="Color_Changed" MouseLeftButtonDown="MouseLeftDown" MouseLeftButtonUp="MouseLeftUp"/>
                         <TextBlock x:Name="Color_keywords" Margin="382,18,236,336" Text="Mots clefs:&#x0a;fonction&#x0a;si&#x0a;sinon_si" Foreground="#fa8d3e" FontWeight="Bold" FontFamily="Consolas"/>
                         <CheckBox Name="Bold_Keywords" Checked="Bold_Keywords_OnChecked"  Content="Gras" Foreground="#fa8d3e" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top"
                                   BorderThickness="1" IsChecked="True"/>
@@ -204,10 +204,10 @@
                         <CheckBox Name="Bold_TrueFalse"  Content="Gras" Foreground="#a37acc" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="498,195,0,0" VerticalAlignment="Top"
                                   BorderThickness="1" IsChecked="True" Checked="Bold_TrueFalse_OnChecked"/>
                         <ComboBox Name="Selected_Combo" HorizontalAlignment="Left" Margin="224,19,0,0" VerticalAlignment="Top" Width="120" Visibility="Visible" SelectionChanged="Selected_Combo_OnSelected">
-                            <ComboBoxItem Content="Mots clefs" IsSelected="True"/>
-                            <ComboBoxItem Content="Fonctions"/>
-                            <ComboBoxItem Content="Types"/>
-                            <ComboBoxItem Content="Vrai Faux"/>
+                            <ComboBoxItem Content="Mots clefs" IsSelected="True" Background="White"/>
+                            <ComboBoxItem Content="Fonctions" Background="White"/>
+                            <ComboBoxItem Content="Types" Background="White"/>
+                            <ComboBoxItem Content="Constantes" Background="White"/>
                         </ComboBox>
                     </Grid>
                 </TabItem>
@@ -243,7 +243,7 @@
                                 Name="OkButton" Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
                     </Grid>
                 </TabItem>-->
-            </TabControl>
+            </dragablz:TabablzControl>
         </DockPanel>
     </Grid>
 </Window>

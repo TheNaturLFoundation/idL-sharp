@@ -10,6 +10,7 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -28,9 +29,9 @@ namespace IDL_for_NaturL
 {
     public partial class MainWindow
     {
-        public string[] Keywords =
+        public List<string> ConstantKeywords = new List<string>()
         {
-            "afficher",
+            "afficher", 
             "fonction",
             "variables",
             "debut",
@@ -61,10 +62,14 @@ namespace IDL_for_NaturL
             "longueur"
         };
 
-
+        public List<string> ContextKeywords = new List<string>();
         // This function will get the last typed word and update an attribute
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.Escape)
+            {
+                _lastFocusedTextEditor.Select(_lastFocusedTextEditor.CaretOffset,0);   
+            }
             if (e.Key == Key.Tab)
             {
                 int i = _lastFocusedTextEditor.CaretOffset;
@@ -121,12 +126,15 @@ namespace IDL_for_NaturL
                     offset--;
                 }
             }
-
+            
             completionWindow = CompletionWindow.GetInstance(_lastFocusedTextEditor.TextArea);
             IList<ICompletionData> data =
                 completionWindow.CompletionList.CompletionData;
-            // filter for strict completion Where(keyword => CompletionScore(keyword,lastTypedWord) > 0).
-            var sorted = Keywords.Where(keyword => CompletionScore(keyword, lastTypedWord) >= 0)
+            TextLocation textLocation = Dispatcher.Invoke(() => _lastFocusedTextEditor.Document.GetLocation(
+                Dispatcher.Invoke(() => _lastFocusedTextEditor.CaretOffset)));
+            Position position = new Position(textLocation.Line,textLocation.Column);
+            LspSender.RequestKeywords(position, "file://" + Path.GetFullPath(_currentTabHandler._file));
+            var sorted = ContextKeywords.Where(keyword => CompletionScore(keyword, lastTypedWord) >= 0)
                 .OrderBy
                     (keyword => CompletionScore(keyword, lastTypedWord));
             foreach (var keyword in sorted)
@@ -134,8 +142,11 @@ namespace IDL_for_NaturL
                 MyCompletionData myCompletionData = new MyCompletionData(keyword, language, _lastFocusedTextEditor);
                 data.Add(myCompletionData);
             }
-
             completionWindow.Show();
+            if (data.Count == 0)
+            {
+                completionWindow.Close();
+            }
         }
 
         private float CompletionScore(string reference, string input)

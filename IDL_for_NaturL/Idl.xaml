@@ -437,7 +437,7 @@
                                          ToolTip="Cancel" Command="self:CustomCommands.Cancel_Process" >
                         <MenuItem.Icon>
                             <Image Source="ressources/red_square.png"
-                                   Margin="-2,-8,-7,-8" />
+                                   Margin="-4,-8,-7,-8" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </Menu>

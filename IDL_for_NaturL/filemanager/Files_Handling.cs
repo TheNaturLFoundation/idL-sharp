@@ -2,8 +2,10 @@ using System;
 using System.Windows;
 using Microsoft.Win32;
 using System.IO;
+using System.Linq;
 using Path = System.IO.Path;
 using System.Windows.Controls;
+using Dragablz;
 using ICSharpCode.AvalonEdit;
 
 namespace IDL_for_NaturL
@@ -22,22 +24,72 @@ namespace IDL_for_NaturL
         
         // This function refers to the "Open" button in the toolbar, opens the file dialog and asks the user the file to open
         // Content of the opened file is then showed in the codebox of idl
-        public void Open_Click()
+        [STAThread]
+        public void Open_Click(string uri = null)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt| cs files (*.cs)|*.cs"
             };
+            if (uri != null)
+            {
+                int fileKey = IsFileOpen(uri);
+                if (fileKey != -1)
+                {
+                    // Select the openend file
+                    Console.WriteLine("Found");
+                    Dispatcher.Invoke(() => TabControl.SelectedIndex = fileKey);
+                    Dispatcher.Invoke(() => _lastFocusedTextEditor = 
+                        (TextEditor) FindName("CodeBox" + _currenttabId));
+                }
+                else
+                {
+                    // Open the file according to the uri
+                    OpenFile(uri);
+                }
+
+                return;
+            }
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
-                NewTabItems(_tabInt++, filename);
-                var text = File.ReadAllText(_currentTabHandler._file);
-                ((TextEditor) FindName("CodeBox" + _currenttabId)).Text = text;
-                _currentTabHandler._firstData = text;
-                ((TabItem) FindName("Tab" + _currenttabId)).Header =
-                    Path.GetFileNameWithoutExtension(_currentTabHandler._file);
+                int filekey = IsFileOpen(filename);
+                if (filekey == -1)
+                {
+                    OpenFile(filename);
+                }
+                else
+                {
+                    Dispatcher.Invoke(() => TabControl.SelectedIndex = filekey);
+                    Dispatcher.Invoke(() => _lastFocusedTextEditor = 
+                        (TextEditor) FindName("CodeBox" + _currenttabId));
+                }
             }
+        }
+
+        public void OpenFile(string path)
+        {
+            NewTabItems(_tabInt++, path);
+            var text = File.ReadAllText(_currentTabHandler._file);
+            ((TextEditor) FindName("CodeBox" + _currenttabId)).Text = text;
+            _currentTabHandler._firstData = text;
+            ((TabItem) FindName("Tab" + _currenttabId)).Header =
+                Path.GetFileNameWithoutExtension(_currentTabHandler._file);
+        }
+
+        public int IsFileOpen(string path)
+        {
+            int index = 0;
+            foreach (TabItem element in Dispatcher.Invoke(() => (TabablzControl) FindName("TabControl")).Items)
+            {
+                if ((string) Dispatcher.Invoke(() => element.Header) == Path.GetFileNameWithoutExtension(path))
+                {
+                    return index;
+                }
+
+                index++;
+            }
+            return -1;
         }
         
         public void NewFile(object sender, RoutedEventArgs e)

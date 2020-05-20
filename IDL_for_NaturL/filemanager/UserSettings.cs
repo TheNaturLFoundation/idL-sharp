@@ -42,7 +42,7 @@ namespace IDL_for_NaturL.filemanager
                     deserializedSettingsManager.language, deserializedSettingsManager.severity,
                     deserializedSettingsManager.syntaxFilePath));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine("Deserialisation Error : No settings.xml found, will apply default configuration");
                 language = Language.French;
