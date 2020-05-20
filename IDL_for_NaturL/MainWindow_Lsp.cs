@@ -12,7 +12,7 @@ namespace IDL_for_NaturL
     public partial class MainWindow : LspReceiver
     {
         public LspSender LspSender;
-        [STAThread]
+        
         public void JumpToDefinition(Location location)
         {
             string uri = location.uri;
@@ -21,7 +21,6 @@ namespace IDL_for_NaturL
             Position end = range.end;
             // implement logic for the uri in order to open file if not opened
             // and select the tab if not selected
-            uri = uri.Replace("file://", "");
             Dispatcher.Invoke(() => Open_Click(uri));
             int startPos = Dispatcher.Invoke(() =>
                 _lastFocusedTextEditor.Document.GetOffset(start.line + 1, start.character + 1));
@@ -72,8 +71,9 @@ namespace IDL_for_NaturL
                 Console.WriteLine("Detected Jump");
                 TextLocation location = _lastFocusedTextEditor.Document.GetLocation(
                     _lastFocusedTextEditor.CaretOffset);
-                LspSender.RequestDefinition(new Position(location.Line,location.Column), 
-                    "file://" + Path.GetFullPath(_currentTabHandler._file));
+                string filename = _currentTabHandler._file;
+                string path = string.IsNullOrEmpty(filename) ? _currentTabHandler.playground : filename;
+                LspSender.RequestDefinition(new Position(location.Line,location.Column), path);
             }
         }
     }

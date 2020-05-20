@@ -24,7 +24,7 @@ namespace IDL_for_NaturL
         
         // This function refers to the "Open" button in the toolbar, opens the file dialog and asks the user the file to open
         // Content of the opened file is then showed in the codebox of idl
-        [STAThread]
+        
         public void Open_Click(string uri = null)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -45,9 +45,9 @@ namespace IDL_for_NaturL
                 else
                 {
                     // Open the file according to the uri
+                    uri = uri.Replace("file://", "");
                     OpenFile(uri);
                 }
-
                 return;
             }
             if (openFileDialog.ShowDialog() == true)
@@ -79,16 +79,23 @@ namespace IDL_for_NaturL
 
         public int IsFileOpen(string path)
         {
+            string uriType = path.Contains("file://") ? "file" : path.Contains("playground://") ? "playground" : null;
             int index = 0;
-            foreach (TabItem element in Dispatcher.Invoke(() => (TabablzControl) FindName("TabControl")).Items)
+            foreach (var element in Dispatcher.Invoke(() => tabAttributes))
             {
-                if ((string) Dispatcher.Invoke(() => element.Header) == Path.GetFileNameWithoutExtension(path))
+                if (uriType == "file" && element.Value._file == path.Replace("file://",""))
                 {
                     return index;
                 }
-
+                if (uriType == "playground" && element.Value.playground == path)
+                {
+                    return index;
+                }
+                Console.WriteLine("Dictionnary contains: " + element.Value._file);
+                Console.WriteLine("Path contains: " + Path.GetFileName(path.Replace("file://","")));
                 index++;
             }
+            Console.WriteLine("not found");
             return -1;
         }
         
@@ -162,6 +169,7 @@ namespace IDL_for_NaturL
                 Path.GetFileNameWithoutExtension(_currentTabHandler._file);
             string text = File.ReadAllText(_currentTabHandler._file);
             _currentTabHandler._firstData = text.ToString();
+            _currentTabHandler.playground = null;
             return true;
         }
     }

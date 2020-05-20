@@ -32,10 +32,11 @@ namespace IDL_for_NaturL
         //private bool _isSaved;
         //private bool _isFileSelected;
         //private string _file = "";
-        private static int _tabInt;
+        private int _tabInt;
         private int _currentTab;
         private string _currenttabId = "0";
         private string tabitem;
+        private int playgroundCount;
         private WarningSeverity _warningSeverity;
 
         private static Dictionary<string, TabHandling> tabAttributes =
@@ -49,21 +50,24 @@ namespace IDL_for_NaturL
 
         private class TabHandling
         {
-            public TabHandling(string file, bool isSaved = false)
+            public TabHandling(string file,int playgroundCount, bool isSaved = false)
             {
                 _isFileSelected = !string.IsNullOrEmpty(file);
                 _firstData = file == null ? "" : File.ReadAllText(file);
                 _isSaved = isSaved;
                 _file = file;
+                this.playgroundCount = playgroundCount;
+                playground = file == null ? "playground://playground" + playgroundCount : null;
             }
-
+    
 
             //public TabHandling()
             public bool _isFileSelected { get; set; }
             public string _firstData { get; set; }
             public bool _isSaved { get; set; }
             public string _file { get; set; }
-
+            public string playground { get; set; }
+            public int playgroundCount { get; set; }
             public override string ToString() =>
                 $"(Is File Selected : {_isFileSelected}, FirstData : {"first_data"}, IsSaved : {_isSaved}, File : {_file})";
         }
@@ -90,8 +94,7 @@ namespace IDL_for_NaturL
 
             textEditor.SyntaxHighlighting = _highlightingDefinition;
             reader.Close();
-
-            //attributes = new Dictionary<string, TabHandling>();
+            
             string[] paths =
                 File.ReadAllLines("ressources/lastfiles.txt");
             tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
@@ -155,7 +158,7 @@ namespace IDL_for_NaturL
             RegisterName("STD" + n,
                 (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
                     "python_grid")).Children[3]);
-            TabHandling tabHandling = new TabHandling(path);
+            TabHandling tabHandling = new TabHandling(path, path == null ? ++playgroundCount : playgroundCount);
             tabAttributes.Add(n.ToString(), tabHandling);
             ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
                     "grid_codebox")).Children[0])
@@ -182,6 +185,11 @@ namespace IDL_for_NaturL
                 tabHandling._isFileSelected = true;
                 tabHandling._isSaved = true;
             }
+            else
+            {
+                ((TabItem) FindName("Tab" + n)).Header =
+                    Path.GetFileNameWithoutExtension(tabHandling.playground);
+            }
 
             TextEditor CodeBox =
                 ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{n}")).FindName(
@@ -206,10 +214,10 @@ namespace IDL_for_NaturL
 
         public void UpdateColorScheme(XmlDocument doc)
         {
-            for (int i = 0; i < _tabInt; i++)
+            foreach(var element in tabAttributes)
             {
                 TextEditor CodeBox =
-                    ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{i}")).FindName(
+                    ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{element.Key}")).FindName(
                         "grid_codebox")).Children[0]);
                 CodeBox.SyntaxHighlighting = HighlightingLoader.Load(new XmlNodeReader(doc),
                     HighlightingManager.Instance);

@@ -133,7 +133,9 @@ namespace IDL_for_NaturL
             TextLocation textLocation = Dispatcher.Invoke(() => _lastFocusedTextEditor.Document.GetLocation(
                 Dispatcher.Invoke(() => _lastFocusedTextEditor.CaretOffset)));
             Position position = new Position(textLocation.Line,textLocation.Column);
-            LspSender.RequestKeywords(position, "file://" + Path.GetFullPath(_currentTabHandler._file));
+            string file = _currentTabHandler._file;
+            string path = string.IsNullOrEmpty(file) ? _currentTabHandler.playground : file;
+            LspSender.RequestKeywords(position, path);
             var sorted = ContextKeywords.Where(keyword => CompletionScore(keyword, lastTypedWord) >= 0)
                 .OrderBy
                     (keyword => CompletionScore(keyword, lastTypedWord));
