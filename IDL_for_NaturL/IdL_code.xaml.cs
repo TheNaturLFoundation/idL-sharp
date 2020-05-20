@@ -94,26 +94,10 @@ namespace IDL_for_NaturL
 
             textEditor.SyntaxHighlighting = _highlightingDefinition;
             reader.Close();
-            
             string[] paths =
                 File.ReadAllLines("ressources/lastfiles.txt");
             tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
             ((TabablzControl) FindName("TabControl")).Items.RemoveAt(0);
-            if (paths.Length == 0)
-            {
-                NewTabItems(_tabInt++, null);
-            }
-            else
-            {
-                foreach (string path in paths)
-                {
-                    NewTabItems(_tabInt++, path);
-                }
-            }
-
-            _lastFocusedTextEditor =
-                (TextEditor) FindName("CodeBox" + _currenttabId);
-            InitialiseLanguageComponents(language);
             Process processServer = new Process
             {
                 StartInfo =
@@ -132,6 +116,22 @@ namespace IDL_for_NaturL
                 EnableRaisingEvents = true
             };
             LspSender = new LspHandler(this, processServer);
+            if (paths.Length == 0)
+            {
+                NewTabItems(_tabInt++, null);
+            }
+            else
+            {
+                foreach (string path in paths)
+                {
+                    NewTabItems(_tabInt++, path);
+                }
+            }
+
+            _lastFocusedTextEditor =
+                (TextEditor) FindName("CodeBox" + _currenttabId);
+            InitialiseLanguageComponents(language);
+            
         }
 
 
@@ -142,7 +142,6 @@ namespace IDL_for_NaturL
         [STAThread]
         private void NewTabItems(int n, string path)
         {
-            Console.WriteLine("Tabid: " + n + " Path: " + path);
             StringReader stringReader =
                 new StringReader(tabitem.Replace("_id_", n.ToString()));
             XmlReader xmlReader = XmlReader.Create(stringReader);
@@ -177,6 +176,7 @@ namespace IDL_for_NaturL
 
             if (path != null)
             {
+                LspSender.DidOpen("file://" + path, "",0, File.ReadAllText(path));
                 string s = File.ReadAllText(path);
                 ((TextEditor) FindName("CodeBox" + n)).Text = s;
                 ((TabItem) FindName("Tab" + n)).Header =

@@ -37,10 +37,10 @@ namespace IDL_for_NaturL.filemanager
                 language = deserializedSettingsManager.GetLanguage();
                 warningSeverity = deserializedSettingsManager.GetSeverity();
                 syntaxFilePath = deserializedSettingsManager.syntaxFilePath;
-                Console.WriteLine(String.Format(
-                    "Configuration loaded : language: {0} severity: {1}, syntaxFilePath : {2}",
-                    deserializedSettingsManager.language, deserializedSettingsManager.severity,
-                    deserializedSettingsManager.syntaxFilePath));
+                //Console.WriteLine(String.Format(
+                    //"Configuration loaded : language: {0} severity: {1}, syntaxFilePath : {2}",
+                //    deserializedSettingsManager.language, deserializedSettingsManager.severity,
+                //    deserializedSettingsManager.syntaxFilePath));
             }
             catch (Exception)
             {

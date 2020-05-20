@@ -58,8 +58,33 @@ namespace IDL_for_NaturL
             Console.WriteLine(json);
         }
 
+        public void Initialize()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DidOpen(string uri, string language, int version, string text)
+        {
+            DidOpenTextDocument document =
+                new ConcreteDidOpenTextDocument(new TextDocumentItem(uri, language, version, text));
+            string json = JsonConvert.SerializeObject(document);
+            server.StandardInput.WriteLine(json);
+            server.StandardInput.Flush();
+        }
+
+        public void DidChange()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DidClose()
+        {
+            throw new NotImplementedException();
+        }
+
         public void ReceiveData(object sender, DataReceivedEventArgs e)
         {
+            if (inHeader) return;
             if (string.IsNullOrEmpty(e.Data))
             {
                 inHeader = false;
@@ -71,11 +96,9 @@ namespace IDL_for_NaturL
                 Replace(",",",\n").
                 Replace("[","[\n").
                 Replace("]","]\n");
-            Console.WriteLine(data);
             JObject receivedData = (JObject) JsonConvert.DeserializeObject(data);
             if (IsPropertyExist(receivedData, "id"))
             {
-                Console.WriteLine("Exists id");
                 // It is a response if we get there.
                 // Now need to find the id of the method called that was previously serialized
                 

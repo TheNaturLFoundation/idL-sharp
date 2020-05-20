@@ -78,7 +78,6 @@ namespace IDL_for_NaturL
                 "_Copy", "_Paste", "_Cut", "_Undo", "_Redo"
             };
             List<List<string>> engList = new List<List<string>>() {fileEng, editEng};
-            Console.WriteLine(language);
             switch (language)
             {
                 case IDL_for_NaturL.Language.French:

@@ -2,6 +2,7 @@ namespace IDL_for_NaturL
 {
     public interface DefinitionParams : TextDocumentPositionParams
     {
+        
     }
 
     public class ConcreteDefinitionParams : DefinitionParams
