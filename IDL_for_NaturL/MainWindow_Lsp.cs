@@ -50,7 +50,8 @@ namespace IDL_for_NaturL
                 _lastFocusedTextEditor.CaretOffset);
             string filename = _currentTabHandler._file;
             string path = string.IsNullOrEmpty(filename) ? _currentTabHandler.playground : filename;
-            LspSender.RequestDefinition(new Position(location.Line,location.Column), path);
+            Dispatcher.Invoke(() => 
+                LspSender.RequestDefinition(new Position(location.Line,location.Column), path));
         }
     }
 }

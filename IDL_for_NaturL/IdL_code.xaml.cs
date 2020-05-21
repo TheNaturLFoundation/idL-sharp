@@ -12,6 +12,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Windows.Threading;
 using Dragablz;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Search;
@@ -117,13 +118,13 @@ namespace IDL_for_NaturL
                 EnableRaisingEvents = true
             };
             LspSender = new LspHandler(this, processServer);
-            LspSender.InitializeRequest(Process.GetCurrentProcess().Id,
+            Dispatcher.Invoke(() => LspSender.InitializeRequest(Process.GetCurrentProcess().Id,
                 "file://" + Directory.GetCurrentDirectory(),
                 new ClientCapabilities(
                     new TextDocumentClientCapabilities(
                         new CompletionClientCapabilities(),
                         new DefinitionClientCapabilities(),
-                        new PublishDiagnosticsClientCapabilities())));
+                        new PublishDiagnosticsClientCapabilities()))));
             if (paths.Length == 0)
             {
                 NewTabItems(_tabInt++, null);
@@ -184,7 +185,8 @@ namespace IDL_for_NaturL
 
             if (path != null)
             {
-                LspSender.DidOpenNotification(("file://" + path), "", 0, File.ReadAllText(path));
+                Dispatcher.Invoke(() => 
+                    LspSender.DidOpenNotification(("file://" + path), "", 0, File.ReadAllText(path)));
                 string s = File.ReadAllText(path);
                 ((TextEditor) FindName("CodeBox" + n)).Text = s;
                 ((TabItem) FindName("Tab" + n)).Header =
@@ -294,7 +296,7 @@ namespace IDL_for_NaturL
                 paths);
             if (!cancelled)
             {
-                LspSender.ShutDownNotification();
+                Dispatcher.Invoke(() => LspSender.ShutDownNotification());
                 Application.Current.Shutdown();
             }
 

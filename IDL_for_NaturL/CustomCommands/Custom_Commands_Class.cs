@@ -118,7 +118,7 @@ namespace IDL_for_NaturL
             typeof(CustomCommands),
             new InputGestureCollection()
             {
-                new KeyGesture(Key.D, ModifierKeys.Control)
+                new KeyGesture(Key.L, ModifierKeys.Control)
             }
         );
 

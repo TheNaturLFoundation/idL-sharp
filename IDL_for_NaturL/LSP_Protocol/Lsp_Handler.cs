@@ -5,6 +5,7 @@ using System.Dynamic;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Threading;
+using System.Windows.Threading;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using Newtonsoft.Json;
@@ -26,7 +27,6 @@ namespace IDL_for_NaturL
             server.Start();
             server.OutputDataReceived += ReceiveData;
             server.BeginOutputReadLine();
-            server.BeginErrorReadLine();
             this.server = server;
         }
 
