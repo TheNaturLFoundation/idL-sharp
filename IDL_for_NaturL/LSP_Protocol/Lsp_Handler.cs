@@ -15,10 +15,11 @@ namespace IDL_for_NaturL
     public class LspHandler : LspSender
     {
         public int id;
+        public bool initializedServer = false;
         private Process server;
         private Dictionary<int, string> idDictionary = new Dictionary<int, string>();
         public bool inHeader;
-        
+
         public LspHandler(LspReceiver lspReceiver, Process server)
         {
             this.lspReceiver = lspReceiver;
@@ -30,15 +31,15 @@ namespace IDL_for_NaturL
         }
 
         private LspReceiver lspReceiver;
-        
+
         public void RequestDefinition(Position position, string uri)
         {
             RequestMessage newMessage = new RequestMessage
             {
-                id = ++id, method = "textDocument/definition", parameters = 
+                id = ++id, method = "textDocument/definition", parameters =
                     new ConcreteDefinitionParams(new ConcreteTextDocumentIdentifier(uri), position)
             };
-            idDictionary.Add(id,"textDocument/definition");
+            idDictionary.Add(id, "textDocument/definition");
             string json = JsonConvert.SerializeObject(newMessage);
             server.StandardInput.WriteLine(json);
             server.StandardInput.Flush();
@@ -48,21 +49,44 @@ namespace IDL_for_NaturL
         {
             RequestMessage newMessage = new RequestMessage
             {
-                id = ++id, method = "textDocument/completion", parameters = 
+                id = ++id, method = "textDocument/completion", parameters =
                     new ConcreteCompletionParams(new ConcreteTextDocumentIdentifier(uri), position)
             };
-            idDictionary.Add(id,"textDocument/completion");
+            idDictionary.Add(id, "textDocument/completion");
             string json = JsonConvert.SerializeObject(newMessage);
             server.StandardInput.WriteLine(json);
             server.StandardInput.Flush();
         }
 
-        public void Initialize() // Request //
+        public void InitializeRequest(int processId, string uri, ClientCapabilities capabilities)
         {
-            throw new NotImplementedException();
+            Initialize_Request initializeRequest =
+                new Initialize_Request(processId, uri, capabilities);
+            idDictionary.Add(id, "initialize");
+            string json = JsonConvert.SerializeObject(initializeRequest);
+            server.StandardInput.WriteLine(json);
+            server.StandardInput.Flush();
         }
 
-        public void DidOpen(string uri, string language, int version, string text)
+        public void InitializedNotification()
+        {
+            InitializedNotification initRequest =
+                new InitializedNotification();
+            string json = JsonConvert.SerializeObject(initRequest);
+            server.StandardInput.WriteLine(json);
+            server.StandardInput.Flush();
+        }
+
+        public void ShutDownNotification()
+        {
+            ShutDownNotification shutDownNotification =
+                new ShutDownNotification();
+            string json = JsonConvert.SerializeObject(shutDownNotification);
+            server.StandardInput.WriteLine(json);
+            server.StandardInput.Flush();
+        }
+
+        public void DidOpenNotification(string uri, string language, int version, string text)
         {
             DidOpenTextDocument document =
                 new ConcreteDidOpenTextDocument(new TextDocumentItem(uri, language, version, text));
@@ -71,7 +95,7 @@ namespace IDL_for_NaturL
             server.StandardInput.Flush();
         }
 
-        public void DidChange(VersionedTextDocumentIdentifier versionedTextDocumentIdentifier,
+        public void DidChangeNotification(VersionedTextDocumentIdentifier versionedTextDocumentIdentifier,
             List<TextDocumentContentChangeEvent> contentchangesEvents)
         {
             DidChangeTextDocument document =
@@ -82,7 +106,7 @@ namespace IDL_for_NaturL
             server.StandardInput.Flush();
         }
 
-        public void DidClose(string uri)
+        public void DidCloseNotification(string uri)
         {
             DidCloseTextDocument document =
                 new ConcreteDidCloseTextDocument(new ConcreteTextDocumentIdentifier(uri));
@@ -99,19 +123,29 @@ namespace IDL_for_NaturL
                 inHeader = false;
                 return;
             }
+
             // Everything will be received here
-            string data = e.Data.Replace("{", "{\n").
-                Replace("}","}\n").
-                Replace(",",",\n").
-                Replace("[","[\n").
-                Replace("]","]\n");
+            string data = e.Data.Replace("{", "{\n").Replace("}", "}\n").Replace(",", ",\n").Replace("[", "[\n")
+                .Replace("]", "]\n");
             JObject receivedData = (JObject) JsonConvert.DeserializeObject(data);
             if (IsPropertyExist(receivedData, "id"))
             {
                 // It is a response if we get there.
                 // Now need to find the id of the method called that was previously serialized
-                
+
                 idDictionary.TryGetValue(receivedData["id"].Value<int>(), out string method);
+                if (!initializedServer)
+                {
+                    if (method == "initialize")
+                    {
+                        initializedServer = true;
+                        // Send initialized notification //
+                        InitializedNotification();
+                    }
+
+                    return;
+                }
+
                 switch (method)
                 {
                     case "textDocument/definition":
@@ -133,13 +167,23 @@ namespace IDL_for_NaturL
                 switch (receivedData["method"].Value<string>())
                 {
                     // Switch on methods in order to call the one sent by the notification
-                    case "":
+                    case "textDocument/publishDiagnostics":
+                        PublishDiagnosticsParams @params =
+                            receivedData["params"].ToObject<PublishDiagnosticsParams>();
+                        foreach (var diagnostic in @params.diagnostics)
+                        {
+                            lspReceiver.Diagnostic(diagnostic.range,
+                                diagnostic.severity ?? DiagnosticSeverity.Information,
+                                diagnostic.message, @params.uri);
+                        }
+
                         break;
                 }
             }
 
             inHeader = true;
         }
+
         public static bool IsPropertyExist(JObject settings, string name)
         {
             return settings[name] != null;

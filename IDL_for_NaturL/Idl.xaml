@@ -473,7 +473,6 @@
                             Typography.StandardLigatures="True"
                             FontFamily="Consolas"
                             Name="python_id_"
-                            Background="#FAFAFA"
                             ShowLineNumbers="True"
                             LineNumbersForeground="#399ee6"
                             SyntaxHighlighting="naturL"
@@ -483,11 +482,11 @@
                             FontSize="12pt"
                             Text=""
                             Grid.Column="1"
-                            HorizontalScrollBarVisibility="Hidden" />
+                            HorizontalScrollBarVisibility="Hidden">
+                        </avalonedit:TextEditor>
                         <Grid Name="grid_codebox">
                             <!-- White -->
                             <avalonedit:TextEditor
-                                
                                 FontFamily="Consolas"
                                 Typography.StandardLigatures="True"
                                 Background="#FAFAFA"
@@ -500,7 +499,8 @@
                                 Margin="0,0,0,0"
                                 FontSize="12pt"
                                 Text=""
-                                HorizontalScrollBarVisibility="Hidden" />
+                                HorizontalScrollBarVisibility="Hidden">
+</avalonedit:TextEditor>
 
                         </Grid>
                         <Grid Grid.ColumnSpan="2" Height="120"

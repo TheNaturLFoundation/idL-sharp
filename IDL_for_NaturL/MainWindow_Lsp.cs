@@ -38,41 +38,19 @@ namespace IDL_for_NaturL
             ContextKeywords.AddRange(ConstantKeywords);
         }
 
-        public Position GetPositionFromIndex(int selectionStart)
+        public void Diagnostic(Range range, DiagnosticSeverity warningSeverity, string message, string uri)
         {
-            int line = 0;
-            int chrcount = 0;
-            int indexcounter = 0;
-            foreach (var chr in Dispatcher.Invoke(() => _lastFocusedTextEditor.Text))
-            {
-                if (chr == '\n')
-                {
-                    line++;
-                    chrcount = 0;
-                }
-
-                if (indexcounter == selectionStart)
-                {
-                    return new Position(line, chrcount);
-                }
-
-                chrcount++;
-                indexcounter++;
-            }
-
-            throw new ArgumentOutOfRangeException();
+            throw new NotImplementedException();
         }
-        
-        private void JumpToCommand_Executed(object sender, MouseButtonEventArgs e)
+
+        private void JumpToDefinitionEvent(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 1 && Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                TextLocation location = _lastFocusedTextEditor.Document.GetLocation(
-                    _lastFocusedTextEditor.CaretOffset);
-                string filename = _currentTabHandler._file;
-                string path = string.IsNullOrEmpty(filename) ? _currentTabHandler.playground : filename;
-                LspSender.RequestDefinition(new Position(location.Line,location.Column), path);
-            }
+            if (Keyboard.Modifiers != ModifierKeys.Control) return;
+            TextLocation location = _lastFocusedTextEditor.Document.GetLocation(
+                _lastFocusedTextEditor.CaretOffset);
+            string filename = _currentTabHandler._file;
+            string path = string.IsNullOrEmpty(filename) ? _currentTabHandler.playground : filename;
+            LspSender.RequestDefinition(new Position(location.Line,location.Column), path);
         }
     }
 }

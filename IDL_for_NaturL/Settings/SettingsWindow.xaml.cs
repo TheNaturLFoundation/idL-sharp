@@ -160,6 +160,6 @@ namespace IDL_for_NaturL
             Close();
         }
 
-        
+       
     }
 }

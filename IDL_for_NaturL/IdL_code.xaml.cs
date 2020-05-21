@@ -50,7 +50,7 @@ namespace IDL_for_NaturL
 
         private class TabHandling
         {
-            public TabHandling(string file,int playgroundCount, bool isSaved = false)
+            public TabHandling(string file, int playgroundCount, bool isSaved = false)
             {
                 _isFileSelected = !string.IsNullOrEmpty(file);
                 _firstData = file == null ? "" : File.ReadAllText(file);
@@ -59,7 +59,7 @@ namespace IDL_for_NaturL
                 this.playgroundCount = playgroundCount;
                 playground = file == null ? "playground://playground" + playgroundCount : null;
             }
-    
+
 
             //public TabHandling()
             public bool _isFileSelected { get; set; }
@@ -68,6 +68,7 @@ namespace IDL_for_NaturL
             public string _file { get; set; }
             public string playground { get; set; }
             public int playgroundCount { get; set; }
+
             public override string ToString() =>
                 $"(Is File Selected : {_isFileSelected}, FirstData : {"first_data"}, IsSaved : {_isSaved}, File : {_file})";
         }
@@ -116,6 +117,13 @@ namespace IDL_for_NaturL
                 EnableRaisingEvents = true
             };
             LspSender = new LspHandler(this, processServer);
+            LspSender.InitializeRequest(Process.GetCurrentProcess().Id,
+                "file://" + Directory.GetCurrentDirectory(),
+                new ClientCapabilities(
+                    new TextDocumentClientCapabilities(
+                        new CompletionClientCapabilities(),
+                        new DefinitionClientCapabilities(),
+                        new PublishDiagnosticsClientCapabilities())));
             if (paths.Length == 0)
             {
                 NewTabItems(_tabInt++, null);
@@ -131,7 +139,6 @@ namespace IDL_for_NaturL
             _lastFocusedTextEditor =
                 (TextEditor) FindName("CodeBox" + _currenttabId);
             InitialiseLanguageComponents(language);
-            
         }
 
 
@@ -139,6 +146,7 @@ namespace IDL_for_NaturL
         {
             ((TabablzControl) FindName("TabControl")).Items.RemoveAt(tabindex);
         }
+
         [STAThread]
         private void NewTabItems(int n, string path)
         {
@@ -176,7 +184,7 @@ namespace IDL_for_NaturL
 
             if (path != null)
             {
-                LspSender.DidOpen(("file://" + path), "",0, File.ReadAllText(path));
+                LspSender.DidOpenNotification(("file://" + path), "", 0, File.ReadAllText(path));
                 string s = File.ReadAllText(path);
                 ((TextEditor) FindName("CodeBox" + n)).Text = s;
                 ((TabItem) FindName("Tab" + n)).Header =
@@ -207,14 +215,14 @@ namespace IDL_for_NaturL
             PythonBox.TextArea.MouseWheel += OnMouseDownMain;
             // Events called on text typing for autocompletion
             CodeBox.TextArea.PreviewKeyDown += CodeBox_TextArea_TextEntering;
-            
+
             // Events called on click
-            CodeBox.TextArea.PreviewMouseDown += JumpToCommand_Executed;
+            CodeBox.TextArea.PreviewMouseDown += JumpToDefinitionEvent;
         }
 
         public void UpdateColorScheme(XmlDocument doc)
         {
-            foreach(var element in tabAttributes)
+            foreach (var element in tabAttributes)
             {
                 TextEditor CodeBox =
                     ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{element.Key}")).FindName(
@@ -245,7 +253,7 @@ namespace IDL_for_NaturL
                 {
                     return;
                 }
-                    
+
                 if (!_currentTabHandler._isFileSelected && DataChanged())
                 {
                     MessageBoxResult result = messageOnClose(
@@ -286,6 +294,7 @@ namespace IDL_for_NaturL
                 paths);
             if (!cancelled)
             {
+                LspSender.ShutDownNotification();
                 Application.Current.Shutdown();
             }
 
@@ -305,10 +314,10 @@ namespace IDL_for_NaturL
                     _currentTab);
                 TabControl.SelectedIndex =
                     ((TabablzControl) FindName("TabControl")).Items.Count - 1;
-                LspSender.DidClose(_currentTabHandler._file ?? _currentTabHandler.playground);
+                LspSender.DidCloseNotification(_currentTabHandler._file ?? _currentTabHandler.playground);
             }
         }
-        
+
         private void CloseTab()
         {
             if (!_currentTabHandler._isFileSelected && DataChanged())
@@ -325,7 +334,6 @@ namespace IDL_for_NaturL
                 else if (result == MessageBoxResult.No)
                 {
                     UnregisterNamesAndRemove();
-                    
                 }
             }
             else

@@ -211,7 +211,7 @@
                         </ComboBox>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Warnings">
+                <!--<TabItem Header="Warnings">
                     <Grid Margin="0,9,0,0" Width="689" Height="412" VerticalAlignment="Top">
                         <Button Click="Save_Setting" Style="{DynamicResource RoundCorner}" Content="Save"
                                 Margin="0,360,174,0" Height="19" VerticalAlignment="Top" Foreground="White"
@@ -222,16 +222,17 @@
                         <Button Click="OK_Click" Style="{DynamicResource RoundCornerOK}" Content="OK"
                                 Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
                         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" Text="Selectionnez la séverité des avertissements" 
-                                   TextWrapping="Wrap" VerticalAlignment="Top" Height="55" Width="282"
+                                   TextWrapping="Wrap" VerticalAlignment="Top" Height="39" Width="348"
                                    FontSize="18"/>
                         <ComboBox HorizontalAlignment="Left" Margin="31,65,0,0" VerticalAlignment="Top" Width="120">
                             <ComboBoxItem Content="Faible"/>
                             <ComboBoxItem Content="Moyenne"/>
                             <ComboBoxItem Content="Forte"/>
                         </ComboBox>
+                        <RadioButton Content="RadioButton" HorizontalAlignment="Left" Margin="31,75,0,0" VerticalAlignment="Top" Checked="RadioButton_Checked"/>
                     </Grid>
                 </TabItem>
-                <!--<TabItem Header="Language">
+                <TabItem Header="Language">
                     <Grid Margin="0,9,0,0" Width="689" Height="412" VerticalAlignment="Top">
                         <Button Click="Save_Setting" Style="{DynamicResource RoundCorner}" Content="Save"
                                 Margin="0,360,174,0" Height="19" VerticalAlignment="Top" Foreground="White"

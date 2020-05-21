@@ -70,7 +70,7 @@ namespace IDL_for_NaturL
         {
             string currentUri = _currentTabHandler._file ?? _currentTabHandler.playground;
             documentsList.Add(new TextDocumentContentChangeEvent(_lastFocusedTextEditor.Text));
-            LspSender.DidChange(new VersionedTextDocumentIdentifier(++version,currentUri), documentsList);
+            LspSender.DidChangeNotification(new VersionedTextDocumentIdentifier(++version,currentUri), documentsList);
             switch (e.Key)
             {
                 case Key.Escape:
