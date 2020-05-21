@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Input file name" Height="186" Width="462"
-        Icon="ressources\logoicon.png"
+        Icon="resources\logoicon.png"
         Keyboard.KeyDown="Cancelled_ESC">
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="25,24,0,0" Text="Please input new file name:" TextWrapping="Wrap"

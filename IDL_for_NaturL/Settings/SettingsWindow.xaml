@@ -7,7 +7,7 @@
     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz" x:Class="IDL_for_NaturL.SettingsWindow"
         mc:Ignorable="d"
         Title="Settings" Height="450" Width="800"
-        Icon="../ressources/logoicon.png"
+        Icon="../resources/logoicon.png"
         ResizeMode="CanMinimize">
     <Window.Resources>
         <Style x:Key="RoundCorner" TargetType="{x:Type Button}">

@@ -9,10 +9,10 @@
         ResizeMode="NoResize"
         WindowStyle="None"
         AllowsTransparency="True"
-        Icon="ressources/logoicon.png"
+        Icon="resources/logoicon.png"
         MouseLeftButtonDown="Window_MouseDown">
     <Grid>
-        <Image HorizontalAlignment="Left" Source="ressources\logoicon.png" Height="86" Margin="208,19,0,0"
+        <Image HorizontalAlignment="Left" Source="resources\logoicon.png" Height="86" Margin="208,19,0,0"
                VerticalAlignment="Top" Width="85" />
         <TextBlock HorizontalAlignment="Left" Margin="163,108,0,0" Foreground="White" Text="The NaturL Foundation"
                    TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" />
@@ -25,7 +25,7 @@
 
 
         <!-- Ouvrir recents -->
-        <Image Source="ressources/recent.png" HorizontalAlignment="Left" Height="18" Margin="175,171,0,0"
+        <Image Source="resources/recent.png" HorizontalAlignment="Left" Height="18" Margin="175,171,0,0"
                VerticalAlignment="Top" Width="19" />
         <Button Content="Ouvrir récents    " FontWeight="SemiBold" Background="#ed9200" HorizontalAlignment="Left"
                 Margin="208,171,0,0" VerticalAlignment="Top" Width="90" Height="20" Padding="1,1,1,3"
@@ -55,7 +55,7 @@
 
 
         <!-- Ouvrir un fichier-->
-        <Image Source="ressources/ouvrir.png" Margin="175,203,0,0" HorizontalAlignment="Left" Width="19" Height="27"
+        <Image Source="resources/ouvrir.png" Margin="175,203,0,0" HorizontalAlignment="Left" Width="19" Height="27"
                VerticalAlignment="Top" />
         <Button Content="Ouvrir un fichier" FontWeight="SemiBold" HorizontalAlignment="Left" Margin="208,204,0,0"
                 VerticalAlignment="Top" Visibility="Visible" Background="#ed9200" BorderThickness="0,0,0,0"
@@ -84,7 +84,7 @@
 
 
         <!-- Creer un fichier-->
-        <Image HorizontalAlignment="Left" Source="ressources/plus.png" Height="22" Margin="177,236,0,0"
+        <Image HorizontalAlignment="Left" Source="resources/plus.png" Height="22" Margin="177,236,0,0"
                VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.583,0.48" />
         <Button Content="Créer un fichier  " FontWeight="SemiBold" HorizontalAlignment="Left" Margin="208,236,0,0"
                 VerticalAlignment="Top" Width="90" Visibility="Visible" Background="#ed9200" BorderThickness="0,0,0,0"
@@ -134,7 +134,7 @@
                     </Style.Triggers>
                 </Style>
             </Button.Style>
-            <Image Source="ressources/close.png" Height="23" Width="24" RenderTransformOrigin="0.5,0.5" />
+            <Image Source="resources/close.png" Height="23" Width="24" RenderTransformOrigin="0.5,0.5" />
         </Button>
 
         <!--- Minimize window-->
@@ -160,7 +160,7 @@
                     </Style.Triggers>
                 </Style>
             </Button.Style>
-            <Image Source="ressources/minimize.png" Height="23" Width="24" RenderTransformOrigin="0.5,0.5" />
+            <Image Source="resources/minimize.png" Height="23" Width="24" RenderTransformOrigin="0.5,0.5" />
         </Button>
     </Grid>
 </Window>

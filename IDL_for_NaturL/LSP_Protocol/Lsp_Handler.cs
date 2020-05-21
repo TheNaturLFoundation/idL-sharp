@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Threading;
 using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Document;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -22,7 +23,6 @@ namespace IDL_for_NaturL
         {
             this.lspReceiver = lspReceiver;
             server.Start();
-            server.ErrorDataReceived += (o, e) => Console.WriteLine(e.Data);  
             server.OutputDataReceived += ReceiveData;
             server.BeginOutputReadLine();
             server.BeginErrorReadLine();
@@ -36,7 +36,7 @@ namespace IDL_for_NaturL
             RequestMessage newMessage = new RequestMessage
             {
                 id = ++id, method = "textDocument/definition", parameters = 
-                    new ConcreteDefinitionParams(uri,position)
+                    new ConcreteDefinitionParams(new ConcreteTextDocumentIdentifier(uri), position)
             };
             idDictionary.Add(id,"textDocument/definition");
             string json = JsonConvert.SerializeObject(newMessage);
@@ -49,16 +49,15 @@ namespace IDL_for_NaturL
             RequestMessage newMessage = new RequestMessage
             {
                 id = ++id, method = "textDocument/completion", parameters = 
-                    new ConcreteDefinitionParams(uri,position)
+                    new ConcreteCompletionParams(new ConcreteTextDocumentIdentifier(uri), position)
             };
             idDictionary.Add(id,"textDocument/completion");
             string json = JsonConvert.SerializeObject(newMessage);
             server.StandardInput.WriteLine(json);
             server.StandardInput.Flush();
-            Console.WriteLine(json);
         }
 
-        public void Initialize()
+        public void Initialize() // Request //
         {
             throw new NotImplementedException();
         }
@@ -72,14 +71,24 @@ namespace IDL_for_NaturL
             server.StandardInput.Flush();
         }
 
-        public void DidChange()
+        public void DidChange(VersionedTextDocumentIdentifier versionedTextDocumentIdentifier,
+            List<TextDocumentContentChangeEvent> contentchangesEvents)
         {
-            throw new NotImplementedException();
+            DidChangeTextDocument document =
+                new ConcreteDidChangeTextDocument(versionedTextDocumentIdentifier,
+                    contentchangesEvents);
+            string json = JsonConvert.SerializeObject(document);
+            server.StandardInput.WriteLine(json);
+            server.StandardInput.Flush();
         }
 
-        public void DidClose()
+        public void DidClose(string uri)
         {
-            throw new NotImplementedException();
+            DidCloseTextDocument document =
+                new ConcreteDidCloseTextDocument(new ConcreteTextDocumentIdentifier(uri));
+            string json = JsonConvert.SerializeObject(document);
+            server.StandardInput.WriteLine(json);
+            server.StandardInput.Flush();
         }
 
         public void ReceiveData(object sender, DataReceivedEventArgs e)
@@ -115,12 +124,11 @@ namespace IDL_for_NaturL
                         lspReceiver.Completion(items.ToObject<IList<CompletionItem>>());
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        return;
                 }
             }
             else if (IsPropertyExist(receivedData, "method"))
             {
-                Console.WriteLine("Exists Method");
                 // It is a notification if we get there.
                 switch (receivedData["method"].Value<string>())
                 {
@@ -128,10 +136,6 @@ namespace IDL_for_NaturL
                     case "":
                         break;
                 }
-            }
-            else
-            {
-                Console.WriteLine("No case");
             }
 
             inHeader = true;

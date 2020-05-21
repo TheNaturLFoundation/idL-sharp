@@ -25,7 +25,7 @@ namespace IDL_for_NaturL
         private void Save_Setting(object sender, RoutedEventArgs e)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load("ressources/user_coloration.xshd");
+            doc.Load("resources/user_coloration.xshd");
             XmlNode root = doc.DocumentElement;
             XmlNodeList ruleSets = root.FirstChild.NextSibling.NextSibling.FirstChild.ChildNodes;
             foreach (XmlNode rule in ruleSets)
@@ -38,7 +38,7 @@ namespace IDL_for_NaturL
                     }
                     catch (Exception exception)
                     {
-                        Console.WriteLine(exception);
+                        // ignored
                     }
                 }
                 else
@@ -60,9 +60,9 @@ namespace IDL_for_NaturL
                     }
                 }
             }
-            Thread thread = new Thread(() => doc.Save("ressources/user_coloration.xshd"));
+            Thread thread = new Thread(() => doc.Save("resources/user_coloration.xshd"));
             thread.Start();
-            UserSettings.syntaxFilePath = "ressources/user_coloration.xshd";
+            UserSettings.syntaxFilePath = "resources/user_coloration.xshd";
             MainWindow.Instance.UpdateColorScheme(doc);
         }
 
@@ -95,7 +95,6 @@ namespace IDL_for_NaturL
 
         public void Color_Changed(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Color Changed");
             if (!clicked) return;
             SolidColorBrush brush = new SolidColorBrush(Color_Picker.Color);
             switch (selected_item)
@@ -154,9 +153,9 @@ namespace IDL_for_NaturL
 
         private void DefaultReset(object sender, RoutedEventArgs e)
         {
-            UserSettings.syntaxFilePath = "ressources/naturl_coloration.xshd";
+            UserSettings.syntaxFilePath = "resources/naturl_coloration.xshd";
             XmlDocument doc = new XmlDocument();
-            doc.Load("ressources/naturl_coloration.xshd");
+            doc.Load("resources/naturl_coloration.xshd");
             MainWindow.Instance.UpdateColorScheme(doc);
             Close();
         }

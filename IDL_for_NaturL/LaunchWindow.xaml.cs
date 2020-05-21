@@ -18,7 +18,7 @@ namespace IDL_for_NaturL
 
         private void New_Click(object sender, RoutedEventArgs e)
         {
-            File.WriteAllText("ressources/lastfiles.txt", "");
+            File.WriteAllText("resources/lastfiles.txt", "");
             mainWindow = new MainWindow();
             Close();
             mainWindow.Show();
@@ -28,7 +28,7 @@ namespace IDL_for_NaturL
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            File.WriteAllText("ressources/lastfiles.txt", "");
+            File.WriteAllText("resources/lastfiles.txt", "");
             mainWindow = new MainWindow();
             Close();
             mainWindow.Show();

@@ -9,7 +9,7 @@
     x:Class="IDL_for_NaturL.MainWindow"
     mc:Ignorable="d"
     Title="IdL for NaturL" Height="633" Width="1123"
-    Icon="ressources\logoicon.png"
+    Icon="resources\logoicon.png"
     WindowStyle="None"
     AllowsTransparency="False"
     ResizeMode="CanResize"
@@ -208,9 +208,9 @@
             </Style.Triggers>
         </Style>
 
-        <!--END FOR SCROLLBAR RESSOURCES-->
+        <!--END FOR SCROLLBAR resources-->
 
-        <!-- TAB RESSOURCES-->
+        <!-- TAB resources-->
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Exit"
@@ -269,7 +269,7 @@
         <DockPanel Grid.RowSpan="2">
             <!-- White -->
             <Grid DockPanel.Dock="Top" Height="30">
-                <Image Source="ressources/logoicon.png"
+                <Image Source="resources/logoicon.png"
                        HorizontalAlignment="Left" Width="25" Height="25"
                        Margin="10,2,0,2" />
                 <Button VerticalAlignment="Center" Height="30"
@@ -298,7 +298,7 @@
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-                    <Image Source="ressources/close1.png" Height="24"
+                    <Image Source="resources/close1.png" Height="24"
                            Width="31" />
                 </Button>
                 <Button Margin="0,0,30,0" VerticalAlignment="Center"
@@ -329,7 +329,7 @@
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-                    <Image Source="ressources/resize1.png" Height="21"
+                    <Image Source="resources/resize1.png" Height="21"
                            Width="24" />
                 </Button>
                 <Button Margin="0,0,60,0" VerticalAlignment="Center"
@@ -360,7 +360,7 @@
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-                    <Image Source="ressources/minimize1.png" Height="25"
+                    <Image Source="resources/minimize1.png" Height="25"
                            Width="29" />
                 </Button>
                 <TextBlock Text="idL for naturL" HorizontalAlignment="Left"
@@ -422,21 +422,21 @@
                     <MenuItem Height="39" Width="51" Header=""
                               Command="self:CustomCommands.Execute" ToolTip="Execute">
                         <MenuItem.Icon>
-                            <Image Source="ressources/Untitled.png"
+                            <Image Source="resources/Untitled.png"
                                    Margin="-14,-8,-16,-8" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Height="39" Width="51" Header=""
                               Command="self:CustomCommands.Transpile" ToolTip="Transpile">
                         <MenuItem.Icon>
-                            <Image Source="ressources/transpile.png"
+                            <Image Source="resources/transpile.png"
                                    Margin="-14,-8,-16,-8" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Height="39" Width="55" Header=""
                                          ToolTip="Cancel" Command="self:CustomCommands.Cancel_Process" >
                         <MenuItem.Icon>
-                            <Image Source="ressources/red_square.png"
+                            <Image Source="resources/red_square.png"
                                    Margin="-4,-8,-7,-8" />
                         </MenuItem.Icon>
                     </MenuItem>

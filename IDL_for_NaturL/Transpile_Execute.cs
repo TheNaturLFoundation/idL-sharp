@@ -35,10 +35,10 @@ namespace IDL_for_NaturL
             {
                 StartInfo =
                 {
-                    FileName = "ressources/naturL.exe",
-                    WorkingDirectory = "ressources/",
+                    FileName = "resources/naturL.exe",
+                    WorkingDirectory = "resources/",
                     EnvironmentVariables = { ["NATURLPATH"] =
-                        Path.GetFullPath("ressources")},
+                        Path.GetFullPath("resources")},
                     Arguments = arguments,
                     StandardOutputEncoding = Encoding.UTF8,
                     StandardErrorEncoding = Encoding.UTF8,
@@ -101,10 +101,10 @@ namespace IDL_for_NaturL
             {
                 StartInfo =
                 {
-                    FileName = "ressources/naturL.exe",
-                    WorkingDirectory = "ressources/",
+                    FileName = "resources/naturL.exe",
+                    WorkingDirectory = "resources/",
                     Arguments = arguments,
-                    EnvironmentVariables = {["NATURLPATH"] = Path.GetFullPath("ressources")},
+                    EnvironmentVariables = {["NATURLPATH"] = Path.GetFullPath("resources")},
                     StandardOutputEncoding = Encoding.UTF8,
                     StandardErrorEncoding = Encoding.UTF8,
                     UseShellExecute = false,
@@ -168,7 +168,6 @@ namespace IDL_for_NaturL
 
                 });
                 _processPython.Exited += (sender3, e3) => _processPythonRunning = false;
-                Console.WriteLine(_processPython.Responding);
                 _processPython.BeginOutputReadLine();
                 _processPython.BeginErrorReadLine();
             }
@@ -206,6 +205,10 @@ namespace IDL_for_NaturL
         static extern uint TerminateThread(IntPtr thread);
         public static void Suspend(this Process process)
         {
+            if (process.HasExited)
+            {
+                return;
+            }
             foreach (ProcessThread thread in process.Threads)
             {
                 var pOpenThread = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);

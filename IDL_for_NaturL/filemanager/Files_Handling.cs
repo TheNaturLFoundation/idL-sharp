@@ -37,7 +37,6 @@ namespace IDL_for_NaturL
                 if (fileKey != -1)
                 {
                     // Select the openend file
-                    Console.WriteLine("Found");
                     Dispatcher.Invoke(() => TabControl.SelectedIndex = fileKey);
                     Dispatcher.Invoke(() => _lastFocusedTextEditor = 
                         (TextEditor) FindName("CodeBox" + _currenttabId));

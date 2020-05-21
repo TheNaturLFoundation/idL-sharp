@@ -76,10 +76,10 @@ namespace IDL_for_NaturL
         public MainWindow()
         {
             Instance = this;
-            Environment.SetEnvironmentVariable("NATURLPATH", Path.GetFullPath("ressources"));
+            Environment.SetEnvironmentVariable("NATURLPATH", Path.GetFullPath("resources"));
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             //Loading Settings configuration from XML 
-            UserSettings.LoadUserSettings("ressources/settings.xml");
+            UserSettings.LoadUserSettings("resources/settings.xml");
             language = UserSettings.language;
             _warningSeverity = UserSettings.warningSeverity;
             //Unused warning severity yet.
@@ -95,7 +95,7 @@ namespace IDL_for_NaturL
             textEditor.SyntaxHighlighting = _highlightingDefinition;
             reader.Close();
             string[] paths =
-                File.ReadAllLines("ressources/lastfiles.txt");
+                File.ReadAllLines("resources/lastfiles.txt");
             tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
             ((TabablzControl) FindName("TabControl")).Items.RemoveAt(0);
             Process processServer = new Process
@@ -103,7 +103,7 @@ namespace IDL_for_NaturL
                 StartInfo =
                 {
                     FileName = "ocaml",
-                    Arguments = "ressources/testspurposes.ml",
+                    Arguments = "resources/testspurposes.ml",
                     UseShellExecute = false,
                     StandardOutputEncoding = Encoding.UTF8,
                     StandardErrorEncoding = Encoding.UTF8,
@@ -176,7 +176,7 @@ namespace IDL_for_NaturL
 
             if (path != null)
             {
-                LspSender.DidOpen("file://" + path, "",0, File.ReadAllText(path));
+                LspSender.DidOpen(("file://" + path), "",0, File.ReadAllText(path));
                 string s = File.ReadAllText(path);
                 ((TextEditor) FindName("CodeBox" + n)).Text = s;
                 ((TabItem) FindName("Tab" + n)).Header =
@@ -282,14 +282,14 @@ namespace IDL_for_NaturL
                 }
             }
 
-            File.WriteAllText("ressources/lastfiles.txt",
+            File.WriteAllText("resources/lastfiles.txt",
                 paths);
             if (!cancelled)
             {
                 Application.Current.Shutdown();
             }
 
-            UserSettings.SaveUserSettings("ressources/settings.xml");
+            UserSettings.SaveUserSettings("resources/settings.xml");
         }
 
         // Function in order to unregister previous instances (used for closing a tab)
@@ -305,9 +305,10 @@ namespace IDL_for_NaturL
                     _currentTab);
                 TabControl.SelectedIndex =
                     ((TabablzControl) FindName("TabControl")).Items.Count - 1;
+                LspSender.DidClose(_currentTabHandler._file ?? _currentTabHandler.playground);
             }
         }
-
+        
         private void CloseTab()
         {
             if (!_currentTabHandler._isFileSelected && DataChanged())
@@ -324,6 +325,7 @@ namespace IDL_for_NaturL
                 else if (result == MessageBoxResult.No)
                 {
                     UnregisterNamesAndRemove();
+                    
                 }
             }
             else

@@ -1,8 +1,10 @@
+using System.Net.Mime;
+
 namespace IDL_for_NaturL
 {
     public interface TextDocumentPositionParams
     {
-        string TextDocumentIdentifier { get; set; }
+        TextDocumentIdentifier textDocument { get; set; }
         Position position { get; set; }
     }
 }

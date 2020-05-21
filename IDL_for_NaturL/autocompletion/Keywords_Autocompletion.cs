@@ -61,47 +61,56 @@ namespace IDL_for_NaturL
             "faux",
             "longueur"
         };
-
+        public List<TextDocumentContentChangeEvent> documentsList = new List<TextDocumentContentChangeEvent>();
         public List<string> ContextKeywords = new List<string>();
+
+        public int version;
         // This function will get the last typed word and update an attribute
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            string currentUri = _currentTabHandler._file ?? _currentTabHandler.playground;
+            documentsList.Add(new TextDocumentContentChangeEvent(_lastFocusedTextEditor.Text));
+            LspSender.DidChange(new VersionedTextDocumentIdentifier(++version,currentUri), documentsList);
+            switch (e.Key)
             {
-                _lastFocusedTextEditor.Select(_lastFocusedTextEditor.CaretOffset,0);   
-            }
-            if (e.Key == Key.Tab)
-            {
-                int i = _lastFocusedTextEditor.CaretOffset;
-                int countBn = 0; // Count Back-slash n
-                while (i < _lastFocusedTextEditor.Text.Length)
+                case Key.Escape:
+                    _lastFocusedTextEditor.Select(_lastFocusedTextEditor.CaretOffset,0);
+                    break;
+                case Key.Tab:
                 {
-                    if (countBn == 4)
+                    int i = _lastFocusedTextEditor.CaretOffset;
+                    int countBn = 0; // Count Back-slash n
+                    while (i < _lastFocusedTextEditor.Text.Length)
                     {
-                        return;
-                    }
-
-                    if (_lastFocusedTextEditor.Text[i] == '\n')
-                    {
-                        countBn++;
-                    }
-
-                    if (_lastFocusedTextEditor.Text[i] == '\\')
-                    {
-                        int length = 1;
-                        int j = ++i;
-                        while (j < _lastFocusedTextEditor.Text.Length && _lastFocusedTextEditor.Text[j] != '/')
+                        if (countBn == 4)
                         {
-                            length++;
-                            j++;
+                            return;
                         }
 
-                        e.Handled = true;
-                        _lastFocusedTextEditor.Select(i - 1, length + 1);
-                        return;
+                        if (_lastFocusedTextEditor.Text[i] == '\n')
+                        {
+                            countBn++;
+                        }
+
+                        if (_lastFocusedTextEditor.Text[i] == '\\')
+                        {
+                            int length = 1;
+                            int j = ++i;
+                            while (j < _lastFocusedTextEditor.Text.Length && _lastFocusedTextEditor.Text[j] != '/')
+                            {
+                                length++;
+                                j++;
+                            }
+
+                            e.Handled = true;
+                            _lastFocusedTextEditor.Select(i - 1, length + 1);
+                            return;
+                        }
+
+                        i++;
                     }
 
-                    i++;
+                    break;
                 }
             }
 

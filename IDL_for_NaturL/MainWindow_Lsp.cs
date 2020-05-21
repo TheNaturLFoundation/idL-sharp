@@ -65,10 +65,8 @@ namespace IDL_for_NaturL
         
         private void JumpToCommand_Executed(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine("Detected Click");
             if (e.ClickCount == 1 && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                Console.WriteLine("Detected Jump");
                 TextLocation location = _lastFocusedTextEditor.Document.GetLocation(
                     _lastFocusedTextEditor.CaretOffset);
                 string filename = _currentTabHandler._file;

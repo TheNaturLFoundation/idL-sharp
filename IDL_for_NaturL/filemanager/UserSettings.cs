@@ -37,17 +37,12 @@ namespace IDL_for_NaturL.filemanager
                 language = deserializedSettingsManager.GetLanguage();
                 warningSeverity = deserializedSettingsManager.GetSeverity();
                 syntaxFilePath = deserializedSettingsManager.syntaxFilePath;
-                //Console.WriteLine(String.Format(
-                    //"Configuration loaded : language: {0} severity: {1}, syntaxFilePath : {2}",
-                //    deserializedSettingsManager.language, deserializedSettingsManager.severity,
-                //    deserializedSettingsManager.syntaxFilePath));
             }
             catch (Exception)
             {
-                Console.WriteLine("Deserialisation Error : No settings.xml found, will apply default configuration");
                 language = Language.French;
                 warningSeverity = WarningSeverity.Light;
-                syntaxFilePath = "ressources/naturl_coloration.xshd";
+                syntaxFilePath = "resources/naturl_coloration.xshd";
             }
         }
 
@@ -57,8 +52,6 @@ namespace IDL_for_NaturL.filemanager
         /// <param name="fileName"></param>
         public static void SaveUserSettings(string fileName)
         {
-            Console.WriteLine(
-                "Configuration saved : saved user configuration in configuration.xml");
             SettingsManager S1 = new SettingsManager(language.ToStringRepresentation(),
                 warningSeverity.ToStringRepresentation(), syntaxFilePath);
             FileStream writer = new FileStream(fileName, FileMode.Create);

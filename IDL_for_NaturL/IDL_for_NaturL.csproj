@@ -9,22 +9,22 @@
     <LangVersion>8</LangVersion>
   </PropertyGroup>
     <ItemGroup>
-        <None Remove="ressources\close.png" />
-        <None Remove="ressources\close1.png" />
-        <None Remove="ressources\FiraCode-Medium.ttf" />
-        <None Remove="ressources\logoicon.png" />
-        <None Remove="ressources\logoiconsrc.png" />
-        <None Remove="ressources\minimize.png" />
-        <None Remove="ressources\minimize1.png" />
-        <None Remove="ressources\ouvrir.png" />
-        <None Remove="ressources\plus.png" />
-        <None Remove="ressources\recent.png" />
-        <None Remove="ressources\resize.png" />
-        <None Remove="ressources\resize1.png" />
-        <None Remove="ressources\transpile.png" />
-        <None Remove="ressources\Untitled.png" />
+        <None Remove="resources\close.png" />
+        <None Remove="resources\close1.png" />
+        <None Remove="resources\FiraCode-Medium.ttf" />
+        <None Remove="resources\logoicon.png" />
+        <None Remove="resources\logoiconsrc.png" />
+        <None Remove="resources\minimize.png" />
+        <None Remove="resources\minimize1.png" />
+        <None Remove="resources\ouvrir.png" />
+        <None Remove="resources\plus.png" />
+        <None Remove="resources\recent.png" />
+        <None Remove="resources\resize.png" />
+        <None Remove="resources\resize1.png" />
+        <None Remove="resources\transpile.png" />
+        <None Remove="resources\Untitled.png" />
         <None Remove="PythonAdrian.xshd" />
-        <None Update="ressources\naturL.exe">
+        <None Update="resources\naturL.exe">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
@@ -37,70 +37,70 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="ressources\close.png">
+        <Resource Include="resources\close.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\close1.png">
+        <Resource Include="resources\close1.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\FiraCode-Medium.ttf" />
-        <Resource Include="ressources\logoicon.png">
+        <Resource Include="resources\FiraCode-Medium.ttf" />
+        <Resource Include="resources\logoicon.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\logoiconsrc.png" />
-        <Resource Include="ressources\minimize.png">
+        <Resource Include="resources\logoiconsrc.png" />
+        <Resource Include="resources\minimize.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\minimize1.png">
+        <Resource Include="resources\minimize1.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\ouvrir.png">
+        <Resource Include="resources\ouvrir.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\plus.png">
+        <Resource Include="resources\plus.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\recent.png">
+        <Resource Include="resources\recent.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\resize1.png">
+        <Resource Include="resources\resize1.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\transpile.png">
+        <Resource Include="resources\transpile.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="ressources\Untitled.png">
+        <Resource Include="resources\Untitled.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <None Remove="ressources\play (1).png" />
-        <Resource Include="ressources\play (1).png">
+        <None Remove="resources\play (1).png" />
+        <Resource Include="resources\play (1).png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <None Remove="ressources\naturl_coloration.xshd" />
-        <EmbeddedResource Include="ressources\naturl_coloration.xshd">
+        <None Remove="resources\naturl_coloration.xshd" />
+        <EmbeddedResource Include="resources\naturl_coloration.xshd">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
-        <None Remove="ressources\red_square.png" />
-        <Resource Include="ressources\red_square.png" />
-        <None Remove="ressources\internationalisation\dune" />
-        <EmbeddedResource Include="ressources\internationalisation\dune">
+        <None Remove="resources\red_square.png" />
+        <Resource Include="resources\red_square.png" />
+        <None Remove="resources\internationalisation\dune" />
+        <EmbeddedResource Include="resources\internationalisation\dune">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
-        <None Remove="ressources\internationalisation\translation.json" />
-        <EmbeddedResource Include="ressources\internationalisation\translation.json">
+        <None Remove="resources\internationalisation\translation.json" />
+        <EmbeddedResource Include="resources\internationalisation\translation.json">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
-        <None Remove="ressources\internationalisation\translation.ml" />
-        <EmbeddedResource Include="ressources\internationalisation\translation.ml">
+        <None Remove="resources\internationalisation\translation.ml" />
+        <EmbeddedResource Include="resources\internationalisation\translation.ml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
-        <None Remove="ressources\user_coloration.xshd" />
-        <EmbeddedResource Include="ressources\user_coloration.xshd">
+        <None Remove="resources\user_coloration.xshd" />
+        <EmbeddedResource Include="resources\user_coloration.xshd">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
-        <None Remove="ressources\testspurposes.py" />
-        <None Remove="ressources\settings.xml" />
-        <EmbeddedResource Include="ressources\settings.xml">
+        <None Remove="resources\testspurposes.py" />
+        <None Remove="resources\settings.xml" />
+        <EmbeddedResource Include="resources\settings.xml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>
@@ -113,13 +113,13 @@
         </Compile>
         <Compile Remove="HashMap.cs" />
         <Compile Remove="ressourceLoader.cs" />
-        <EmbeddedResource Include="ressources\testspurposes.ml">
+        <EmbeddedResource Include="resources\testspurposes.ml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="ressources\resize.png">
+        <Resource Include="resources\resize.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
     </ItemGroup>
@@ -129,8 +129,8 @@
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>Resources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
-        <None Remove="ressources\lastfiles.txt" />
-        <EmbeddedResource Include="ressources\lastfiles.txt">
+        <None Remove="resources\lastfiles.txt" />
+        <EmbeddedResource Include="resources\lastfiles.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>
