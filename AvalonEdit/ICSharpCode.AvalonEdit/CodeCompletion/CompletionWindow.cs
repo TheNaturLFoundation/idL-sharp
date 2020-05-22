@@ -18,6 +18,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Transactions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -52,6 +53,14 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			}
 			instance.CompletionList.CompletionData.Clear();
 			return instance;
+		}
+
+		public void Show()
+		{
+			if (instance != null)
+			{
+				base.Show();
+			}
 		}
 		/// <summary>
 		/// Creates a new code completion window.

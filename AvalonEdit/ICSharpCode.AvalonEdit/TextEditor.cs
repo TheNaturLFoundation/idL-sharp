@@ -60,7 +60,7 @@ namespace ICSharpCode.AvalonEdit
 		public TextEditor() : this(new TextArea())
 		{
 		}
-
+		
 		/// <summary>
 		/// Creates a new TextEditor instance.
 		/// </summary>

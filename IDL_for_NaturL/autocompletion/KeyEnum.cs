@@ -90,7 +90,6 @@ namespace IDL_for_NaturL
                 case Key.Decimal: return '.';
                 case Key.Divide: return '/';
                 case Key.Multiply: return '*';
-
                 default: return '\x00';
             }
         }

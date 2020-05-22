@@ -19,6 +19,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Data;
+using System.Windows.Threading;
 using Dragablz;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
@@ -34,7 +35,6 @@ namespace IDL_for_NaturL
     {
         public List<string> ConstantKeywords = new List<string>()
         {
-            "afficher", 
             "fonction",
             "variables",
             "debut",
@@ -62,12 +62,13 @@ namespace IDL_for_NaturL
             "rien",
             "vrai",
             "faux",
-            "longueur"
         };
+
         public List<TextDocumentContentChangeEvent> documentsList = new List<TextDocumentContentChangeEvent>();
         public List<string> ContextKeywords = new List<string>();
 
         public int version;
+
         // This function will get the last typed word and update an attribute
         public void TemplatesManagerOnTab(TextEditor textEditor, KeyEventArgs e)
         {
@@ -88,117 +89,141 @@ namespace IDL_for_NaturL
                         length++;
                         j++;
                     }
+
                     e.Handled = true;
                     textEditor.Select(i - 1, length + 1);
                     return;
                 }
+
                 i++;
             }
         }
 
         public string GetLastTypedWord(string lastTypedWord, TextEditor textEditor)
         {
-            List<char> specialChars = new List<char>() {' ','\n','\t','\r','(',')'};
+            List<char> specialChars = new List<char>() {' ', '\n', '\t', '\r', '(', ')'};
             int offset = textEditor.CaretOffset - 1;
             while (offset > -1 && !specialChars.Contains(textEditor.Text[offset]))
             {
-                lastTypedWord = textEditor.Text[offset] + lastTypedWord;
+                char appendChar = textEditor.Text[offset];
+                lastTypedWord = (appendChar == '\x00' ? "" : appendChar.ToString()) + lastTypedWord;
                 offset--;
             }
-            
+
             return lastTypedWord;
         }
 
         public IList<ICompletionData> GetDataList(string lastTypedWord, TextEditor textEditor)
         {
-            Console.WriteLine("Get Dataa");
-            Console.WriteLine(lastTypedWord);
-            completionWindow = CompletionWindow.GetInstance(textEditor.TextArea);
+            Console.WriteLine("LastTyped word is: " + lastTypedWord);
+            completionWindow =
+                CompletionWindow.GetInstance(textEditor.TextArea);
             IList<ICompletionData> data =
                 completionWindow.CompletionList.CompletionData;
-            TextLocation textLocation = Dispatcher.Invoke(() => textEditor.Document.GetLocation(
-                textEditor.CaretOffset));
-            Position position = new Position(textLocation.Line,textLocation.Column);
+            TextLocation textLocation = textEditor.Document.GetLocation(
+                textEditor.CaretOffset);
+            Position position = new Position(textLocation.Line, textLocation.Column);
             string file = _currentTabHandler._file;
             string path = string.IsNullOrEmpty(file) ? _currentTabHandler.playground : file;
             LspSender.RequestKeywords(position, path);
-            IOrderedEnumerable<string> sorted = 
-                ConstantKeywords.Where(keyword =>
-                    {
-                        Console.WriteLine(keyword +" " + CompletionScore(keyword, lastTypedWord));
-                        return CompletionScore(keyword, lastTypedWord) >= 0;
-                    })
-                .OrderBy(keyword =>
-                {
-                    return CompletionScore(keyword, lastTypedWord);
-                });
+            Dictionary<string,float> keywordsScore = new Dictionary<string, float>(); 
+            ConstantKeywords.ForEach(keyword => keywordsScore.Add(keyword,CompletionScore(keyword,lastTypedWord)));
+            IOrderedEnumerable<string> sorted =
+                ConstantKeywords.Where(keyword => keywordsScore[keyword] >= 0)
+                    .OrderBy(keyword  => keywordsScore[keyword]);
+
             foreach (var keyword in sorted)
             {
-                MyCompletionData myCompletionData = new MyCompletionData(keyword, language, textEditor);
+                MyCompletionData myCompletionData =
+                    new MyCompletionData(keyword, language, textEditor);
                 data.Add(myCompletionData);
             }
+
             return data;
         }
 
-        public void AutoComplete(TextEditor textEditor,KeyEventArgs e)
+        public void AutoComplete(TextEditor textEditor, KeyEventArgs e)
         {
             string lastTypedWord = KeyUtil.KeyToChar(e.Key).ToString();
             if (textEditor.CaretOffset > 0)
             {
-                lastTypedWord = GetLastTypedWord(lastTypedWord, textEditor);
+                lastTypedWord = GetLastTypedWord(lastTypedWord == '\x00'.ToString() ? "" : lastTypedWord, textEditor);
             }
+
             IList<ICompletionData> data = GetDataList(lastTypedWord, textEditor);
-            Console.WriteLine("data lenght" + data.Count);
-            completionWindow.Show();
             if (data.Count == 0)
             {
                 completionWindow.Close();
             }
+            if (data.Count != 0 && (e.Key != Key.Back || !string.IsNullOrEmpty(lastTypedWord)))
+                completionWindow.Show();
         }
-        
+
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
         {
-            Console.WriteLine(e.Key);
             string currentUri = _currentTabHandler._file ?? _currentTabHandler.playground;
             documentsList.Add(new TextDocumentContentChangeEvent(_lastFocusedTextEditor.Text));
-            LspSender.DidChangeNotification(new VersionedTextDocumentIdentifier(++version,currentUri), documentsList);
+            LspSender.DidChangeNotification(new VersionedTextDocumentIdentifier(++version, currentUri), documentsList);
             switch (e.Key)
             {
                 case Key.Escape:
-                    _lastFocusedTextEditor.Select(_lastFocusedTextEditor.CaretOffset,0);
+                    _lastFocusedTextEditor.Select(_lastFocusedTextEditor.CaretOffset, 0);
                     break;
-                case Key.Tab: 
-                    TemplatesManagerOnTab(_lastFocusedTextEditor,e); 
+                case Key.Tab:
+                    TemplatesManagerOnTab(_lastFocusedTextEditor, e);
                     break;
             }
-            if (!char.IsLetterOrDigit(KeyUtil.KeyToChar(e.Key)) 
-                && e.Key != Key.Back
-                && e.Key != Key.Delete)
+
+            string typed = GetLastTypedWord(KeyUtil.KeyToChar(e.Key).ToString(), _lastFocusedTextEditor);
+            if (e.Key == Key.Back && string.IsNullOrEmpty(typed))
             {
                 completionWindow?.Close();
                 return;
             }
-            Thread thread = new Thread(o => Dispatcher.Invoke(()=>AutoComplete(_lastFocusedTextEditor, e)));
-            thread.Start();
+
+            Dispatcher.InvokeAsync(() => AutoComplete(_lastFocusedTextEditor, e));
         }
 
         private float CompletionScore(string reference, string input)
         {
             float sum = 0;
-            foreach (var chr in input)s
+            
+            Dictionary<char, int> indexes = new Dictionary<char, int>();
+            for (var index = 0; index < reference.Length; index++)
             {
-                int index = reference.IndexOf(chr) + 1;
-                sum += index * 1.0f / (input.Length);
+                char chr = reference[index];
+                try
+                {
+                    indexes.Add(chr, index);
+                }
+                catch (ArgumentException e)
+                {
+                }
+            }
+
+            for (var i = 0; i < input.Length; i++)
+            {
+                var chr = input[i];
+                if (chr == '\x00') continue;
+                if (!indexes.TryGetValue(chr, out int index))
+                {
+                    index = -1;
+                }
+                else
+                {
+                    indexes.Remove(chr);
+                }
+                index += 1;
+                sum += index * 1.0f / input.Length;
                 if (index == 0)
                 {
                     return -1;
                 }
             }
-
+            Console.WriteLine("Reference: " + reference + " input: " + input + " Score: " + sum);
             return sum;
         }
 
-        
 
         public class MyCompletionData : ICompletionData
         {
@@ -307,6 +332,7 @@ namespace IDL_for_NaturL
                         return Text;
                 }
             }
+
             public int SetOffSet(int offset, string text, int align)
             {
                 int i = offset;
@@ -327,6 +353,7 @@ namespace IDL_for_NaturL
 
                 return i;
             }
+
             public int GetLineFromIndex(int index)
             {
                 int line = 0;
@@ -341,6 +368,7 @@ namespace IDL_for_NaturL
 
                 return line;
             }
+
             public int CountLines()
             {
                 int count = 0;
@@ -354,6 +382,7 @@ namespace IDL_for_NaturL
 
                 return count;
             }
+
             public void ScrollIfIsLastsLines(int offset)
             {
                 if (GetLineFromIndex(offset) + 10 >= CountLines())
