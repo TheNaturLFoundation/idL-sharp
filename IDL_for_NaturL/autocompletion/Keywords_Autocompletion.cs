@@ -115,7 +115,7 @@ namespace IDL_for_NaturL
 
         public IList<ICompletionData> GetDataList(string lastTypedWord, TextEditor textEditor)
         {
-            Console.WriteLine("LastTyped word is: " + lastTypedWord);
+            Console.WriteLine("LastTyped word is: '" + lastTypedWord + "'");
             completionWindow =
                 CompletionWindow.GetInstance(textEditor.TextArea);
             IList<ICompletionData> data =
@@ -156,7 +156,10 @@ namespace IDL_for_NaturL
                 completionWindow.Close();
             }
             if (data.Count != 0 && (e.Key != Key.Back || !string.IsNullOrEmpty(lastTypedWord)))
+            {
                 completionWindow.Show();
+            }
+            completionWindow.CompletionList.SelectItem("");
         }
 
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
@@ -220,7 +223,6 @@ namespace IDL_for_NaturL
                     return -1;
                 }
             }
-            Console.WriteLine("Reference: " + reference + " input: " + input + " Score: " + sum);
             return sum;
         }
 
