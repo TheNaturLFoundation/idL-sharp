@@ -163,7 +163,7 @@ namespace IDL_for_NaturL
         private void DebugCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             //Can be useful for debugging
-            _lastFocusedTextEditor.TextArea.TextView.LineTransformers.Add(new LineColorizer(1));
+            //_lastFocusedTextEditor.TextArea.TextView.LineTransformers.Add(new LineColorizer(1));
         }
 
         private void ResearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

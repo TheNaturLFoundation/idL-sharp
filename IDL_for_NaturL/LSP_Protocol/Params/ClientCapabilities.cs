@@ -2,7 +2,7 @@ namespace IDL_for_NaturL
 {
     public class ClientCapabilities
     {
-        private TextDocumentClientCapabilities textDocument;
+        public TextDocumentClientCapabilities textDocument;
 
         public ClientCapabilities(TextDocumentClientCapabilities textDocument)
         {
@@ -12,9 +12,9 @@ namespace IDL_for_NaturL
 
     public class TextDocumentClientCapabilities
     {
-        private CompletionClientCapabilities completion;
-        private DefinitionClientCapabilities definition;
-        private PublishDiagnosticsClientCapabilities publishDiagnostics;
+        public CompletionClientCapabilities completion;
+        public DefinitionClientCapabilities definition;
+        public PublishDiagnosticsClientCapabilities publishDiagnostics;
 
         public TextDocumentClientCapabilities(CompletionClientCapabilities completion,
             DefinitionClientCapabilities definition,

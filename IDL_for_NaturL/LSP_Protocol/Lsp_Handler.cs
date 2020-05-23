@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -18,6 +19,7 @@ namespace IDL_for_NaturL
         public int id;
         public bool initializedServer = false;
         private Process server;
+        public static DiagnosticSeverity diagnosticSeverity ;
         private Dictionary<int, string> idDictionary = new Dictionary<int, string>();
         public bool inHeader;
 
@@ -26,7 +28,9 @@ namespace IDL_for_NaturL
             this.lspReceiver = lspReceiver;
             server.Start();
             server.OutputDataReceived += ReceiveData;
+            server.ErrorDataReceived += (sender, args) => Console.WriteLine(args.Data); 
             server.BeginOutputReadLine();
+            server.BeginErrorReadLine();
             this.server = server;
         }
 
@@ -64,8 +68,10 @@ namespace IDL_for_NaturL
                 new Initialize_Request(processId, uri, capabilities);
             idDictionary.Add(id, "initialize");
             string json = JsonConvert.SerializeObject(initializeRequest);
-            server.StandardInput.WriteLine(json);
+            string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\n" + json + "\r\n";
+            server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
+            Console.WriteLine(headerAndJson);
         }
 
         public void InitializedNotification()
@@ -117,12 +123,14 @@ namespace IDL_for_NaturL
 
         public void ReceiveData(object sender, DataReceivedEventArgs e)
         {
-            //iteLine("Received data: " + e.Data);
+            Console.WriteLine("Received data: " + e.Data);
+            
             if (string.IsNullOrEmpty(e.Data))
             {
                 inHeader = false;
                 return;
             }
+            
 
             // Everything will be received here
             string data = e.Data.Replace("{", "{\n").Replace("}", "}\n").Replace(",", ",\n").Replace("[", "[\n")
@@ -134,8 +142,8 @@ namespace IDL_for_NaturL
                 // Now need to find the id of the method called that was previously serialized
 
                 idDictionary.TryGetValue(receivedData["id"].Value<int>(), out string method);
-                //iteLine("Method: " + method);
-                /*if (!initializedServer)
+                Console.WriteLine("Method: " + method);
+                if (!initializedServer)
                 {
                     if (method == "initialize")
                     {
@@ -145,7 +153,7 @@ namespace IDL_for_NaturL
                     }
 
                     return;
-                }*/
+                }
 
                 switch (method)
                 {
@@ -163,17 +171,18 @@ namespace IDL_for_NaturL
             }
             else if (IsPropertyExist(receivedData, "method"))
             {
-                // It is a notification if we get there.
+                // Server notifications
                 switch (receivedData["method"].Value<string>())
                 {
-                    // Switch on methods in order to call the one sent by the notification
+                    // Switch on methods in order to call the method sent by the notification
                     case "textDocument/publishDiagnostics":
                         PublishDiagnosticsParams @params =
                             receivedData["params"].ToObject<PublishDiagnosticsParams>();
                         foreach (var diagnostic in @params.diagnostics)
                         {
+                            diagnosticSeverity = diagnostic.severity ?? DiagnosticSeverity.Information;
                             lspReceiver.Diagnostic(diagnostic.range,
-                                diagnostic.severity ?? DiagnosticSeverity.Information,
+                                diagnosticSeverity,
                                 diagnostic.message, @params.uri);
                         }
 

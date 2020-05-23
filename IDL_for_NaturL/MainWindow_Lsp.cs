@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Dragablz;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Rendering;
 
 namespace IDL_for_NaturL
 {
@@ -41,7 +42,18 @@ namespace IDL_for_NaturL
 
         public void Diagnostic(Range range, DiagnosticSeverity warningSeverity, string message, string uri)
         {
-            throw new NotImplementedException();
+            int startPositionLine = range.start.line;
+            if (warningSeverity == DiagnosticSeverity.Information)
+            {
+                _lastFocusedTextEditor.TextArea.TextView.
+                    LineTransformers.RemoveAt(1);
+            }
+            else
+            {
+                _lastFocusedTextEditor.TextArea.TextView.LineTransformers.Add(new LineColorizer(startPositionLine,
+                    warningSeverity));
+            } 
+            
         }
 
         private void JumpToDefinitionEvent(object sender, MouseButtonEventArgs e)

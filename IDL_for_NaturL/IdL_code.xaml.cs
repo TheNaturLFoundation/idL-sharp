@@ -104,8 +104,7 @@ namespace IDL_for_NaturL
             {
                 StartInfo =
                 {
-                    FileName = "ocaml",
-                    Arguments = "resources/testspurposes.ml",
+                    FileName = "resources/server.exe",
                     UseShellExecute = false,
                     StandardOutputEncoding = Encoding.UTF8,
                     StandardErrorEncoding = Encoding.UTF8,
@@ -118,13 +117,13 @@ namespace IDL_for_NaturL
                 EnableRaisingEvents = true
             };
             LspSender = new LspHandler(this, processServer);
-            Dispatcher.Invoke(() => LspSender.InitializeRequest(Process.GetCurrentProcess().Id,
+            LspSender.InitializeRequest(Process.GetCurrentProcess().Id,
                 "file://" + Directory.GetCurrentDirectory(),
                 new ClientCapabilities(
                     new TextDocumentClientCapabilities(
                         new CompletionClientCapabilities(),
                         new DefinitionClientCapabilities(),
-                        new PublishDiagnosticsClientCapabilities()))));
+                        new PublishDiagnosticsClientCapabilities())));
             if (paths.Length == 0)
             {
                 NewTabItems(_tabInt++, null);

@@ -104,9 +104,9 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
         <None Remove="resources\server.exe" />
-        <Resource Include="resources\server.exe">
+        <EmbeddedResource Include="resources\server.exe">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Resource>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
