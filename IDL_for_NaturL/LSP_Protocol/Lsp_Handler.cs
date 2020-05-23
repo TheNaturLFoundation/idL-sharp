@@ -117,7 +117,7 @@ namespace IDL_for_NaturL
 
         public void ReceiveData(object sender, DataReceivedEventArgs e)
         {
-            if (inHeader) return;
+            //iteLine("Received data: " + e.Data);
             if (string.IsNullOrEmpty(e.Data))
             {
                 inHeader = false;
@@ -134,7 +134,8 @@ namespace IDL_for_NaturL
                 // Now need to find the id of the method called that was previously serialized
 
                 idDictionary.TryGetValue(receivedData["id"].Value<int>(), out string method);
-                if (!initializedServer)
+                //iteLine("Method: " + method);
+                /*if (!initializedServer)
                 {
                     if (method == "initialize")
                     {
@@ -144,16 +145,15 @@ namespace IDL_for_NaturL
                     }
 
                     return;
-                }
+                }*/
 
                 switch (method)
                 {
                     case "textDocument/definition":
-                        Thread.Sleep(100);
                         lspReceiver.JumpToDefinition(receivedData["result"].ToObject<Location>());
                         break;
                     case "textDocument/completion":
-                        Thread.Sleep(100);
+                        //Thread.Sleep(100);
                         JArray items = (JArray) receivedData["params"];
                         lspReceiver.Completion(items.ToObject<IList<CompletionItem>>());
                         break;
@@ -181,7 +181,6 @@ namespace IDL_for_NaturL
                 }
             }
 
-            inHeader = true;
         }
 
         public static bool IsPropertyExist(JObject settings, string name)

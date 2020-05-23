@@ -103,6 +103,10 @@
         <EmbeddedResource Include="resources\settings.xml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Remove="resources\server.exe" />
+        <Resource Include="resources\server.exe">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
     </ItemGroup>
 
     <ItemGroup>

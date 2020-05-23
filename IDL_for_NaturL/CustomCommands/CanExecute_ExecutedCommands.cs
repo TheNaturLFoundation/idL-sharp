@@ -86,7 +86,7 @@ namespace IDL_for_NaturL
 
         private void ExecuteCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Execute(sender, e);
+            Dispatcher.InvokeAsync(() => Execute(sender, e));
         }
 
         #endregion

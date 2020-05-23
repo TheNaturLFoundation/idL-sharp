@@ -9,6 +9,7 @@ using Path = System.IO.Path;
 using ICSharpCode.AvalonEdit;
 using System.Text;
 using System.Threading;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace IDL_for_NaturL
@@ -18,6 +19,7 @@ namespace IDL_for_NaturL
         // Attributes declared for process handling (if the user wants to cut one)
         private Process _process = new Process();
         private Process _processPython = new Process();
+
         private bool _processPythonRunning;
         //Function in order to quote paths as the cmd doesn't understand what a path with spaces is
 
@@ -37,8 +39,11 @@ namespace IDL_for_NaturL
                 {
                     FileName = "resources/naturL.exe",
                     WorkingDirectory = "resources/",
-                    EnvironmentVariables = { ["NATURLPATH"] =
-                        Path.GetFullPath("resources")},
+                    EnvironmentVariables =
+                    {
+                        ["NATURLPATH"] =
+                            Path.GetFullPath("resources")
+                    },
                     Arguments = arguments,
                     StandardOutputEncoding = Encoding.UTF8,
                     StandardErrorEncoding = Encoding.UTF8,
@@ -152,7 +157,7 @@ namespace IDL_for_NaturL
                     _processPython.Suspend();
                     Thread.Sleep(10);
                     _processPython.Resume();
-                    Dispatcher.Invoke(() =>
+                    Dispatcher.InvokeAsync(() =>
                     {
                         if (!_processPythonRunning) return;
                         ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Black;
@@ -163,17 +168,22 @@ namespace IDL_for_NaturL
                 _processPython.ErrorDataReceived += (sender1, e1) => Dispatcher.Invoke(() =>
                 {
                     if (string.IsNullOrEmpty(e1.Data) || _processPythonRunning) return;
-                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = e1.Data[0] == 'W' ? Brushes.Orange : Brushes.Red;
+                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground =
+                        e1.Data[0] == 'W' ? Brushes.Orange : Brushes.Red;
                     ((TextEditor) FindName("STD" + _currenttabId)).Text += e1.Data;
-
                 });
-                _processPython.Exited += (sender3, e3) => _processPythonRunning = false;
+                _processPython.Exited += (sender3, e3) =>
+                {
+                    _processPythonRunning = false;
+                    Dispatcher.Invoke(CommandManager.InvalidateRequerySuggested);
+                };
                 _processPython.BeginOutputReadLine();
                 _processPython.BeginErrorReadLine();
             }
             else
             {
-                ((TextEditor) FindName("STD" + _currenttabId)).Foreground = errorTranspile[0] == 'W' ? Brushes.Orange : Brushes.Red;
+                ((TextEditor) FindName("STD" + _currenttabId)).Foreground =
+                    errorTranspile[0] == 'W' ? Brushes.Orange : Brushes.Red;
                 ((TextEditor) FindName("STD" + _currenttabId)).Text = errorTranspile;
             }
         }
@@ -191,34 +201,48 @@ namespace IDL_for_NaturL
             };
             _processPythonRunning = false;
         }
-        
     }
+
     public static class ProcessExtension
     {
         [DllImport("kernel32.dll")]
         static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+
         [DllImport("kernel32.dll")]
         static extern uint SuspendThread(IntPtr hThread);
+
         [DllImport("kernel32.dll")]
         static extern int ResumeThread(IntPtr hThread);
+
         [DllImport("kernel32.dll")]
         static extern uint TerminateThread(IntPtr thread);
+
         public static void Suspend(this Process process)
         {
             if (process.HasExited)
             {
                 return;
             }
-            foreach (ProcessThread thread in process.Threads)
+
+            try
             {
-                var pOpenThread = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);
-                if (pOpenThread == IntPtr.Zero)
+                foreach (ProcessThread thread in process.Threads)
                 {
-                    break;
+                    var pOpenThread = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint) thread.Id);
+                    if (pOpenThread == IntPtr.Zero)
+                    {
+                        break;
+                    }
+
+                    SuspendThread(pOpenThread);
                 }
-                SuspendThread(pOpenThread);
+            }
+            catch (InvalidOperationException)
+            {
+                // Ignore
             }
         }
+
         public static void Resume(this Process process)
         {
             try
@@ -236,9 +260,9 @@ namespace IDL_for_NaturL
             }
             catch (InvalidOperationException)
             {
-                
             }
         }
+
         public static void Terminate(this Process process)
         {
             foreach (ProcessThread thread in process.Threads)
@@ -250,6 +274,7 @@ namespace IDL_for_NaturL
             }
         }
     }
+
     [Flags]
     public enum ThreadAccess : int
     {

@@ -419,7 +419,7 @@
                                   IsCheckable="True" Name="EngBox"
                                   Click="EngBoxClicked" />
                     </MenuItem>
-                    <MenuItem Height="39" Width="51" Header=""
+                    <MenuItem Name="ExecuteProcess" Height="39" Width="51" Header=""
                               Command="self:CustomCommands.Execute" ToolTip="Execute">
                         <MenuItem.Icon>
                             <Image Source="resources/Untitled.png"
@@ -433,7 +433,7 @@
                                    Margin="-14,-8,-16,-8" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Height="39" Width="55" Header=""
+                    <MenuItem Name="StopProcess" Height="39" Width="55" Header=""
                                          ToolTip="Cancel" Command="self:CustomCommands.Cancel_Process" >
                         <MenuItem.Icon>
                             <Image Source="resources/red_square.png"
