@@ -12,6 +12,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Net;
 using System.Reflection.Metadata;
@@ -106,7 +107,7 @@ namespace IDL_for_NaturL
             while (offset > -1 && !specialChars.Contains(textEditor.Text[offset]))
             {
                 char appendChar = textEditor.Text[offset];
-                lastTypedWord = (appendChar == '\x00' ? "" : appendChar.ToString()) + lastTypedWord;
+                lastTypedWord = appendChar + lastTypedWord;
                 offset--;
             }
 
@@ -125,11 +126,12 @@ namespace IDL_for_NaturL
             string file = _currentTabHandler._file;
             string path = string.IsNullOrEmpty(file) ? _currentTabHandler.playground : file;
             LspSender.RequestKeywords(position, path);
-            Dictionary<string,float> keywordsScore = new Dictionary<string, float>(); 
-            ContextKeywords.ForEach(keyword => keywordsScore.Add(keyword,CompletionScore(keyword,lastTypedWord)));
+            Dictionary<string, float> keywordsScore = new Dictionary<string, float>();
+            ConstantKeywords.ForEach(keyword =>
+                keywordsScore.Add(keyword, CompletionScore(keyword, lastTypedWord)));
             IOrderedEnumerable<string> sorted =
-                ContextKeywords.Where(keyword => keywordsScore[keyword] >= 0)
-                    .OrderBy(keyword  => keywordsScore[keyword]);
+                ConstantKeywords.Where(keyword => keywordsScore[keyword] >= 0)
+                    .OrderBy(keyword => keywordsScore[keyword]);
 
             foreach (var keyword in sorted)
             {
@@ -141,46 +143,70 @@ namespace IDL_for_NaturL
             return data;
         }
 
-        public void AutoComplete(TextEditor textEditor, KeyEventArgs e)
+        public void AutoComplete(TextEditor textEditor)
         {
-            string lastTypedWord = KeyUtil.KeyToChar(e.Key).ToString();
+            Console.WriteLine("-------------------");
+            Console.WriteLine("AutoComplete called");
+            string lastTypedWord = "";
             if (textEditor.CaretOffset > 0)
             {
-                lastTypedWord = GetLastTypedWord(lastTypedWord == '\x00'.ToString() ? "" : lastTypedWord, textEditor);
+                lastTypedWord = GetLastTypedWord(lastTypedWord, textEditor);
             }
-
             IList<ICompletionData> data = GetDataList(lastTypedWord, textEditor);
             if (data.Count == 0)
             {
+                Console.WriteLine("Closed");
                 completionWindow.Close();
             }
-            if (data.Count != 0 && (e.Key != Key.Back || !string.IsNullOrEmpty(lastTypedWord)))
+            Console.WriteLine("Between close and show");
+            
+            if (data.Count != 0 && !string.IsNullOrEmpty(lastTypedWord))
             {
+                Console.WriteLine("Show");
                 completionWindow.Show();
             }
+            Console.WriteLine("Selection Done");
             completionWindow.CompletionList.SelectItem("");
         }
 
-        public Dictionary<T,Q> ReverseDictionary<T,Q>(Dictionary<Q,T> dictionary)
+        public Dictionary<T, Q> ReverseDictionary<T, Q>(Dictionary<Q, T> dictionary)
         {
             return dictionary.ToDictionary(element => element.Value, element => element.Key);
         }
+
         public void AutoCompleteSpecialChars(char @char)
         {
-            Dictionary<char, char> specialChars = 
-                new Dictionary<char, char> {{'\'','\''},{'\"','\"'},{'\\','/'},{'[',']'},{'(',')'}};
-            var reversed = ReverseDictionary(specialChars);
-            if (!specialChars.TryGetValue(@char,out char char1)) return;
-            _lastFocusedTextEditor.Document.Insert(_lastFocusedTextEditor.CaretOffset, char1.ToString());
-            _lastFocusedTextEditor.CaretOffset -= 1;
-            if (!reversed.TryGetValue(@char, out char char2)) return;
-            _lastFocusedTextEditor.Document.Remove(_lastFocusedTextEditor.CaretOffset,2);
-            _lastFocusedTextEditor.CaretOffset += 1;
+            TextEditor editor = _lastFocusedTextEditor;
+            Dictionary<char, char> specialChars =
+                new Dictionary<char, char> {{'\'', '\''}, {'\"', '\"'}, {'\\', '/'}, {'[', ']'}, {'(', ')'}};
+            Console.WriteLine("Offset: " + editor.CaretOffset);
+            Console.WriteLine("Length: " + editor.Text.Length);
+            if (specialChars.TryGetValue(@char, out char char1) 
+                && (!(editor.CaretOffset < editor.Text.Length) || char1 != editor.Text[editor.CaretOffset]))
+            {
+                editor.Document.Insert(editor.CaretOffset, char1.ToString());
+                editor.CaretOffset -= 1;
+            }
+            else if (specialChars.ContainsValue(@char) && @char == editor.Text[editor.CaretOffset])
+            {
+                editor.Document.Remove(editor.CaretOffset,1);
+            }
+            
         }
+
         public void CodeBox_TextArea_KeyDown(object sender, TextCompositionEventArgs e)
         {
-            AutoCompleteSpecialChars(e.Text[0]);
+            char got = e == null ? '\x08' : e.Text[0];
+            AutoCompleteSpecialChars(got);
+            if ((got == '\x08' && string.IsNullOrEmpty(got.ToString()))
+                || (!char.IsLetterOrDigit(got) && got != '\x08'))
+            {
+                completionWindow?.Close();
+                return;
+            }
+            Dispatcher.InvokeAsync(() => AutoComplete(_lastFocusedTextEditor));
         }
+
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
         {
             string currentUri = _currentTabHandler._file ?? _currentTabHandler.playground;
@@ -194,22 +220,16 @@ namespace IDL_for_NaturL
                 case Key.Tab:
                     TemplatesManagerOnTab(_lastFocusedTextEditor, e);
                     return;
+                case Key.Back:
+                    CodeBox_TextArea_KeyDown(null,null);
+                    break;
             }
-
-            char typed = KeyUtil.KeyToChar(e.Key);
-            if ((e.Key == Key.Back && string.IsNullOrEmpty(typed.ToString())) || (!char.IsLetterOrDigit(typed) && e.Key != Key.Back))
-            {
-                completionWindow?.Close();
-                return;
-            }
-
-            Dispatcher.InvokeAsync(() => AutoComplete(_lastFocusedTextEditor, e));
         }
 
         private float CompletionScore(string reference, string input)
         {
             float sum = 0;
-            
+
             Dictionary<char, int> indexes = new Dictionary<char, int>();
             for (var index = 0; index < reference.Length; index++)
             {
@@ -235,6 +255,7 @@ namespace IDL_for_NaturL
                 {
                     indexes.Remove(chr);
                 }
+
                 index += 1;
                 sum += index * 1.0f / input.Length;
                 if (index == 0)
@@ -242,6 +263,7 @@ namespace IDL_for_NaturL
                     return -1;
                 }
             }
+
             return sum;
         }
 

@@ -68,7 +68,7 @@ namespace IDL_for_NaturL
                 new Initialize_Request(processId, uri, capabilities);
             idDictionary.Add(id, "initialize");
             string json = JsonConvert.SerializeObject(initializeRequest);
-            string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\n" + json + "\r\n";
+            string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\r\n" + json;
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
             Console.WriteLine(headerAndJson);

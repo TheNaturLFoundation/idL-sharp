@@ -126,6 +126,7 @@ namespace IDL_for_NaturL
             StreamReader outputreader = _process.StandardOutput;
             inputWriter.Write(((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
             inputWriter.Close();
+            _process.WaitForExit();
             string errorTranspile = reader.ReadLine();
             string outputTranspile = outputreader.ReadToEnd();
             if (errorTranspile == null)
@@ -148,26 +149,30 @@ namespace IDL_for_NaturL
                 };
                 ((TextEditor) FindName("STD" + _currenttabId)).Clear();
                 _processPython.Start();
+
                 _processPythonRunning = true;
+
                 inputWriter = _processPython.StandardInput;
                 inputWriter.Write(outputTranspile);
                 inputWriter.Close();
                 _processPython.OutputDataReceived += (sender2, e2) =>
                 {
-                    _processPython.Suspend();
-                    Thread.Sleep(10);
-                    _processPython.Resume();
-                    Dispatcher.InvokeAsync(() =>
-                    {
-                        if (!_processPythonRunning) return;
-                        ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Black;
-                        ((TextEditor) FindName("STD" + _currenttabId)).Text += e2.Data + '\n';
-                        ((TextEditor) FindName("STD" + _currenttabId)).ScrollToEnd();
-                    });
+                        _processPython.Suspend();
+                        Thread.Sleep(1);
+                        _processPython.Resume();
+                        Dispatcher.Invoke(() =>
+                        {
+                            ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Black;
+                            ((TextEditor) FindName("STD" + _currenttabId)).Text += e2.Data + '\n';
+                            ((TextEditor) FindName("STD" + _currenttabId)).ScrollToEnd();
+                        });
+
                 };
                 _processPython.ErrorDataReceived += (sender1, e1) => Dispatcher.Invoke(() =>
                 {
                     if (string.IsNullOrEmpty(e1.Data) || _processPythonRunning) return;
+
+
                     ((TextEditor) FindName("STD" + _currenttabId)).Foreground =
                         e1.Data[0] == 'W' ? Brushes.Orange : Brushes.Red;
                     ((TextEditor) FindName("STD" + _currenttabId)).Text += e1.Data;
@@ -175,6 +180,7 @@ namespace IDL_for_NaturL
                 _processPython.Exited += (sender3, e3) =>
                 {
                     _processPythonRunning = false;
+                    Console.WriteLine("Exited process");
                     Dispatcher.Invoke(CommandManager.InvalidateRequerySuggested);
                 };
                 _processPython.BeginOutputReadLine();
@@ -192,7 +198,7 @@ namespace IDL_for_NaturL
         {
             _processPython.Kill();
             _processPython.Dispose();
-            ((TextEditor) FindName("STD" + _currenttabId)).Text = language switch
+            ((TextEditor) FindName("STD" + _currenttabId)).Text += language switch
             {
                 IDL_for_NaturL.Language.English => ("Process finished with exit code -1"),
                 IDL_for_NaturL.Language.French =>
