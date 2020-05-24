@@ -158,7 +158,7 @@ namespace IDL_for_NaturL
                 _processPython.OutputDataReceived += (sender2, e2) =>
                 {
                         _processPython.Suspend();
-                        Thread.Sleep(1);
+                        Thread.Sleep(10);
                         _processPython.Resume();
                         Dispatcher.Invoke(() =>
                         {
@@ -180,7 +180,6 @@ namespace IDL_for_NaturL
                 _processPython.Exited += (sender3, e3) =>
                 {
                     _processPythonRunning = false;
-                    Console.WriteLine("Exited process");
                     Dispatcher.Invoke(CommandManager.InvalidateRequerySuggested);
                 };
                 _processPython.BeginOutputReadLine();
@@ -196,16 +195,24 @@ namespace IDL_for_NaturL
 
         public void Cancel_Process(object sender, RoutedEventArgs e)
         {
+            // This is black magic
+            Process.GetProcessesByName("Ok so apparently we discovered magic. Like for real" +
+                                       "If you try to delete this line, you will get a" +
+                                       "problem in the dispay of the STD of idL and we don't understand why ...");
             _processPython.Kill();
             _processPython.Dispose();
-            ((TextEditor) FindName("STD" + _currenttabId)).Text += language switch
-            {
-                IDL_for_NaturL.Language.English => ("Process finished with exit code -1"),
-                IDL_for_NaturL.Language.French =>
-                ("Processus terminé avec le code de retour -1"),
-                _ => throw new ArgumentOutOfRangeException()
-            };
             _processPythonRunning = false;
+            Dispatcher.InvokeAsync(() =>
+            {
+                
+                ((TextEditor) FindName("STD" + _currenttabId)).Text += language switch
+                {
+                    IDL_for_NaturL.Language.English => ("Process finished with exit code -1"),
+                    IDL_for_NaturL.Language.French =>
+                    ("Processus terminé avec le code de retour -1"),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+            });
         }
     }
 
@@ -239,7 +246,6 @@ namespace IDL_for_NaturL
                     {
                         break;
                     }
-
                     SuspendThread(pOpenThread);
                 }
             }
@@ -248,7 +254,6 @@ namespace IDL_for_NaturL
                 // Ignore
             }
         }
-
         public static void Resume(this Process process)
         {
             try
