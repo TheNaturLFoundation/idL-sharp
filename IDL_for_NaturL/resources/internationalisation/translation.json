@@ -45,11 +45,11 @@
 	},
 	"UnexpectedEOF": {
 		"fr": "Fin de fichier non attendue",
-		"end": "Unexpected end of file"
+		"en": "Unexpected end of file"
 	},
 	"ExpectedDebut": {
 		"fr": "Mot clé 'debut' attendu après la définition de la fonction",
-		"end": "Expected 'debut' after function definition"
+		"en": "Expected 'debut' after function definition"
 	},
 	"UnexpectedDebut": {
 		"fr": "Mot clé 'debut' non attendu",
@@ -91,13 +91,13 @@
 		"fr": "Mot clé manquant '",
 		"en": "Missing keyword '"
 	},
-	"InvalidFunctionDefiniton": {
+	"InvalidFunctionDefinition": {
 		"fr": "Définition de fonction invalide",
 		"en": "Invalid function defintion"
 	},
 	"UnknownVariable": {
-		"fr": "Variable inconnue ",
-		"en": "Unknwown variable "
+		"fr": "Variable inconnue '",
+		"en": "Unknwown variable '"
 	},
 	"UnknownType": {
 		"fr": "Type inconnu '",
@@ -111,7 +111,7 @@
 		"fr": "Expression invalide",
 		"en": "Invalid expression"
 	},
-	"InvalidTokenExpresion": {
+	"InvalidTokenExpression": {
 		"fr": "Indentificateur invalide dans l'expression: '",
 		"en": "Invalid token in expression: '"
 	},
@@ -120,7 +120,7 @@
 		"en": "' is a reserved keyword"
 	},
 	"TokenCapture": {
-		"fr": "Impossible de capturer l'identificateur inconnu",
+		"fr": "Identificateur inconnu",
 		"en": "Could not capture the unknown token"
 	},
 	"MissingClosingParenthesis": {

@@ -67,7 +67,7 @@ namespace IDL_for_NaturL
 
         public Queue<TextDocumentContentChangeEvent> documentsList = new Queue<TextDocumentContentChangeEvent>();
         public List<string> ContextKeywords = new List<string>();
-        public long lastTypedTime;
+        public double lastTypedTime;
         public int version;
 
         // This function will get the last typed word and update an attribute
@@ -187,6 +187,7 @@ namespace IDL_for_NaturL
             }
         }
 
+        
         public void DeleteSpecialChars()
         {
             Dictionary<char, char> specialChars =
@@ -219,10 +220,14 @@ namespace IDL_for_NaturL
             Dispatcher.InvokeAsync(() => AutoComplete(_lastFocusedTextEditor));
         }
 
+        public double GetTimeStamp()
+        {
+            return DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+        }
         public void SendChanges(string currentUri)
         {
-            long currentTime = DateTime.Now.ToFileTime();
-            if (currentTime - lastTypedTime > 20000000) // Math calculus that is done by einstein you won't understand why
+            double currentTime = GetTimeStamp();
+            if (currentTime - lastTypedTime > 400)
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -242,15 +247,20 @@ namespace IDL_for_NaturL
         {
             string currentUri = _currentTabHandler._file == null ? _currentTabHandler.playground :
                 "file://" + _currentTabHandler._file;
-            documentsList.Enqueue(new TextDocumentContentChangeEvent(
-                _lastFocusedTextEditor.Text.Replace("\r","")));
+            string text = _lastFocusedTextEditor.Text;
+            if (e == null && _lastFocusedTextEditor.CaretOffset > 1)
+            {
+                text = text.Remove(_lastFocusedTextEditor.CaretOffset-1, 1);
+            }
+            text = text.Replace("\r", "");
+            documentsList.Enqueue(new TextDocumentContentChangeEvent(text));
             lock (this)
             {
-                lastTypedTime = DateTime.Now.ToFileTime();
+                lastTypedTime = GetTimeStamp();
             }
             Thread thread = new Thread(_ =>
             {
-                Thread.Sleep(2000);
+                Thread.Sleep(500);
                 SendChanges(currentUri);
             });
             thread.Start();
@@ -272,6 +282,7 @@ namespace IDL_for_NaturL
                     return;
                 case Key.Back:
                     CodeBox_TextArea_KeyDown(null,null);
+                    CodeBoxText(null,null);
                     break;
             }
         }

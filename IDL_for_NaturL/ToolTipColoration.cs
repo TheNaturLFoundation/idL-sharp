@@ -1,6 +1,8 @@
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Rendering;
+using MaterialDesignThemes.Wpf;
 using Microsoft.VisualBasic;
 
 namespace IDL_for_NaturL
@@ -27,17 +29,30 @@ namespace IDL_for_NaturL
             // This is where you do anything with the line
             BrushConverter converter = new BrushConverter();
             Brush brush;
+            TextDecorationCollection myCollection;
             switch (_diagnosticSeverity)
             {
                 case DiagnosticSeverity.Error:
                     brush = (Brush) converter.ConvertFrom("#FF0000");
                     brush.Opacity = 0.3;
-                    element.TextRunProperties.SetBackgroundBrush(brush);
+                    TextDecoration myUnderline = new TextDecoration();
+                    // Create a solid color brush pen for the text decoration.
+                    myUnderline.Pen = new Pen(Brushes.Red, 1);
+                    myUnderline.PenThicknessUnit = TextDecorationUnit.FontRecommended;
+                    myCollection = new TextDecorationCollection();
+                    myCollection.Add(myUnderline);
+                    element.TextRunProperties.SetTextDecorations(myCollection);
                     break;
                 case DiagnosticSeverity.Warning:
                      brush = (Brush) converter.ConvertFrom("#FFCC00");
-                     brush.Opacity = 0.3;
-                     element.TextRunProperties.SetBackgroundBrush(brush);
+                     
+                     myUnderline = new TextDecoration();
+                     // Create a solid color brush pen for the text decoration.
+                     myUnderline.Pen = new Pen(brush, 1);
+                     myUnderline.PenThicknessUnit = TextDecorationUnit.FontRecommended;
+                     myCollection = new TextDecorationCollection();
+                     myCollection.Add(myUnderline);
+                     element.TextRunProperties.SetTextDecorations(myCollection);
                      break;
             }
         }

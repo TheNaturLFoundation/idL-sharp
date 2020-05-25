@@ -121,9 +121,6 @@
         </Compile>
         <Compile Remove="HashMap.cs" />
         <Compile Remove="ressourceLoader.cs" />
-        <EmbeddedResource Include="resources\testspurposes.ml">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>

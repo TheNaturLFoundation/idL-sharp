@@ -143,7 +143,6 @@ namespace IDL_for_NaturL
             string json = JsonConvert.SerializeObject(notificationMessage);
             string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
             server.StandardInput.Write(headerAndJson);
-            Console.WriteLine("Text sent is: " + json);
             server.StandardInput.Flush();
         }
 
@@ -206,7 +205,6 @@ namespace IDL_for_NaturL
                         break;
                     case "textDocument/completion":
                         JArray items = (JArray) receivedData["result"];
-                        Console.WriteLine($"Received data {receivedData}");
                         lspReceiver.Completion(items.ToObject<IList<CompletionItem>>());
                         break;
                     case "shudown":
@@ -223,7 +221,6 @@ namespace IDL_for_NaturL
                 {
                     // Switch on methods in order to call the method sent by the notification
                     case "textDocument/publishDiagnostics":
-                        Console.WriteLine("Publish diagnostics"+receivedData);
                         PublishDiagnosticsParams @params =
                             receivedData["params"].ToObject<PublishDiagnosticsParams>();
                         lspReceiver.Diagnostic(@params.diagnostics, @params.uri);

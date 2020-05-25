@@ -11,8 +11,10 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Text;
 using System.Windows.Threading;
+using System.Windows.Media;
 using BespokeFusion;
 using Dragablz;
 using ICSharpCode.AvalonEdit.CodeCompletion;
@@ -30,7 +32,7 @@ namespace IDL_for_NaturL
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : LspReceiver
-    {
+    {    
         private int _tabInt;
         private int _currentTab;
         private string _currenttabId = "0";
@@ -226,6 +228,12 @@ namespace IDL_for_NaturL
             CodeBox.TextArea.TextEntered += CodeBoxText;
             // Events called on click
             CodeBox.TextArea.PreviewMouseDown += JumpToDefinitionEvent;
+            BrushConverter converter = new BrushConverter();
+            Brush brush = (Brush) converter.ConvertFrom("#ffeac8");
+            Brush borderbrush = (Brush) converter.ConvertFrom("#ed9200");
+            Pen pen = new Pen(borderbrush,0);
+            CodeBox.TextArea.SelectionBorder = pen;
+            CodeBox.TextArea.SelectionBrush = brush;
         }
 
         public void UpdateColorScheme(XmlDocument doc)
