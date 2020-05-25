@@ -4,6 +4,8 @@ using System.Windows.Input;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Dragablz;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using MaterialDesignThemes.Wpf;
 
@@ -101,7 +103,7 @@ namespace IDL_for_NaturL
 
         private void NewTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            NewTabItems(_tabInt++, null);
+            NewTabItems(++_tabInt, null);
         }
 
         #endregion
@@ -162,8 +164,10 @@ namespace IDL_for_NaturL
 
         private void DebugCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //Can be useful for debugging
-            //_lastFocusedTextEditor.TextArea.TextView.LineTransformers.Add(new LineColorizer(1));
+            TextEditor ed = _lastFocusedTextEditor;
+            TextLocation location = ed.Document.GetLocation(ed.CaretOffset);
+            LspSender.RequestDefinition(new Position(location.Line-1,location.Column-1),
+                _currentTabHandler._file == null ? _currentTabHandler.playground : "file://" + _currentTabHandler._file);
         }
 
         private void ResearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

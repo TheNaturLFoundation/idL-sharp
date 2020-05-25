@@ -7,11 +7,11 @@ namespace IDL_for_NaturL
 
     public class ConcreteDidCloseTextDocument : DidCloseTextDocument
     {
-        public TextDocumentIdentifier _textDocumentIdentifier;
+        public TextDocumentIdentifier textDocument;
 
-        public ConcreteDidCloseTextDocument(TextDocumentIdentifier textDocumentIdentifier)
+        public ConcreteDidCloseTextDocument(TextDocumentIdentifier textDocument)
         {
-            _textDocumentIdentifier = textDocumentIdentifier;
+            this.textDocument = textDocument;
         }
     }
 }

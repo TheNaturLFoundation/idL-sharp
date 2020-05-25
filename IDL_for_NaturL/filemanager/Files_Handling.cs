@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Windows;
 using Microsoft.Win32;
 using System.IO;
@@ -27,10 +28,7 @@ namespace IDL_for_NaturL
         
         public void Open_Click(string uri = null)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt| cs files (*.cs)|*.cs"
-            };
+            Console.WriteLine("Open_Click");
             if (uri != null)
             {
                 int fileKey = IsFileOpen(uri);
@@ -49,8 +47,13 @@ namespace IDL_for_NaturL
                 }
                 return;
             }
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt| cs files (*.cs)|*.cs"
+            };
             if (openFileDialog.ShowDialog() == true)
             {
+                Console.WriteLine("open file dialog");
                 string filename = openFileDialog.FileName;
                 int filekey = IsFileOpen(filename);
                 if (filekey == -1)
@@ -68,7 +71,7 @@ namespace IDL_for_NaturL
 
         public void OpenFile(string path)
         {
-            NewTabItems(_tabInt++, path);
+            NewTabItems(++_tabInt, path);
             var text = File.ReadAllText(_currentTabHandler._file);
             ((TextEditor) FindName("CodeBox" + _currenttabId)).Text = text;
             _currentTabHandler._firstData = text;
@@ -105,7 +108,7 @@ namespace IDL_for_NaturL
                     filename += ".ntl";
                 Stream myfile = File.Create(filename);
                 myfile.Close();
-                NewTabItems(_tabInt++, filename);
+                NewTabItems(++_tabInt, filename);
                 _currentTabHandler._isSaved = false;
                 _currentTabHandler._isFileSelected = true;
                 ((TabItem) FindName("Tab" + _currenttabId)).Header =

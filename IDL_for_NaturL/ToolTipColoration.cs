@@ -1,21 +1,18 @@
+using System.ComponentModel;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Rendering;
 using Microsoft.VisualBasic;
 
 namespace IDL_for_NaturL
 {
-    public partial class MainWindow
-    {
-        
-    }
     class LineColorizer : DocumentColorizingTransformer
     {
-        int lineNumber;
-        private DiagnosticSeverity DiagnosticSeverity;
+        private int lineNumber;
+        private DiagnosticSeverity _diagnosticSeverity;
         public LineColorizer(int lineNumber, DiagnosticSeverity diagnosticSeverity)
         {
             this.lineNumber = lineNumber;
-            this.DiagnosticSeverity = diagnosticSeverity;
+            this._diagnosticSeverity = diagnosticSeverity;
         }
 
         protected override void ColorizeLine(ICSharpCode.AvalonEdit.Document.DocumentLine line)
@@ -29,15 +26,20 @@ namespace IDL_for_NaturL
         {
             // This is where you do anything with the line
             BrushConverter converter = new BrushConverter();
-            Brush brush = (Brush) converter.ConvertFrom("#FF0000");
-            element.TextRunProperties.SetForegroundBrush(Brushes.Red);
-            if (DiagnosticSeverity == DiagnosticSeverity.Information)
+            Brush brush;
+            switch (_diagnosticSeverity)
             {
-                brush = (Brush) converter.ConvertFrom("#f7da00");
-                element.TextRunProperties.SetForegroundBrush(Brushes.Black);
+                case DiagnosticSeverity.Error:
+                    brush = (Brush) converter.ConvertFrom("#FF0000");
+                    brush.Opacity = 0.3;
+                    element.TextRunProperties.SetBackgroundBrush(brush);
+                    break;
+                case DiagnosticSeverity.Warning:
+                     brush = (Brush) converter.ConvertFrom("#FFCC00");
+                     brush.Opacity = 0.3;
+                     element.TextRunProperties.SetBackgroundBrush(brush);
+                     break;
             }
-            brush.Opacity = 0.3;
-            element.TextRunProperties.SetBackgroundBrush(brush);
         }
     }
 }

@@ -7,6 +7,6 @@ namespace IDL_for_NaturL
     {
         void JumpToDefinition(Location location);
         void Completion(IList<CompletionItem> completionList);
-        void Diagnostic(Range range, DiagnosticSeverity warningSeverity, string message, string uri);
+        void Diagnostic(Diagnostic[] diagnostics, string uri);
     }
 }

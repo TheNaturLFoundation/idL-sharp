@@ -2,16 +2,16 @@ namespace IDL_for_NaturL
 {
     public interface DidOpenTextDocument
     {
-        TextDocumentItem textDocumentItem { get; set; }
+        TextDocument textDocument { get; set; }
     }
 
     public class ConcreteDidOpenTextDocument : DidOpenTextDocument
     {
-        public TextDocumentItem textDocumentItem { get; set; }
+        public TextDocument textDocument { get; set; }
 
-        public ConcreteDidOpenTextDocument(TextDocumentItem textDocumentItem)
+        public ConcreteDidOpenTextDocument(TextDocument textDocument)
         {
-            this.textDocumentItem = textDocumentItem;
+            this.textDocument = textDocument;
         }
     }
 }

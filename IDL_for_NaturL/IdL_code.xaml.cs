@@ -13,11 +13,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Threading;
+using BespokeFusion;
 using Dragablz;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Search;
 using IDL_for_NaturL.filemanager;
+using MaterialDesignMessageBox;
 using MaterialDesignThemes.Wpf;
+using MaterialMessageBox;
 using HighlightingManager =
     ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
@@ -28,11 +31,6 @@ namespace IDL_for_NaturL
     /// </summary>
     public partial class MainWindow : LspReceiver
     {
-        //Constants in order to determine if the data is dirty or know
-        //private string _firstData = "";
-        //private bool _isSaved;
-        //private bool _isFileSelected;
-        //private string _file = "";
         private int _tabInt;
         private int _currentTab;
         private string _currenttabId = "0";
@@ -77,6 +75,7 @@ namespace IDL_for_NaturL
         //MyCompletionWindow myCompletionWindow;
         public MainWindow()
         {
+            Console.WriteLine("Hello my dear friends");
             Instance = this;
             Environment.SetEnvironmentVariable("NATURLPATH", Path.GetFullPath("resources"));
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
@@ -105,14 +104,18 @@ namespace IDL_for_NaturL
                 StartInfo =
                 {
                     FileName = "resources/server.exe",
+                    EnvironmentVariables =
+                    {
+                        ["NATURLPATH"] =
+                            Path.GetFullPath("resources")
+                    },
                     UseShellExecute = false,
-                    StandardOutputEncoding = Encoding.UTF8,
-                    StandardErrorEncoding = Encoding.UTF8,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
+                    ErrorDialog = false,
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
                 },
                 EnableRaisingEvents = true
             };
@@ -196,6 +199,9 @@ namespace IDL_for_NaturL
             }
             else
             {
+                Dispatcher.Invoke(() => 
+                    LspSender.DidOpenNotification(_currentTabHandler.playground, "", 
+                        0, _currentTabHandler.playground));
                 ((TabItem) FindName("Tab" + n)).Header =
                     Path.GetFileNameWithoutExtension(tabHandling.playground);
             }
@@ -217,7 +223,7 @@ namespace IDL_for_NaturL
             // Events called on text typing for autocompletion
             CodeBox.TextArea.PreviewKeyDown += CodeBox_TextArea_TextEntering;
             CodeBox.TextArea.TextEntered += CodeBox_TextArea_KeyDown;
-
+            CodeBox.TextArea.TextEntered += CodeBoxText;
             // Events called on click
             CodeBox.TextArea.PreviewMouseDown += JumpToDefinitionEvent;
         }
@@ -296,7 +302,7 @@ namespace IDL_for_NaturL
                 paths);
             if (!cancelled)
             {
-                Dispatcher.Invoke(() => LspSender.ShutDownNotification());
+                //Dispatcher.Invoke(() => LspSender.ExitNotification());
                 Application.Current.Shutdown();
             }
 
@@ -328,6 +334,7 @@ namespace IDL_for_NaturL
                 MessageBoxResult result = MessageBox.Show(msg, "Data App",
                     MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Question);
+                
                 if (result == MessageBoxResult.Yes)
                 {
                     bool saved = Save_Click();

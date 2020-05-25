@@ -8,14 +8,14 @@ namespace IDL_for_NaturL
 
     public class ConcreteDidChangeTextDocument : DidChangeTextDocument
     {
-        public VersionedTextDocumentIdentifier DocumentIdentifier { get; set; }
+        public VersionedTextDocumentIdentifier textDocument { get; set; }
 
-        public List<TextDocumentContentChangeEvent> TextDocumentContentChangeEvents { get; set; }
-        public ConcreteDidChangeTextDocument(VersionedTextDocumentIdentifier documentIdentifier,
-            List<TextDocumentContentChangeEvent> textDocumentContentChangeEvents)
+        public IEnumerable<TextDocumentContentChangeEvent> contentChanges { get; set; }
+        public ConcreteDidChangeTextDocument(VersionedTextDocumentIdentifier textDocument,
+            IEnumerable<TextDocumentContentChangeEvent> contentChanges)
         {
-            DocumentIdentifier = documentIdentifier;
-            TextDocumentContentChangeEvents = textDocumentContentChangeEvents;
+            this.textDocument = textDocument;
+            this.contentChanges = contentChanges;
         }
     }
 }

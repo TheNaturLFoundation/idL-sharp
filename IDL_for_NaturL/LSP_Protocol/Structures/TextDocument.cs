@@ -1,18 +1,18 @@
 namespace IDL_for_NaturL
 {
-    public struct TextDocumentItem
+    public struct TextDocument
     {
         public string uri { get; } 
         public string languageId { get; }
         public int version { get; }
-        public string content { get; }
+        public string text { get; }
 
-        public TextDocumentItem(string uri, string languageId, int version, string content)
+        public TextDocument(string uri, string languageId, int version, string text)
         {
             this.uri = uri;
             this.languageId = languageId;
             this.version = version;
-            this.content = content;
+            this.text = text;
         }
     }
 }

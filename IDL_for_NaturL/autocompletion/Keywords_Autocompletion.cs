@@ -65,9 +65,9 @@ namespace IDL_for_NaturL
             "faux",
         };
 
-        public List<TextDocumentContentChangeEvent> documentsList = new List<TextDocumentContentChangeEvent>();
+        public Queue<TextDocumentContentChangeEvent> documentsList = new Queue<TextDocumentContentChangeEvent>();
         public List<string> ContextKeywords = new List<string>();
-
+        public long lastTypedTime;
         public int version;
 
         // This function will get the last typed word and update an attribute
@@ -124,13 +124,13 @@ namespace IDL_for_NaturL
                 textEditor.CaretOffset);
             Position position = new Position(textLocation.Line, textLocation.Column);
             string file = _currentTabHandler._file;
-            string path = string.IsNullOrEmpty(file) ? _currentTabHandler.playground : file;
+            string path = string.IsNullOrEmpty(file) ? _currentTabHandler.playground : "file://" + file;
             LspSender.RequestKeywords(position, path);
             Dictionary<string, float> keywordsScore = new Dictionary<string, float>();
-            ConstantKeywords.ForEach(keyword =>
+            ContextKeywords.ForEach(keyword =>
                 keywordsScore.Add(keyword, CompletionScore(keyword, lastTypedWord)));
             IOrderedEnumerable<string> sorted =
-                ConstantKeywords.Where(keyword => keywordsScore[keyword] >= 0)
+                ContextKeywords.Where(keyword => keywordsScore[keyword] >= 0)
                     .OrderBy(keyword => keywordsScore[keyword]);
 
             foreach (var keyword in sorted)
@@ -145,8 +145,6 @@ namespace IDL_for_NaturL
 
         public void AutoComplete(TextEditor textEditor)
         {
-            Console.WriteLine("-------------------");
-            Console.WriteLine("AutoComplete called");
             string lastTypedWord = "";
             if (textEditor.CaretOffset > 0)
             {
@@ -155,17 +153,13 @@ namespace IDL_for_NaturL
             IList<ICompletionData> data = GetDataList(lastTypedWord, textEditor);
             if (data.Count == 0)
             {
-                Console.WriteLine("Closed");
                 completionWindow.Close();
             }
-            Console.WriteLine("Between close and show");
             
             if (data.Count != 0 && !string.IsNullOrEmpty(lastTypedWord))
             {
-                Console.WriteLine("Show");
                 completionWindow.Show();
             }
-            Console.WriteLine("Selection Done");
             completionWindow.CompletionList.SelectItem("");
         }
 
@@ -178,26 +172,44 @@ namespace IDL_for_NaturL
         {
             TextEditor editor = _lastFocusedTextEditor;
             Dictionary<char, char> specialChars =
-                new Dictionary<char, char> {{'\'', '\''}, {'\"', '\"'}, {'\\', '/'}, {'[', ']'}, {'(', ')'}};
-            Console.WriteLine("Offset: " + editor.CaretOffset);
-            Console.WriteLine("Length: " + editor.Text.Length);
+                new Dictionary<char, char> {{'\'', '\''}, {'\"', '\"'}, 
+                    {'\\', '/'}, {'[', ']'}, {'(', ')'}};
             if (specialChars.TryGetValue(@char, out char char1) 
                 && (!(editor.CaretOffset < editor.Text.Length) || char1 != editor.Text[editor.CaretOffset]))
             {
                 editor.Document.Insert(editor.CaretOffset, char1.ToString());
                 editor.CaretOffset -= 1;
             }
-            else if (specialChars.ContainsValue(@char) && @char == editor.Text[editor.CaretOffset])
+            else if (editor.CaretOffset < editor.Text.Length &&
+                     specialChars.ContainsValue(@char) && @char == editor.Text[editor.CaretOffset])
             {
                 editor.Document.Remove(editor.CaretOffset,1);
             }
-            
+        }
+
+        public void DeleteSpecialChars()
+        {
+            Dictionary<char, char> specialChars =
+                new Dictionary<char, char> {{'\'', '\''}, {'\"', '\"'}, 
+                    {'\\', '/'}, {'[', ']'}, {'(', ')'}};
+            TextEditor editor = _lastFocusedTextEditor;
+            int offset = editor.CaretOffset;
+            if (editor.CaretOffset > 0 && editor.CaretOffset < editor.Text.Length
+                                       && specialChars.TryGetValue(editor.Text[offset-1], out char ch1)
+                                       && specialChars[editor.Text[offset-1]] == editor.Text[offset])
+            {
+                editor.Document.Remove(offset, 1);
+            }
         }
 
         public void CodeBox_TextArea_KeyDown(object sender, TextCompositionEventArgs e)
         {
             char got = e == null ? '\x08' : e.Text[0];
             AutoCompleteSpecialChars(got);
+            if (got == '\x08')
+            {
+                DeleteSpecialChars();
+            }
             if ((got == '\x08' && string.IsNullOrEmpty(got.ToString()))
                 || (!char.IsLetterOrDigit(got) && got != '\x08'))
             {
@@ -207,11 +219,49 @@ namespace IDL_for_NaturL
             Dispatcher.InvokeAsync(() => AutoComplete(_lastFocusedTextEditor));
         }
 
+        public void SendChanges(string currentUri)
+        {
+            long currentTime = DateTime.Now.ToFileTime();
+            if (currentTime - lastTypedTime > 20000000) // Math calculus that is done by einstein you won't understand why
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    foreach (var el in documentsList)
+                    {
+                        Console.WriteLine("------------------------------------------------");
+                        Console.WriteLine("Text" + el.text);
+                    }
+                    LspSender.DidChangeNotification(
+                        new VersionedTextDocumentIdentifier(++version, currentUri),
+                        documentsList.Reverse());
+                });
+            }
+        }
+
+        public void CodeBoxText(object sender, TextCompositionEventArgs e)
+        {
+            string currentUri = _currentTabHandler._file == null ? _currentTabHandler.playground :
+                "file://" + _currentTabHandler._file;
+            documentsList.Enqueue(new TextDocumentContentChangeEvent(
+                _lastFocusedTextEditor.Text.Replace("\r","")));
+            lock (this)
+            {
+                lastTypedTime = DateTime.Now.ToFileTime();
+            }
+            Thread thread = new Thread(_ =>
+            {
+                Thread.Sleep(2000);
+                SendChanges(currentUri);
+            });
+            thread.Start();
+            if (documentsList.Count > 10)
+            {
+                documentsList.Dequeue();
+            }
+        }
+        
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
         {
-            string currentUri = _currentTabHandler._file ?? _currentTabHandler.playground;
-            documentsList.Add(new TextDocumentContentChangeEvent(_lastFocusedTextEditor.Text));
-            LspSender.DidChangeNotification(new VersionedTextDocumentIdentifier(++version, currentUri), documentsList);
             switch (e.Key)
             {
                 case Key.Escape:

@@ -3,7 +3,6 @@ namespace IDL_for_NaturL
     public class PublishDiagnosticsParams
     {
         public string uri;
-        public int? version;
         public Diagnostic[] diagnostics;
     }
 
