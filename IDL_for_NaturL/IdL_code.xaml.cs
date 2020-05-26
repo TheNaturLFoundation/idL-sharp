@@ -219,6 +219,8 @@ namespace IDL_for_NaturL
             CodeBox.TextArea.PreviewKeyDown += CodeBox_TextArea_TextEntering;
             CodeBox.TextArea.TextEntered += CodeBox_TextArea_KeyDown;
             CodeBox.TextArea.TextEntered += CodeBoxText;
+            // Tooltips
+            CodeBox.TextArea.MouseDoubleClick += MouseCaptured;
             // Events called on click
             BrushConverter converter = new BrushConverter();
             Brush brush = (Brush) converter.ConvertFrom("#ffeac8");
@@ -327,11 +329,12 @@ namespace IDL_for_NaturL
                 UnregisterName("CodeBox" + _currenttabId);
                 UnregisterName("python" + _currenttabId);
                 UnregisterName("STD" + _currenttabId);
+                LspSender.DidCloseNotification(_currentTabHandler._file == null ? _currentTabHandler.playground :
+                    "file://" + _currentTabHandler._file);
                 ((TabablzControl) FindName("TabControl")).Items.RemoveAt(
                     _currentTab);
                 TabControl.SelectedIndex =
                     ((TabablzControl) FindName("TabControl")).Items.Count - 1;
-                LspSender.DidCloseNotification(_currentTabHandler._file ?? _currentTabHandler.playground);
             }
         }
 

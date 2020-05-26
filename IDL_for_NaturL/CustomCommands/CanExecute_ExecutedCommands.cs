@@ -101,7 +101,6 @@ namespace IDL_for_NaturL
         private void NewTabCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
-            //((TabablzControl) FindName("TabControl")).Items.Count < 9;
         }
 
         private void NewTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -167,25 +166,6 @@ namespace IDL_for_NaturL
 
         private void DebugCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            TextEditor CodeBox = (TextEditor) FindName("CodeBox" + _currenttabId);
-            Popup myPopup = new Popup
-            {
-                PlacementTarget = CodeBox,
-                PlacementRectangle = new Rect(),
-                PopupAnimation = PopupAnimation.Slide,
-                AllowsTransparency = true
-            };
-            TextBlock popupText = new TextBlock
-            {
-                Text = "Hello",
-                Background = Brushes.Transparent,
-                Foreground = Brushes.Red,
-                TextWrapping = TextWrapping.Wrap
-            };
-            myPopup.Child = popupText;
-            CodeBox.ToolTip = myPopup;
-            myPopup.IsOpen = true;
-            
             TextEditor ed = _lastFocusedTextEditor;
             TextLocation location = ed.Document.GetLocation(ed.CaretOffset);
             LspSender.RequestDefinition(new Position(location.Line-1,location.Column-1),

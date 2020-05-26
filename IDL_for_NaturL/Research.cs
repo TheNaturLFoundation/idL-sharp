@@ -103,8 +103,7 @@ namespace IDL_for_NaturL
             if (GetLineFromIndex(index) > textEditor.LineCount - 5)
                 textEditor.ScrollToEnd();
             else
-                textEditor.ScrollToVerticalOffset(
-                    textEditor.CaretOffset - 250);
+                textEditor.BringIntoView(_lastFocusedTextEditor.TextArea.Caret.CalculateCaretRectangle());
             index += searched.Length;
             _copyStart = index;
         }

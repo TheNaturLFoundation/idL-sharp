@@ -1,0 +1,75 @@
+fonction __traduire_couleur(chaine nom) -> chaine
+debut
+  si nom = "rouge" alors
+    retourner "red"
+  sinon_si nom = "vert" alors
+    retourner "green"
+  sinon_si nom = "bleu" alors
+    retourner "blue"
+  sinon_si nom = "jaune" alors
+    retourner "yellow"
+  sinon_si nom = "rose" alors
+    retourner "pink"
+  sinon_si nom = "violet" alors
+    retourner "purple"
+  sinon_si nom = "marron" alors
+    retourner "saddle brown"
+  sinon_si nom = "saumon" alors
+    retourner "salmon"
+  sinon_si nom = "cyan" alors
+    retourner "cyan"
+  sinon_si nom = "orange" alors
+    retourner "orange"
+  sinon_si nom = "orange naturl" alors
+    retourner "#ed9700"
+  sinon_si nom = "or" alors
+    retourner "gold"
+  sinon_si nom = "bordeaux" alors
+    retourner "maroon"
+  sinon_si nom = "gris" alors
+    retourner "gray"
+  sinon_si nom = "blanc" alors
+    retourner "white"
+  sinon_si nom = "noir" alors
+    retourner "black"
+  sinon
+    retourner nom
+  fin
+fin
+
+
+procedure definir_couleur(chaine couleur)
+debut
+  couleur_crayon(__traduire_couleur(couleur))
+fin
+
+
+procedure definir_epaisseur(reel epaisseur)
+debut
+  taille_crayon(epaisseur)
+fin
+
+
+procedure couleur_de_fond(chaine couleur)
+debut
+  couleur_fond(__traduire_couleur(couleur))
+fin
+
+
+procedure fond(chaine couleur)
+debut
+  couleur_de_fond(couleur)
+  effacer_ecran()
+fin
+
+
+procedure commencer_a_remplir()
+debut
+  commencer_remplissage()
+fin
+
+
+procedure finir_de_remplir()
+debut
+  finir_remplissage()
+fin

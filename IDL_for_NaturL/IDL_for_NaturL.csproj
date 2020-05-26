@@ -111,6 +111,42 @@
         <EmbeddedResource Include="resources\server.exe">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Remove="resources\std\pixL\evenements.ntl" />
+        <EmbeddedResource Include="resources\std\pixL\evenements.ntl">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="resources\std\pixL\formes.ntl" />
+        <EmbeddedResource Include="resources\std\pixL\formes.ntl">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="resources\std\pixL\geometrie.ntl" />
+        <EmbeddedResource Include="resources\std\pixL\geometrie.ntl">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="resources\std\pixL\naturl-package" />
+        <EmbeddedResource Include="resources\std\pixL\naturl-package">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="resources\std\pixL\style.ntl" />
+        <EmbeddedResource Include="resources\std\pixL\style.ntl">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="resources\std\pixL\texte.ntl" />
+        <EmbeddedResource Include="resources\std\pixL\texte.ntl">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="resources\std\arbrebinaire.ntl" />
+        <EmbeddedResource Include="resources\std\arbrebinaire.ntl">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="resources\std\maths.ntl" />
+        <EmbeddedResource Include="resources\std\maths.ntl">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="resources\std\naturl-package" />
+        <EmbeddedResource Include="resources\std\naturl-package">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>

@@ -20,6 +20,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Threading;
 using Dragablz;
@@ -35,6 +36,8 @@ namespace IDL_for_NaturL
 {
     public partial class MainWindow
     {
+        public ToolTip toolTip = new ToolTip 
+            { Placement = PlacementMode.MousePoint, PlacementTarget = _lastFocusedTextEditor};
         public List<string> ConstantKeywords = new List<string>()
         {
             "fonction",
@@ -294,6 +297,7 @@ namespace IDL_for_NaturL
 
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
         {
+            toolTip.IsOpen = false;
             switch (e.Key)
             {
                 case Key.Escape:
@@ -305,6 +309,9 @@ namespace IDL_for_NaturL
                 case Key.Back:
                     CodeBox_TextArea_KeyDown(null, null);
                     CodeBoxText(Key.Back, null);
+                    break;
+                case Key.Enter when Keyboard.Modifiers == ModifierKeys.Shift:
+                    MouseCaptured(null,null);
                     break;
                 case Key.Y when Keyboard.Modifiers == ModifierKeys.Control:
                 case Key.X when Keyboard.Modifiers == ModifierKeys.Control:

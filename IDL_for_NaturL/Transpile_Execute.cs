@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using System.Windows;
 using System.IO;
+using System.IO.Enumeration;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Path = System.IO.Path;
@@ -25,12 +26,17 @@ namespace IDL_for_NaturL
         private bool _processPythonRunning;
         //Function in order to quote paths as the cmd doesn't understand what a path with spaces is
 
+        private string Quote(string text)
+        {
+            return '"' + text + '"';
+        }
         private void Transpile(object sender, RoutedEventArgs routedEventArgs)
         {
             TextEditor STD = (TextEditor) FindName("STD" + _currenttabId);
             TextEditor CodeBox = (TextEditor) FindName("CodeBox" + _currenttabId);
             TextEditor PythonBox = (TextEditor) FindName("python" + _currenttabId);
             STD.TextArea.TextView.LineTransformers.Clear();
+            bool readStdin = true;
             if (string.IsNullOrEmpty(CodeBox.Text)) return;
             string arguments = language switch
             {
@@ -38,7 +44,15 @@ namespace IDL_for_NaturL
                 IDL_for_NaturL.Language.English => "--language english",
                 _ => throw new ArgumentOutOfRangeException()
             };
-
+            if (CodeBox.Text.Length > 4096)
+            {
+                if (_currentTabHandler.playground != null) return;
+                Save_Click();
+                string file = _currentTabHandler._file;
+                arguments += " --input " + Quote(file) + " --output " + Quote(Path.ChangeExtension(file,".py"));
+                readStdin = false;
+                Console.WriteLine("Stdin = false" + arguments);
+            }
             _process = new Process
             {
                 StartInfo =
@@ -64,8 +78,17 @@ namespace IDL_for_NaturL
             _process.Start();
             StreamWriter inputWriter = _process.StandardInput;
             StreamReader reader = _process.StandardError;
-            StreamReader outputreader = _process.StandardOutput;
-            inputWriter.Write(CodeBox.Text);
+            StreamReader outputreader;
+            if (readStdin)
+            {
+                inputWriter.Write(CodeBox.Text);
+                outputreader = _process.StandardOutput;
+            }
+            else
+            {
+                outputreader = new StreamReader(
+                    Path.ChangeExtension(_currentTabHandler._file,".py"));
+            }
             inputWriter.Close();
             string error = reader.ReadLine();
             string output = outputreader.ReadToEnd();
@@ -103,6 +126,16 @@ namespace IDL_for_NaturL
                 IDL_for_NaturL.Language.English => "--language english",
                 _ => throw new ArgumentOutOfRangeException()
             };
+            bool readStdin = true;
+            if (CodeBox.Text.Length > 4096)
+            {
+                if (_currentTabHandler.playground != null) return;
+                Save_Click();
+                string file = _currentTabHandler._file;
+                arguments += " --input " + Quote(file) + " --output " + Quote(Path.ChangeExtension(file,".py"));
+                readStdin = false;
+                Console.WriteLine("Stdin = false" + arguments);
+            }
             _process = new Process
             {
                 StartInfo =
@@ -122,8 +155,17 @@ namespace IDL_for_NaturL
             _process.Start();
             StreamWriter inputWriter = _process.StandardInput;
             StreamReader reader = _process.StandardError;
-            StreamReader outputreader = _process.StandardOutput;
-            inputWriter.Write(CodeBox.Text);
+            StreamReader outputreader;
+            if (readStdin)
+            {
+                inputWriter.Write(CodeBox.Text);
+                outputreader = _process.StandardOutput;
+            }
+            else
+            {
+                outputreader = new StreamReader(
+                    Path.ChangeExtension(_currentTabHandler._file,".py"));
+            }
             inputWriter.Close();
             _process.WaitForExit();
             string errorTranspile = reader.ReadToEnd();
@@ -137,6 +179,7 @@ namespace IDL_for_NaturL
                     StartInfo =
                     {
                         FileName = "python",
+                        WorkingDirectory = "resources/",
                         UseShellExecute = false,
                         StandardOutputEncoding = Encoding.UTF8,
                         StandardErrorEncoding = Encoding.UTF8,

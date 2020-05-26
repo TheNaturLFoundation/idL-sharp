@@ -1,0 +1,25 @@
+utiliser geometrie.*
+
+type_abstrait Police
+  attributs
+    chaine nom
+    entier taille
+  methodes
+    fonction nouveau(chaine nom, entier taille) -> Police
+    debut
+      instance nom <- nom
+      instance taille <- taille
+
+      retourner instance
+    fin
+  fin
+fin
+
+
+procedure ecrire_texte(Vecteur position, Police police, chaine texte)
+debut
+  init_geometrie()
+  crayon_a(position.x, position.y)
+  abaisser_crayon()
+  dessiner_texte(texte, police.nom, police.taille)
+fin

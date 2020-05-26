@@ -1,0 +1,57 @@
+fonction abs(entier n) -> entier
+debut
+  si n > 0 alors
+      retourner n
+  sinon
+      retourner -n
+  fin
+fin
+
+
+fonction fact(entier n) -> entier
+debut
+  si n <= 1 alors
+    retourner 1
+  sinon
+    retourner n * fact(n - 1)
+  fin
+fin
+
+
+fonction __mod_2pi(reel x) -> reel
+variables
+  reel tau
+  reel s
+debut
+  tau <- 2. * 3.1415926553589
+  tant_que x < 0. ou x > tau faire
+    si x > 0. alors
+      s <- 1.0
+    sinon
+      s <- -1.0
+    fin
+    x <- x - s * tau
+  fin
+  retourner x
+fin
+
+fonction __cos(reel x, entier n) -> reel
+variables
+  entier i
+  reel somme, pi
+debut
+  pi <- 3.1415926553589
+  somme <- 0.
+  x <- __mod_2pi(x)
+  afficher(x)
+  pour i de 0 jusqu_a n div 2 faire
+    somme <- decimal(somme) + decimal((-1.)^reel(i) * x^(2.0 * reel(i))) / decimal(fact(2 * i))
+  fin
+  retourner somme
+fin
+
+fonction cos(reel x) -> reel
+debut
+    retourner __cos(x, 50)
+fin
+

@@ -1,0 +1,74 @@
+fonction __traduire_touche(chaine touche) -> chaine
+debut
+  si touche = "haut" alors
+    retourner "Up"
+  sinon_si touche = "bas" alors
+    retourner "Down"
+  sinon_si touche = "droite" alors
+    retourner "Right"
+  sinon_si touche = "gauche" alors
+    retourner "Left"
+  sinon_si touche = "effacer" alors
+    retourner "BackSpace"
+  sinon_si touche = "controle" ou touche = "ctrl" alors
+    retourner "Control_L"
+  sinon_si touche = "supprimer" alors
+    retourner "Delete"
+  sinon_si touche = "fin" alors
+    retourner "End"
+  sinon_si touche = "entrer" ou touche = "retourner" alors
+    retourner "Return"
+  sinon
+    retourner touche
+  fin
+fin
+
+
+procedure detecter_clic_gauche(procedure: (reel) x (reel) action)
+debut
+  _detecter_clic(action, 1)
+fin
+
+
+procedure detecter_clic_droit(procedure: (reel) x (reel) action)
+debut
+  _detecter_clic(action, 3)
+fin
+
+
+procedure detecter_clic_molette(procedure: (reel) x (reel) action)
+debut
+  _detecter_clic(action, 2)
+fin
+
+
+procedure executer_apres(procedure action, entier temps)
+debut
+  _executer_apres(action, temps)
+fin
+
+
+procedure detecter_touche_pressee(procedure action, chaine touche)
+debut
+  _ecouter_clavier()
+  _detecter_touche_pressee(action, __traduire_touche(touche))
+fin
+
+procedure detecter_touche_levee(procedure action, chaine touche)
+debut
+  _ecouter_clavier()
+  _detecter_touche_levee(action, __traduire_touche(touche))
+fin
+
+
+procedure lancer_partie(procedure principale, entier temps)
+debut
+  procedure _principale()
+  debut
+    principale()
+    executer_apres(_principale, temps)
+  fin
+
+  executer_apres(_principale, temps)
+  lancer_boucle()
+fin

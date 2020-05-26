@@ -1,0 +1,81 @@
+utiliser geometrie.*
+utiliser style
+
+
+procedure point(Vecteur position)
+debut
+  init_geometrie()
+  crayon_a(position.x, position.y)
+  dessiner_point()
+fin
+
+
+procedure ligne(Vecteur position1, Vecteur position2)
+debut
+  init_geometrie()
+  crayon_a(position1.x, position1.y)
+  abaisser_crayon()
+  crayon_a(position2.x, position2.y)
+fin
+
+
+procedure rectangle(Vecteur position, reel largeur, reel hauteur)
+variables
+  entier i
+  reel cote
+debut
+  init_geometrie()
+  crayon_a(position.x, position.y)
+  abaisser_crayon()
+  pour i de 1 jusqu_a 4 faire
+    si i mod 2 = 0 alors
+      cote <- hauteur
+    sinon
+      cote <- largeur
+    fin
+    avancer_crayon(cote)
+    tourner_crayon(90)
+  fin
+fin
+
+
+procedure rectangle_plein(Vecteur position, reel largeur, reel hauteur)
+variables
+  entier i
+  reel cote
+debut
+  init_geometrie()
+  crayon_a(position.x - largeur/2, position.y - hauteur/2)
+  abaisser_crayon()
+  style.commencer_a_remplir()
+  pour i de 1 jusqu_a 4 faire
+    si i mod 2 = 0 alors
+      cote <- hauteur
+    sinon
+      cote <- largeur
+    fin
+    avancer_crayon(cote)
+    tourner_crayon(90)
+  fin
+  style.finir_de_remplir()
+fin
+
+
+procedure cercle(Vecteur position, reel rayon)
+debut
+  init_geometrie()
+  crayon_a(position.x, position.y - rayon)
+  abaisser_crayon()
+  dessiner_cercle(rayon)
+fin
+
+
+procedure cercle_plein(Vecteur position, reel rayon)
+debut
+  init_geometrie()
+  crayon_a(position.x, position.y - rayon)
+  abaisser_crayon()
+  style.commencer_a_remplir()
+  dessiner_cercle(rayon)
+  style.finir_de_remplir()
+fin

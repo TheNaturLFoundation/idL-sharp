@@ -26,6 +26,7 @@ namespace IDL_for_NaturL
         private Dictionary<int, string> idDictionary = new Dictionary<int, string>();
         public int breakCount = 0;
 
+        
         public LspHandler(LspReceiver lspReceiver, Process server)
         {
             this.lspReceiver = lspReceiver;
@@ -35,7 +36,6 @@ namespace IDL_for_NaturL
             server.BeginOutputReadLine();
             server.BeginErrorReadLine();
             this.server = server;
-            
         }
 
         private LspReceiver lspReceiver;
@@ -55,6 +55,7 @@ namespace IDL_for_NaturL
 
         public void RequestKeywords(Position position, string uri)
         {
+            Console.WriteLine("request keywords: " + uri);
             RequestMessage newMessage = new RequestMessage
             (
                 ++id,
@@ -67,7 +68,7 @@ namespace IDL_for_NaturL
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
         }
-
+        
         public void InitializeRequest(int processId, string uri, ClientCapabilities capabilities)
         {
             Initialize_Params initializeParams =
@@ -118,6 +119,7 @@ namespace IDL_for_NaturL
 
         public void DidOpenNotification(string uri, string language, int version, string text)
         {
+            Console.WriteLine("Did open: " + uri);
             text = text.Replace("\r", "");
             DidOpenTextDocument document =
                 new ConcreteDidOpenTextDocument(new TextDocument(uri, language, version, text));
@@ -146,6 +148,7 @@ namespace IDL_for_NaturL
 
         public void DidCloseNotification(string uri)
         {
+            Console.WriteLine("Did close uri: " + uri);
             DidCloseTextDocument document =
                 new ConcreteDidCloseTextDocument(new ConcreteTextDocumentIdentifier(uri));
             Notification_Message notificationMessage =

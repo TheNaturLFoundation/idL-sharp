@@ -21,6 +21,11 @@
     MinHeight="50">
 
     <Window.Resources>
+        <VisualBrush x:Key="WavyBrush" Viewbox="0,0,3,2" ViewboxUnits="Absolute" Viewport="0,0.8,6,4" ViewportUnits="Absolute" TileMode="Tile">
+            <VisualBrush.Visual>
+                <Path Data="M 0,1 C 1,0 2,2 3,1" Stroke="Red" StrokeThickness="0.2" StrokeEndLineCap="Square" StrokeStartLineCap="Square" />
+            </VisualBrush.Visual>
+        </VisualBrush>
         <!-- This is the ressource for the current SCROLLBARS-->
         <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
         <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
