@@ -19,9 +19,56 @@ namespace IDL_for_NaturL
         public SettingsWindow()
         {
             InitializeComponent();
+            UpdateAtLaunch();
         }
 
         //TODO Ajouter la possibilité de charger un fichier directement dans les configurations.
+        private void UpdateAtLaunch()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("resources/user_coloration.xshd");
+            XmlNode root = doc.DocumentElement;
+            XmlNodeList ruleSets = root.FirstChild.NextSibling.NextSibling.FirstChild.ChildNodes;
+            foreach (XmlNode rule in ruleSets)
+            {
+                if (rule.Name.Equals("MarkPrevious"))
+                {
+                    Brush brush;
+                    try
+                    {
+                        brush = new SolidColorBrush((Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
+                        Color_functions.Foreground = brush;
+                    }
+                    catch (Exception exception)
+                    {
+                        // ignored
+                    }
+                }
+                else
+                {
+                    var node = rule.Attributes?.GetNamedItem("name");
+                    Brush brush;
+                    switch (node?.InnerText)
+                    {
+                        case "structure_words":
+                            brush = new SolidColorBrush((Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
+                            Color_keywords.Foreground = brush;
+                            break;
+                        case "booleen":
+                            brush = new SolidColorBrush((Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
+                            Color_truefalse.Foreground = brush;
+                            break;
+                        case "types":
+                            brush = new SolidColorBrush((Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
+                            Color_types.Foreground = brush;
+                            break;
+                        default:
+                            continue;
+                    }
+                }
+            }
+            
+        }
         private void Save_Setting(object sender, RoutedEventArgs e)
         {
             XmlDocument doc = new XmlDocument();
@@ -65,7 +112,8 @@ namespace IDL_for_NaturL
             UserSettings.syntaxFilePath = "resources/user_coloration.xshd";
             MainWindow.Instance.UpdateColorScheme(doc);
         }
-
+        
+        
         private string GetHexFromBrush(TextBlock colorBlock)
         {
             Color color = ((SolidColorBrush) colorBlock.Foreground).Color;

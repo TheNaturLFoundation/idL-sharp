@@ -69,7 +69,6 @@ namespace IDL_for_NaturL
         //MyCompletionWindow myCompletionWindow;
         public MainWindow()
         {
-            Console.WriteLine("Hello my dear friends");
             Instance = this;
             Environment.SetEnvironmentVariable("NATURLPATH", Path.GetFullPath("resources"));
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;

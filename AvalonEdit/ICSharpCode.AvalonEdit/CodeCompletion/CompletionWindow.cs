@@ -94,16 +94,13 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			if (item == null)
 				return;
 			object description = item.Description;
-			if (description != null) {
+			if (!string.IsNullOrEmpty(description as string)) {
 				string descriptionText = description as string;
-				if (descriptionText != null) {
-					toolTip.Content = new TextBlock {
+				toolTip.Content = new TextBlock {
 						Text = descriptionText,
 						TextWrapping = TextWrapping.Wrap
 					};
-				} else {
-					toolTip.Content = description;
-				}
+				
 				toolTip.IsOpen = true;
 			} else {
 				toolTip.IsOpen = false;

@@ -22,7 +22,6 @@ namespace IDL_for_NaturL
         
         public void JumpToDefinition(Location location)
         {
-            Console.WriteLine(location.ToString());
             string uri = location.uri;
             Range range = location.range;
             Position start = range.start;
@@ -41,7 +40,12 @@ namespace IDL_for_NaturL
 
         public void Completion(IList<CompletionItem> keywords)
         {
-            ContextKeywords = new List<string>();
+            ContextKeywords.Clear();
+            keyWordsDescriptions.Clear();
+            foreach (var keyword in keywords)
+            {
+                keyWordsDescriptions.Add(keyword.label, keyword.detail);
+            }
             ContextKeywords.AddRange(keywords.Select(item => item.label));
             ContextKeywords.AddRange(ConstantKeywords);
         }
@@ -83,6 +87,24 @@ namespace IDL_for_NaturL
             }
             throw new ArgumentOutOfRangeException(); // not supposed to be reached
         }
+
+        public int DeleteWhiteSpaceLine(int line)
+        {
+            TextEditor textEditor = _lastFocusedTextEditor;
+            string[] text = textEditor.Text.Split('\n');
+            string linetext = text[line];
+            int offset = 1;
+            foreach (char @char in linetext)
+            {
+                if (!string.IsNullOrEmpty(linetext) && @char != ' ' && @char != '\t')
+                {
+                    return textEditor.Document.GetOffset(line+1,offset);
+                }
+                offset++;
+            }
+
+            return textEditor.Document.GetOffset(line+1,0);
+        }
         public void SetLineTransformers(Diagnostic[] diagnostics, string uri)
         {
             string tabindex = GetTabFromUri(uri);
@@ -92,9 +114,8 @@ namespace IDL_for_NaturL
                 TextEditor editor = (TextEditor) FindName("CodeBox" + tabindex);
                 DiagnosticSeverity severity = diagnostic.severity ?? DiagnosticSeverity.Information;
                 int line = diagnostic.range.start.line;
-                editor.TextArea.TextView.LineTransformers.Add(new LineColorizer(line+1,severity));
-                Console.WriteLine("Severity is : " + severity);
-                Console.WriteLine(line+1);
+                editor.TextArea.TextView.LineTransformers.Add(
+                    new LineColorizer(line+1,severity,DeleteWhiteSpaceLine(line)));
                 UpdateLayout();
                 _lastFocusedTextEditor = actualEditor;
             }

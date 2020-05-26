@@ -28,7 +28,6 @@ namespace IDL_for_NaturL
         
         public void Open_Click(string uri = null)
         {
-            Console.WriteLine("Open_Click");
             if (uri != null)
             {
                 int fileKey = IsFileOpen(uri);
@@ -53,7 +52,6 @@ namespace IDL_for_NaturL
             };
             if (openFileDialog.ShowDialog() == true)
             {
-                Console.WriteLine("open file dialog");
                 string filename = openFileDialog.FileName;
                 int filekey = IsFileOpen(filename);
                 if (filekey == -1)

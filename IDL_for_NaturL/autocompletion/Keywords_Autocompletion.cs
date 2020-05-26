@@ -66,13 +66,14 @@ namespace IDL_for_NaturL
             "faux",
         };
 
-        public Queue<TextDocumentContentChangeEvent> documentsList = new Queue<TextDocumentContentChangeEvent>();
-        public List<string> ContextKeywords = new List<string>();
-        public double lastTypedTime;
-        public int version;
+        private Queue<TextDocumentContentChangeEvent> documentsList = new Queue<TextDocumentContentChangeEvent>();
+        private List<string> ContextKeywords = new List<string>();
+        private Dictionary<string,string> keyWordsDescriptions = new Dictionary<string, string>();
+        private double lastTypedTime;
+        private int version;
 
         // This function will get the last typed word and update an attribute
-        public void TemplatesManagerOnTab(TextEditor textEditor, KeyEventArgs e)
+        private void TemplatesManagerOnTab(TextEditor textEditor, KeyEventArgs e)
         {
             int i = textEditor.CaretOffset;
             int countBn = 0; // Count Back-slash n
@@ -101,7 +102,7 @@ namespace IDL_for_NaturL
             }
         }
 
-        public string GetLastTypedWord(string lastTypedWord, TextEditor textEditor)
+        private string GetLastTypedWord(string lastTypedWord, TextEditor textEditor)
         {
             List<char> specialChars = new List<char>() {' ', '\n', '\t', '\r', '(', ')'};
             int offset = textEditor.CaretOffset - 1;
@@ -115,18 +116,12 @@ namespace IDL_for_NaturL
             return lastTypedWord;
         }
 
-        public IList<ICompletionData> GetDataList(string lastTypedWord, TextEditor textEditor)
+        private IList<ICompletionData> GetDataList(string lastTypedWord, TextEditor textEditor)
         {
             completionWindow =
                 CompletionWindow.GetInstance(textEditor.TextArea);
             IList<ICompletionData> data =
                 completionWindow.CompletionList.CompletionData;
-            TextLocation textLocation = textEditor.Document.GetLocation(
-                textEditor.CaretOffset);
-            Position position = new Position(textLocation.Line, textLocation.Column);
-            string file = _currentTabHandler._file;
-            string path = string.IsNullOrEmpty(file) ? _currentTabHandler.playground : "file://" + file;
-            LspSender.RequestKeywords(position, path);
             Dictionary<string, float> keywordsScore = new Dictionary<string, float>();
             ContextKeywords.ForEach(keyword =>
                 keywordsScore.Add(keyword, CompletionScore(keyword, lastTypedWord)));
@@ -136,15 +131,16 @@ namespace IDL_for_NaturL
 
             foreach (var keyword in sorted)
             {
+                keyWordsDescriptions.TryGetValue(keyword, out string description);
                 MyCompletionData myCompletionData =
-                    new MyCompletionData(keyword, language, textEditor);
+                    new MyCompletionData(keyword,description ,language, textEditor, () => CodeBoxText(null,null));
                 data.Add(myCompletionData);
             }
 
             return data;
         }
 
-        public void AutoComplete(TextEditor textEditor)
+        private void AutoComplete(TextEditor textEditor)
         {
             string lastTypedWord = "";
             if (textEditor.CaretOffset > 0)
@@ -218,6 +214,14 @@ namespace IDL_for_NaturL
                 completionWindow?.Close();
                 return;
             }
+
+            TextEditor textEditor = _lastFocusedTextEditor;
+            TextLocation textLocation = textEditor.Document.GetLocation(
+                textEditor.CaretOffset);
+            Position position = new Position(textLocation.Line-1, textLocation.Column-1);
+            string file = _currentTabHandler._file;
+            string path = string.IsNullOrEmpty(file) ? _currentTabHandler.playground : "file://" + file;
+            LspSender.RequestKeywords(position, path);
             Dispatcher.InvokeAsync(() => AutoComplete(_lastFocusedTextEditor));
         }
 
@@ -285,6 +289,7 @@ namespace IDL_for_NaturL
                 case Key.C when Keyboard.Modifiers == ModifierKeys.Control:
                 case Key.V when Keyboard.Modifiers == ModifierKeys.Control:
                 case Key.Z when Keyboard.Modifiers == ModifierKeys.Control:
+                case Key.Enter:
                     Thread thread = new Thread(o =>
                     {
                         Thread.Sleep(10);
@@ -294,7 +299,7 @@ namespace IDL_for_NaturL
                     break;
             }
         }
-
+        
         private float CompletionScore(string reference, string input)
         {
             float sum = 0;
@@ -339,18 +344,23 @@ namespace IDL_for_NaturL
 
         public class MyCompletionData : ICompletionData
         {
-            public MyCompletionData(string text, Language language, TextEditor lastfocusedtexteditor)
+            public MyCompletionData(string text,string description,Language language, TextEditor lastfocusedtexteditor, Action OnTab)
             {
                 this.Text = text;
+                this.description = description;
                 this.language = language;
                 this.Lastfocusedtexteditor = lastfocusedtexteditor;
+                this.action = OnTab;
             }
+
+            private Action action;
 
             public System.Windows.Media.ImageSource Image
             {
                 get { return null; }
             }
 
+            private string description;
             public TextEditor Lastfocusedtexteditor { get; private set; }
             public Language language { get; private set; }
             public string Text { get; private set; }
@@ -363,7 +373,7 @@ namespace IDL_for_NaturL
 
             public object Description
             {
-                get { return "Description for " + this.Text; }
+                get { return this.description;  }
             }
             //+ SetDesc(Text)
 
@@ -398,6 +408,7 @@ namespace IDL_for_NaturL
                 textArea.Document.Replace(mySegment, SetTextDep());
                 Lastfocusedtexteditor.CaretOffset = SetOffSet(offset, Lastfocusedtexteditor.Text, SetTextDep().Length);
                 ScrollIfIsLastsLines(copyoffset);
+                action();
             }
 
             public string SetTextDep()
@@ -407,7 +418,7 @@ namespace IDL_for_NaturL
                     case "fonction":
                         return "fonction \\NOM/(\\PARAMETRES/) -> \\TYPE_RETOUR/\n" +
                                "\tvariables\n\t\t\\VARIABLES/\n" +
-                               "debut\n\t\\CODE/\n\tretourner\nfin";
+                               "debut\n\t\\CODE/\nfin";
                     case "variables":
                         return "variables";
                     case "debut":

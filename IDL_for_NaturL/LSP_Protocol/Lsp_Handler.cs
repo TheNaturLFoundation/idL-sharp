@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
@@ -28,9 +29,7 @@ namespace IDL_for_NaturL
             this.lspReceiver = lspReceiver;
             server.Start();
             server.OutputDataReceived += ReceiveData;
-            server.ErrorDataReceived += (sender, args) => Console.WriteLine(args.Data);
             server.BeginOutputReadLine();
-            server.BeginErrorReadLine();
             this.server = server;
         }
 
@@ -38,7 +37,6 @@ namespace IDL_for_NaturL
 
         public void RequestDefinition(Position position, string uri)
         {
-            Console.WriteLine("Request definition");
             RequestMessage newMessage = new RequestMessage(++id,
                 new ConcreteDefinitionParams(new ConcreteTextDocumentIdentifier(uri), position),
                 "textDocument/definition");
@@ -52,7 +50,6 @@ namespace IDL_for_NaturL
 
         public void RequestKeywords(Position position, string uri)
         {
-            Console.WriteLine("Request Keywords");
             RequestMessage newMessage = new RequestMessage
             (
                 ++id,
@@ -68,7 +65,6 @@ namespace IDL_for_NaturL
 
         public void InitializeRequest(int processId, string uri, ClientCapabilities capabilities)
         {
-            Console.WriteLine("Initialize request");
             Initialize_Params initializeParams =
                 new Initialize_Params(processId, uri, capabilities);
             RequestMessage newmessage = new RequestMessage(++id, initializeParams, "initialize");
@@ -81,7 +77,6 @@ namespace IDL_for_NaturL
         
         public void InitializedNotification()
         {
-            Console.WriteLine("Initialize notification");
             InitializedNotification initRequest =
                 new InitializedNotification();
             Notification_Message initializeNotification =
@@ -94,7 +89,6 @@ namespace IDL_for_NaturL
 
         public void ExitNotification()
         {
-            Console.WriteLine("Exit notification");
             ExitNotification exitNotification =
                 new ExitNotification();
             Notification_Message notificationMessage = new Notification_Message("exit", exitNotification);
@@ -133,8 +127,6 @@ namespace IDL_for_NaturL
         public void DidChangeNotification(VersionedTextDocumentIdentifier versionedTextDocumentIdentifier,
             IEnumerable<TextDocumentContentChangeEvent> contentchangesEvents)
         {
-            
-            Console.WriteLine("Did change notification");
             DidChangeTextDocument document =
                 new ConcreteDidChangeTextDocument(versionedTextDocumentIdentifier,
                     contentchangesEvents);
@@ -148,7 +140,6 @@ namespace IDL_for_NaturL
 
         public void DidCloseNotification(string uri)
         {
-            Console.WriteLine("Did close notification");
             DidCloseTextDocument document =
                 new ConcreteDidCloseTextDocument(new ConcreteTextDocumentIdentifier(uri));
             Notification_Message notificationMessage =
@@ -176,12 +167,12 @@ namespace IDL_for_NaturL
             string data = e.Data.Replace("{", "{\n").Replace("}", "}\n").Replace(",", ",\n").Replace("[", "[\n")
                 .Replace("]", "]\n");
             JObject receivedData = (JObject) JsonConvert.DeserializeObject(data);
+            bool error = false;
             if (IsPropertyExist(receivedData, "id"))
             {
                 if (IsPropertyExist(receivedData, "error"))
                 {
-                    Console.WriteLine("Error");
-                    return;
+                    error = true;
                 }
                 // It is a response if we get there.
                 // Now need to find the id of the method called that was previously serialized
@@ -201,11 +192,23 @@ namespace IDL_for_NaturL
                 switch (method)
                 {
                     case "textDocument/definition":
-                        lspReceiver.JumpToDefinition(receivedData["result"].ToObject<Location>());
+                        if (!error)
+                        {
+                            lspReceiver.JumpToDefinition(receivedData["result"].ToObject<Location>());
+                        }
                         break;
                     case "textDocument/completion":
                         JArray items = (JArray) receivedData["result"];
-                        lspReceiver.Completion(items.ToObject<IList<CompletionItem>>());
+                        if (!error)
+                        {
+                            Console.WriteLine("Context Keywords");
+                            lspReceiver.Completion(items.ToObject<IList<CompletionItem>>());
+                        }
+                        else
+                        {
+                            Console.WriteLine("Constant Keywords");
+                            lspReceiver.Completion(new List<CompletionItem>());
+                        }
                         break;
                     case "shudown":
                         //ExitNotification();
