@@ -55,10 +55,7 @@ namespace IDL_for_NaturL
             "sinon",
             "et",
             "non",
-            "entier",
-            "reel",
             "booleen",
-            "chaine",
             "caractere",
             "liste",
             "rien",
@@ -68,7 +65,7 @@ namespace IDL_for_NaturL
 
         private Queue<TextDocumentContentChangeEvent> documentsList = new Queue<TextDocumentContentChangeEvent>();
         private List<string> ContextKeywords = new List<string>();
-        private Dictionary<string,string> keyWordsDescriptions = new Dictionary<string, string>();
+        private Dictionary<string, string> keyWordsDescriptions = new Dictionary<string, string>();
         private double lastTypedTime;
         private int version;
 
@@ -118,22 +115,30 @@ namespace IDL_for_NaturL
 
         private IList<ICompletionData> GetDataList(string lastTypedWord, TextEditor textEditor)
         {
+            Console.WriteLine("Called Get Data list");
             completionWindow =
                 CompletionWindow.GetInstance(textEditor.TextArea);
             IList<ICompletionData> data =
                 completionWindow.CompletionList.CompletionData;
             Dictionary<string, float> keywordsScore = new Dictionary<string, float>();
+            IOrderedEnumerable<string> sorted;
             ContextKeywords.ForEach(keyword =>
-                keywordsScore.Add(keyword, CompletionScore(keyword, lastTypedWord)));
-            IOrderedEnumerable<string> sorted =
-                ContextKeywords.Where(keyword => keywordsScore[keyword] >= 0)
-                    .OrderBy(keyword => keywordsScore[keyword]);
+                keywordsScore.TryAdd(keyword, CompletionScore(keyword, lastTypedWord)));
+            sorted = ContextKeywords.Where(keyword => { return keywordsScore[keyword] >= 0; })
+                .OrderBy(keyword => keywordsScore[keyword]);
+
 
             foreach (var keyword in sorted)
             {
-                keyWordsDescriptions.TryGetValue(keyword, out string description);
+                if (keyword == null)
+                {
+                    continue;
+                }
+
+                string description = default;
+                keyWordsDescriptions?.TryGetValue(keyword, out description);
                 MyCompletionData myCompletionData =
-                    new MyCompletionData(keyword,description ,language, textEditor, () => CodeBoxText(null,null));
+                    new MyCompletionData(keyword, description, language, textEditor, () => CodeBoxText(null, null));
                 data.Add(myCompletionData);
             }
 
@@ -147,16 +152,22 @@ namespace IDL_for_NaturL
             {
                 lastTypedWord = GetLastTypedWord(lastTypedWord, textEditor);
             }
-            IList<ICompletionData> data = GetDataList(lastTypedWord, textEditor);
+
+            IList<ICompletionData> data;
+            lock (ContextKeywords)
+            {
+                data = GetDataList(lastTypedWord, textEditor);
+            }
             if (data.Count == 0)
             {
                 completionWindow.Close();
             }
-            
+
             if (data.Count != 0 && !string.IsNullOrEmpty(lastTypedWord))
             {
                 completionWindow.Show();
             }
+
             completionWindow.CompletionList.SelectItem("");
         }
 
@@ -169,9 +180,12 @@ namespace IDL_for_NaturL
         {
             TextEditor editor = _lastFocusedTextEditor;
             Dictionary<char, char> specialChars =
-                new Dictionary<char, char> {{'\'', '\''}, {'\"', '\"'}, 
-                    {'\\', '/'}, {'[', ']'}, {'(', ')'}};
-            if (specialChars.TryGetValue(@char, out char char1) 
+                new Dictionary<char, char>
+                {
+                    {'\'', '\''}, {'\"', '\"'},
+                    {'\\', '/'}, {'[', ']'}, {'(', ')'}
+                };
+            if (specialChars.TryGetValue(@char, out char char1)
                 && (!(editor.CaretOffset < editor.Text.Length) || char1 != editor.Text[editor.CaretOffset]))
             {
                 editor.Document.Insert(editor.CaretOffset, char1.ToString());
@@ -180,21 +194,24 @@ namespace IDL_for_NaturL
             else if (editor.CaretOffset < editor.Text.Length &&
                      specialChars.ContainsValue(@char) && @char == editor.Text[editor.CaretOffset])
             {
-                editor.Document.Remove(editor.CaretOffset,1);
+                editor.Document.Remove(editor.CaretOffset, 1);
             }
         }
 
-        
+
         public void DeleteSpecialChars()
         {
             Dictionary<char, char> specialChars =
-                new Dictionary<char, char> {{'\'', '\''}, {'\"', '\"'}, 
-                    {'\\', '/'}, {'[', ']'}, {'(', ')'}};
+                new Dictionary<char, char>
+                {
+                    {'\'', '\''}, {'\"', '\"'},
+                    {'\\', '/'}, {'[', ']'}, {'(', ')'}
+                };
             TextEditor editor = _lastFocusedTextEditor;
             int offset = editor.CaretOffset;
             if (editor.CaretOffset > 0 && editor.CaretOffset < editor.Text.Length
-                                       && specialChars.TryGetValue(editor.Text[offset-1], out char ch1)
-                                       && specialChars[editor.Text[offset-1]] == editor.Text[offset])
+                                       && specialChars.TryGetValue(editor.Text[offset - 1], out char ch1)
+                                       && specialChars[editor.Text[offset - 1]] == editor.Text[offset])
             {
                 editor.Document.Remove(offset, 1);
             }
@@ -208,6 +225,7 @@ namespace IDL_for_NaturL
             {
                 DeleteSpecialChars();
             }
+
             if ((got == '\x08' && string.IsNullOrEmpty(got.ToString()))
                 || (!char.IsLetterOrDigit(got) && got != '\x08'))
             {
@@ -218,17 +236,18 @@ namespace IDL_for_NaturL
             TextEditor textEditor = _lastFocusedTextEditor;
             TextLocation textLocation = textEditor.Document.GetLocation(
                 textEditor.CaretOffset);
-            Position position = new Position(textLocation.Line-1, textLocation.Column-1);
+            Position position = new Position(textLocation.Line - 1, textLocation.Column - 1);
             string file = _currentTabHandler._file;
             string path = string.IsNullOrEmpty(file) ? _currentTabHandler.playground : "file://" + file;
             LspSender.RequestKeywords(position, path);
-            Dispatcher.InvokeAsync(() => AutoComplete(_lastFocusedTextEditor));
+            AutoComplete(_lastFocusedTextEditor);
         }
 
         public double GetTimeStamp()
         {
             return DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
+
         public void SendChanges(string currentUri)
         {
             double currentTime = GetTimeStamp();
@@ -245,19 +264,22 @@ namespace IDL_for_NaturL
 
         public void CodeBoxText(object sender, TextCompositionEventArgs e)
         {
-            string currentUri = _currentTabHandler._file == null ? _currentTabHandler.playground :
-                "file://" + _currentTabHandler._file;
+            string currentUri = _currentTabHandler._file == null
+                ? _currentTabHandler.playground
+                : "file://" + _currentTabHandler._file;
             string text = _lastFocusedTextEditor.Text;
             if (sender is Key key && key == Key.Back && _lastFocusedTextEditor.CaretOffset > 1)
             {
-                text = text.Remove(_lastFocusedTextEditor.CaretOffset-1, 1);
+                text = text.Remove(_lastFocusedTextEditor.CaretOffset - 1, 1);
             }
+
             text = text.Replace("\r", "");
             documentsList.Enqueue(new TextDocumentContentChangeEvent(text));
             lock (this)
             {
                 lastTypedTime = GetTimeStamp();
             }
+
             Thread thread = new Thread(_ =>
             {
                 Thread.Sleep(500);
@@ -269,7 +291,7 @@ namespace IDL_for_NaturL
                 documentsList.Dequeue();
             }
         }
-        
+
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -281,7 +303,7 @@ namespace IDL_for_NaturL
                     TemplatesManagerOnTab(_lastFocusedTextEditor, e);
                     return;
                 case Key.Back:
-                    CodeBox_TextArea_KeyDown(null,null);
+                    CodeBox_TextArea_KeyDown(null, null);
                     CodeBoxText(Key.Back, null);
                     break;
                 case Key.Y when Keyboard.Modifiers == ModifierKeys.Control:
@@ -299,18 +321,25 @@ namespace IDL_for_NaturL
                     break;
             }
         }
-        
+
         private float CompletionScore(string reference, string input)
         {
             float sum = 0;
 
-            Dictionary<char, int> indexes = new Dictionary<char, int>();
+            Dictionary<char, List<int>> indexes = new Dictionary<char, List<int>>();
             for (var index = 0; index < reference.Length; index++)
             {
                 char chr = reference[index];
                 try
                 {
-                    indexes.Add(chr, index);
+                    try
+                    {
+                        indexes[chr].Add(index);
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        indexes.Add(chr, new List<int> {index});
+                    }
                 }
                 catch (ArgumentException e)
                 {
@@ -319,15 +348,25 @@ namespace IDL_for_NaturL
 
             for (var i = 0; i < input.Length; i++)
             {
+                int index;
                 var chr = input[i];
                 if (chr == '\x00') continue;
-                if (!indexes.TryGetValue(chr, out int index))
+                if (!indexes.TryGetValue(chr, out List<int> indexlist))
                 {
                     index = -1;
                 }
                 else
                 {
-                    indexes.Remove(chr);
+                    try
+                    {
+                        index = indexlist[0];
+                        indexlist.RemoveAt(0);
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        indexes.Remove(chr);
+                        index = -1;
+                    }
                 }
 
                 index += 1;
@@ -344,7 +383,8 @@ namespace IDL_for_NaturL
 
         public class MyCompletionData : ICompletionData
         {
-            public MyCompletionData(string text,string description,Language language, TextEditor lastfocusedtexteditor, Action OnTab)
+            public MyCompletionData(string text, string description, Language language,
+                TextEditor lastfocusedtexteditor, Action OnTab)
             {
                 this.Text = text;
                 this.description = description;
@@ -373,7 +413,7 @@ namespace IDL_for_NaturL
 
             public object Description
             {
-                get { return this.description;  }
+                get { return this.description; }
             }
             //+ SetDesc(Text)
 

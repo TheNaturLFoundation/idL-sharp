@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
@@ -11,6 +12,7 @@ using System.Threading;
 using System.Windows.Threading;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
+using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -29,8 +31,11 @@ namespace IDL_for_NaturL
             this.lspReceiver = lspReceiver;
             server.Start();
             server.OutputDataReceived += ReceiveData;
+            server.ErrorDataReceived += (sender, args) => Console.WriteLine(args.Data);
             server.BeginOutputReadLine();
+            server.BeginErrorReadLine();
             this.server = server;
+            
         }
 
         private LspReceiver lspReceiver;
@@ -120,6 +125,7 @@ namespace IDL_for_NaturL
                 new Notification_Message("textDocument/didOpen", document);
             string json = JsonConvert.SerializeObject(notificationMessage);
             string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
+            Console.WriteLine("Header length did open: " + json.Length);
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
         }
@@ -201,7 +207,6 @@ namespace IDL_for_NaturL
                         JArray items = (JArray) receivedData["result"];
                         if (!error)
                         {
-                            Console.WriteLine("Context Keywords");
                             lspReceiver.Completion(items.ToObject<IList<CompletionItem>>());
                         }
                         else

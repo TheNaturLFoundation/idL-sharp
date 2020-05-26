@@ -24,7 +24,7 @@ namespace IDL_for_NaturL
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : LspReceiver
-    {    
+    {
         private int _tabInt;
         private int _currentTab;
         private string _currenttabId = "0";
@@ -220,7 +220,6 @@ namespace IDL_for_NaturL
             CodeBox.TextArea.TextEntered += CodeBox_TextArea_KeyDown;
             CodeBox.TextArea.TextEntered += CodeBoxText;
             // Events called on click
-            CodeBox.TextArea.PreviewMouseDown += JumpToDefinitionEvent;
             BrushConverter converter = new BrushConverter();
             Brush brush = (Brush) converter.ConvertFrom("#ffeac8");
             Brush borderbrush = (Brush) converter.ConvertFrom("#ed9200");

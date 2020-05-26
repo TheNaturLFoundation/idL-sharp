@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using Dragablz;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
@@ -166,7 +167,25 @@ namespace IDL_for_NaturL
 
         private void DebugCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            DeleteWhiteSpaceLine(1);
+            TextEditor CodeBox = (TextEditor) FindName("CodeBox" + _currenttabId);
+            Popup myPopup = new Popup
+            {
+                PlacementTarget = CodeBox,
+                PlacementRectangle = new Rect(),
+                PopupAnimation = PopupAnimation.Slide,
+                AllowsTransparency = true
+            };
+            TextBlock popupText = new TextBlock
+            {
+                Text = "Hello",
+                Background = Brushes.Transparent,
+                Foreground = Brushes.Red,
+                TextWrapping = TextWrapping.Wrap
+            };
+            myPopup.Child = popupText;
+            CodeBox.ToolTip = myPopup;
+            myPopup.IsOpen = true;
+            
             TextEditor ed = _lastFocusedTextEditor;
             TextLocation location = ed.Document.GetLocation(ed.CaretOffset);
             LspSender.RequestDefinition(new Position(location.Line-1,location.Column-1),

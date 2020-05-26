@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml;
@@ -33,21 +34,25 @@ namespace IDL_for_NaturL
                 _lastFocusedTextEditor.Document.GetOffset(start.line+1, start.character+1));
             int endPos = Dispatcher.Invoke(() =>
                 _lastFocusedTextEditor.Document.GetOffset(end.line+1, end.character+1));
-            Dispatcher.Invoke(() => _lastFocusedTextEditor.Select(startPos, endPos - startPos));
+            Dispatcher.Invoke(() => _lastFocusedTextEditor.Select(startPos, endPos - startPos + 1));
         }
 
         
 
         public void Completion(IList<CompletionItem> keywords)
         {
-            ContextKeywords.Clear();
-            keyWordsDescriptions.Clear();
-            foreach (var keyword in keywords)
+            lock (ContextKeywords)
             {
-                keyWordsDescriptions.Add(keyword.label, keyword.detail);
+                ContextKeywords = new List<string>();
+                keyWordsDescriptions = new Dictionary<string, string>();
+                foreach (var keyword in keywords)
+                {
+                    keyWordsDescriptions.Add(keyword.label, keyword.detail);
+                }
+                ContextKeywords.AddRange(keywords.Select(item => item.label));
+                ContextKeywords.AddRange(ConstantKeywords);
+                Console.WriteLine("Answered Request");
             }
-            ContextKeywords.AddRange(keywords.Select(item => item.label));
-            ContextKeywords.AddRange(ConstantKeywords);
         }
 
         public void ClearLineTransformers(string uri)
@@ -91,7 +96,12 @@ namespace IDL_for_NaturL
         public int DeleteWhiteSpaceLine(int line)
         {
             TextEditor textEditor = _lastFocusedTextEditor;
+            if (line >= textEditor.Text.Length) return 0;
             string[] text = textEditor.Text.Split('\n');
+            if (line >= text.Length)
+            {
+                return 0;
+            }
             string linetext = text[line];
             int offset = 1;
             foreach (char @char in linetext)
@@ -134,17 +144,5 @@ namespace IDL_for_NaturL
                 SetLineTransformers(diagnostics, uri);
             });
         }
-
-        private void JumpToDefinitionEvent(object sender, MouseButtonEventArgs e)
-        {
-            if (Keyboard.Modifiers != ModifierKeys.Control) return;
-            TextLocation location = _lastFocusedTextEditor.Document.GetLocation(
-                _lastFocusedTextEditor.CaretOffset);
-            string filename = _currentTabHandler._file;
-            string path = string.IsNullOrEmpty(filename) ? _currentTabHandler.playground : "file://" + filename;
-            Dispatcher.Invoke(() => 
-                LspSender.RequestDefinition(new Position(location.Line-1,location.Column), path));
-        }
-        
     }
 }
