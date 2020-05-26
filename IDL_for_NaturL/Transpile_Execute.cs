@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using System.Windows;
@@ -11,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Input;
 using System.Windows.Media;
+using ICSharpCode.AvalonEdit.Rendering;
 
 namespace IDL_for_NaturL
 {
@@ -25,7 +27,11 @@ namespace IDL_for_NaturL
 
         private void Transpile(object sender, RoutedEventArgs routedEventArgs)
         {
-            if (string.IsNullOrEmpty(((TextEditor) FindName("CodeBox" + _currenttabId)).Text)) return;
+            TextEditor STD = (TextEditor) FindName("STD" + _currenttabId);
+            TextEditor CodeBox = (TextEditor) FindName("CodeBox" + _currenttabId);
+            TextEditor PythonBox = (TextEditor) FindName("python" + _currenttabId);
+            STD.TextArea.TextView.LineTransformers.Clear();
+            if (string.IsNullOrEmpty(CodeBox.Text)) return;
             string arguments = language switch
             {
                 IDL_for_NaturL.Language.French => "--language french",
@@ -59,42 +65,37 @@ namespace IDL_for_NaturL
             StreamWriter inputWriter = _process.StandardInput;
             StreamReader reader = _process.StandardError;
             StreamReader outputreader = _process.StandardOutput;
-            inputWriter.Write(((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
+            inputWriter.Write(CodeBox.Text);
             inputWriter.Close();
             string error = reader.ReadLine();
             string output = outputreader.ReadToEnd();
             if (error == null)
             {
-                ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.ForestGreen;
-                if (FrenchBox.IsChecked)
-                {
-                    ((TextEditor) FindName("STD" + _currenttabId)).Text = "Transpilation réussie";
-                }
-                else
-                {
-                    ((TextEditor) FindName("STD" + _currenttabId)).Text = "Transpilation succeeded";
-                }
-
-                ((TextEditor) FindName("python" + _currenttabId)).Text = output;
+                STD.Foreground = Brushes.ForestGreen;
+                STD.Text = FrenchBox.IsChecked ? "Transpilation réussie" : "Transpilation succeeded";
+                PythonBox.Text = output;
             }
             else
             {
                 if (error[0] == 'W')
                 {
-                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Orange;
-                    ((TextEditor) FindName("STD" + _currenttabId)).Text = error;
-                    ((TextEditor) FindName("python" + _currenttabId)).Text = output;
+                    STD.Foreground = Brushes.Orange;
+                    STD.Text = error;
+                    PythonBox.Text = output;
                 }
                 else
                 {
-                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Red;
-                    ((TextEditor) FindName("STD" + _currenttabId)).Text = error;
+                    STD.Foreground = Brushes.Red;
+                    STD.Text = error;
                 }
             }
         }
-
+        
         private void Execute(object sender, RoutedEventArgs e)
         {
+            TextEditor STD = Dispatcher.Invoke(() =>(TextEditor) FindName("STD" + _currenttabId));
+            STD.TextArea.TextView.LineTransformers.Clear();
+            TextEditor CodeBox = Dispatcher.Invoke(() => (TextEditor) FindName("CodeBox" + _currenttabId));
             if (string.IsNullOrEmpty(((TextEditor) FindName("CodeBox" + _currenttabId)).Text)) return;
             string arguments = language switch
             {
@@ -110,8 +111,6 @@ namespace IDL_for_NaturL
                     WorkingDirectory = "resources/",
                     Arguments = arguments,
                     EnvironmentVariables = {["NATURLPATH"] = Path.GetFullPath("resources")},
-                    StandardOutputEncoding = Encoding.UTF8,
-                    StandardErrorEncoding = Encoding.UTF8,
                     UseShellExecute = false,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
@@ -124,13 +123,15 @@ namespace IDL_for_NaturL
             StreamWriter inputWriter = _process.StandardInput;
             StreamReader reader = _process.StandardError;
             StreamReader outputreader = _process.StandardOutput;
-            inputWriter.Write(((TextEditor) FindName("CodeBox" + _currenttabId)).Text);
+            inputWriter.Write(CodeBox.Text);
             inputWriter.Close();
             _process.WaitForExit();
-            string errorTranspile = reader.ReadLine();
+            string errorTranspile = reader.ReadToEnd();
             string outputTranspile = outputreader.ReadToEnd();
-            if (errorTranspile == null)
+            bool containsError = errorTranspile.Contains("Erreur") || errorTranspile.Contains("Error");
+            if (!containsError)
             {
+                STD.Foreground = Brushes.Black;
                 _processPython = new Process
                 {
                     StartInfo =
@@ -147,35 +148,36 @@ namespace IDL_for_NaturL
                     },
                     EnableRaisingEvents = true,
                 };
-                ((TextEditor) FindName("STD" + _currenttabId)).Clear();
+
+                STD.Clear();
+                STD.TextArea.TextView.LineTransformers.Clear();
                 _processPython.Start();
-
                 _processPythonRunning = true;
-
                 inputWriter = _processPython.StandardInput;
                 inputWriter.Write(outputTranspile);
                 inputWriter.Close();
+                string[] warnings = errorTranspile.Split('\n');
+                for (int i = 0; i < warnings.Length-1; i++)
+                {
+                    STD.TextArea.TextView.LineTransformers.Add(new STDColorizer(i+1,DiagnosticSeverity.Warning));
+                    STD.Text += warnings[i];
+                }
                 _processPython.OutputDataReceived += (sender2, e2) =>
                 {
-                        _processPython.Suspend();
-                        Thread.Sleep(10);
-                        _processPython.Resume();
-                        Dispatcher.Invoke(() =>
-                        {
-                            ((TextEditor) FindName("STD" + _currenttabId)).Foreground = Brushes.Black;
-                            ((TextEditor) FindName("STD" + _currenttabId)).Text += e2.Data + '\n';
-                            ((TextEditor) FindName("STD" + _currenttabId)).ScrollToEnd();
-                        });
-
+                    _processPython.Suspend();
+                    Thread.Sleep(10);
+                    _processPython.Resume();
+                    Dispatcher.Invoke(() =>
+                    {
+                        STD.Text += e2.Data + '\n';
+                        STD.ScrollToEnd();
+                    });
                 };
                 _processPython.ErrorDataReceived += (sender1, e1) => Dispatcher.Invoke(() =>
                 {
-                    if (string.IsNullOrEmpty(e1.Data) || _processPythonRunning) return;
-
-
-                    ((TextEditor) FindName("STD" + _currenttabId)).Foreground =
-                        e1.Data[0] == 'W' ? Brushes.Orange : Brushes.Red;
-                    ((TextEditor) FindName("STD" + _currenttabId)).Text += e1.Data;
+                    if (string.IsNullOrEmpty(e1.Data)) return;
+                    STD.Foreground = Brushes.Red;
+                    STD.Text += e1.Data;
                 });
                 _processPython.Exited += (sender3, e3) =>
                 {
@@ -187,9 +189,8 @@ namespace IDL_for_NaturL
             }
             else
             {
-                ((TextEditor) FindName("STD" + _currenttabId)).Foreground =
-                    errorTranspile[0] == 'W' ? Brushes.Orange : Brushes.Red;
-                ((TextEditor) FindName("STD" + _currenttabId)).Text = errorTranspile;
+                STD.Foreground = Brushes.Red;
+                STD.Text = errorTranspile;
             }
         }
 

@@ -101,52 +101,53 @@ namespace IDL_for_NaturL
             {
                 case 0:
                     Color_keywords.Foreground = brush;
-                    Bold_Keywords.Foreground = brush;
+                    //Bold_Keywords.Foreground = brush;
                     break;
                 case 1:
                     Color_functions.Foreground = brush;
-                    Bold_Functions.Foreground = brush;
+                    //Bold_Functions.Foreground = brush;
                     break;
                 case 2:
                     Color_types.Foreground = brush;
-                    Bold_Types.Foreground = brush;
+                    //Bold_Types.Foreground = brush;
                     break;
                 case 3:
                     Color_truefalse.Foreground = brush;
-                    Bold_TrueFalse.Foreground = brush;
+                    //Bold_TrueFalse.Foreground = brush;
                     break;
             }
         }
-
         private void Selected_Combo_OnSelected(object sender, RoutedEventArgs e)
         {
             selected_item = Selected_Combo.SelectedIndex;
         }
 
+        // These are functions that control the bold not implemented because of lack of time
+        // This would have been useful in order to allow the user to chose if its text is bold or not
         private void Bold_Keywords_OnChecked(object sender, RoutedEventArgs e)
         {
-            if (Bold_Keywords.IsChecked != null && (bool) Bold_Keywords.IsChecked)
+            //if (Bold_Keywords.IsChecked != null && (bool) Bold_Keywords.IsChecked)
             {
             }
         }
 
         private void Bold_Types_OnChecked(object sender, RoutedEventArgs e)
         {
-            if (Bold_Types.IsChecked != null && (bool) Bold_Types.IsChecked)
+            //if (Bold_Types.IsChecked != null && (bool) Bold_Types.IsChecked)
             {
             }
         }
 
         private void Bold_TrueFalse_OnChecked(object sender, RoutedEventArgs e)
         {
-            if (Bold_TrueFalse.IsChecked != null && (bool) Bold_TrueFalse.IsChecked)
+            //if (Bold_TrueFalse.IsChecked != null && (bool) Bold_TrueFalse.IsChecked)
             {
             }
         }
 
         private void Bold_Functions_OnChecked(object sender, RoutedEventArgs e)
         {
-            if (Bold_Functions.IsChecked != null && (bool) Bold_Functions.IsChecked)
+            //if (Bold_Functions.IsChecked != null && (bool) Bold_Functions.IsChecked)
             {
             }
         }

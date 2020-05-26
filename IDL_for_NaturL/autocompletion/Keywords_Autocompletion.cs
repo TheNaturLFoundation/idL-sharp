@@ -19,6 +19,7 @@ using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Threading;
 using Dragablz;
@@ -231,11 +232,6 @@ namespace IDL_for_NaturL
             {
                 Dispatcher.Invoke(() =>
                 {
-                    foreach (var el in documentsList)
-                    {
-                        Console.WriteLine("------------------------------------------------");
-                        Console.WriteLine("Text" + el.text);
-                    }
                     LspSender.DidChangeNotification(
                         new VersionedTextDocumentIdentifier(++version, currentUri),
                         documentsList.Reverse());
@@ -248,7 +244,7 @@ namespace IDL_for_NaturL
             string currentUri = _currentTabHandler._file == null ? _currentTabHandler.playground :
                 "file://" + _currentTabHandler._file;
             string text = _lastFocusedTextEditor.Text;
-            if (e == null && _lastFocusedTextEditor.CaretOffset > 1)
+            if (sender is Key key && key == Key.Back && _lastFocusedTextEditor.CaretOffset > 1)
             {
                 text = text.Remove(_lastFocusedTextEditor.CaretOffset-1, 1);
             }
@@ -282,7 +278,19 @@ namespace IDL_for_NaturL
                     return;
                 case Key.Back:
                     CodeBox_TextArea_KeyDown(null,null);
-                    CodeBoxText(null,null);
+                    CodeBoxText(Key.Back, null);
+                    break;
+                case Key.Y when Keyboard.Modifiers == ModifierKeys.Control:
+                case Key.X when Keyboard.Modifiers == ModifierKeys.Control:
+                case Key.C when Keyboard.Modifiers == ModifierKeys.Control:
+                case Key.V when Keyboard.Modifiers == ModifierKeys.Control:
+                case Key.Z when Keyboard.Modifiers == ModifierKeys.Control:
+                    Thread thread = new Thread(o =>
+                    {
+                        Thread.Sleep(10);
+                        Dispatcher.Invoke(() => CodeBoxText(null, null));
+                    });
+                    thread.Start();
                     break;
             }
         }

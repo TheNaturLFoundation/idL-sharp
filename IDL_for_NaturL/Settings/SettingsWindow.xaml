@@ -192,17 +192,17 @@
                                                     Height="215" Width="190" Margin="10,10,0,0"
                                                     MouseMove="Color_Changed" MouseLeftButtonDown="MouseLeftDown" MouseLeftButtonUp="MouseLeftUp"/>
                         <TextBlock x:Name="Color_keywords" Margin="382,18,236,336" Text="Mots clefs:&#x0a;fonction&#x0a;si&#x0a;sinon_si" Foreground="#fa8d3e" FontWeight="Bold" FontFamily="Consolas"/>
-                        <CheckBox Name="Bold_Keywords" Checked="Bold_Keywords_OnChecked"  Content="Gras" Foreground="#fa8d3e" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top"
-                                  BorderThickness="1" IsChecked="True"/>
+                        <!--<CheckBox Name="Bold_Keywords" Checked="Bold_Keywords_OnChecked"  Content="Gras" Foreground="#fa8d3e" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top"
+                                  BorderThickness="1" IsChecked="True"/>-->
                         <TextBlock x:Name="Color_functions" Margin="498,18,123,336" Text="Fonctions:&#x0a;afficher&#x0a;longueur&#x0a;" Foreground="#ff9940" FontWeight="Bold" FontFamily="Consolas"/>
-                        <CheckBox Name="Bold_Types"  Content="Gras" Foreground="#ff9940" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="498,81,0,0" VerticalAlignment="Top"
-                                  BorderThickness="1" IsChecked="True" Checked="Bold_Types_OnChecked"/>
+                        <!--<CheckBox Name="Bold_Types"  Content="Gras" Foreground="#ff9940" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="498,81,0,0" VerticalAlignment="Top"
+                                  BorderThickness="1" IsChecked="True" Checked="Bold_Types_OnChecked"/>-->
                         <TextBlock x:Name="Color_types" Margin="378,132,244,222" Text="Types:&#x0a;entier&#x0a;booleen&#x0a;chaine" Foreground="#399ee6" FontWeight="Bold" FontFamily="Consolas"/>
-                        <CheckBox Name="Bold_Functions"  Content="Gras" Foreground="#399ee6" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="378,0,0,0" VerticalAlignment="Center"
-                                  BorderThickness="1" IsChecked="True" Checked="Bold_Functions_OnChecked"/>
+                        <!--<CheckBox Name="Bold_Functions"  Content="Gras" Foreground="#399ee6" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="378,0,0,0" VerticalAlignment="Center"
+                                  BorderThickness="1" IsChecked="True" Checked="Bold_Functions_OnChecked"/>-->
                         <TextBlock x:Name="Color_truefalse" Margin="498,132,123,222" Text="Booleens:&#x0a;vrai&#x0a;faux&#x0a;" Foreground="#a37acc" FontWeight="Bold" FontFamily="Consolas"/>
-                        <CheckBox Name="Bold_TrueFalse"  Content="Gras" Foreground="#a37acc" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="498,195,0,0" VerticalAlignment="Top"
-                                  BorderThickness="1" IsChecked="True" Checked="Bold_TrueFalse_OnChecked"/>
+                        <!--<CheckBox Name="Bold_TrueFalse"  Content="Gras" Foreground="#a37acc" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="498,195,0,0" VerticalAlignment="Top"
+                                  BorderThickness="1" IsChecked="True" Checked="Bold_TrueFalse_OnChecked"/>-->
                         <ComboBox Name="Selected_Combo" HorizontalAlignment="Left" Margin="224,19,0,0" VerticalAlignment="Top" Width="120" Visibility="Visible" SelectionChanged="Selected_Combo_OnSelected">
                             <ComboBoxItem Content="Mots clefs" IsSelected="True" Background="White"/>
                             <ComboBoxItem Content="Fonctions" Background="White"/>

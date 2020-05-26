@@ -11,6 +11,7 @@ namespace IDL_for_NaturL
     {
         private int lineNumber;
         private DiagnosticSeverity _diagnosticSeverity;
+
         public LineColorizer(int lineNumber, DiagnosticSeverity diagnosticSeverity)
         {
             this.lineNumber = lineNumber;
@@ -19,7 +20,8 @@ namespace IDL_for_NaturL
 
         protected override void ColorizeLine(ICSharpCode.AvalonEdit.Document.DocumentLine line)
         {
-            if (!line.IsDeleted && line.LineNumber == lineNumber) {
+            if (!line.IsDeleted && line.LineNumber == lineNumber)
+            {
                 ChangeLinePart(line.Offset, line.EndOffset, ApplyChanges);
             }
         }
@@ -44,16 +46,51 @@ namespace IDL_for_NaturL
                     element.TextRunProperties.SetTextDecorations(myCollection);
                     break;
                 case DiagnosticSeverity.Warning:
-                     brush = (Brush) converter.ConvertFrom("#FFCC00");
-                     
-                     myUnderline = new TextDecoration();
-                     // Create a solid color brush pen for the text decoration.
-                     myUnderline.Pen = new Pen(brush, 1);
-                     myUnderline.PenThicknessUnit = TextDecorationUnit.FontRecommended;
-                     myCollection = new TextDecorationCollection();
-                     myCollection.Add(myUnderline);
-                     element.TextRunProperties.SetTextDecorations(myCollection);
-                     break;
+                    brush = (Brush) converter.ConvertFrom("#FFCC00");
+
+                    myUnderline = new TextDecoration();
+                    // Create a solid color brush pen for the text decoration.
+                    myUnderline.Pen = new Pen(brush, 1);
+                    myUnderline.PenThicknessUnit = TextDecorationUnit.FontRecommended;
+                    myCollection = new TextDecorationCollection();
+                    myCollection.Add(myUnderline);
+                    element.TextRunProperties.SetTextDecorations(myCollection);
+                    break;
+            }
+        }
+    }
+
+    class STDColorizer : DocumentColorizingTransformer
+    {
+        private int lineNumber;
+        private DiagnosticSeverity _diagnosticSeverity;
+
+        public STDColorizer(int lineNumber, DiagnosticSeverity diagnosticSeverity)
+        {
+            this.lineNumber = lineNumber;
+            this._diagnosticSeverity = diagnosticSeverity;
+        }
+
+        protected override void ColorizeLine(ICSharpCode.AvalonEdit.Document.DocumentLine line)
+        {
+            if (!line.IsDeleted && line.LineNumber == lineNumber)
+            {
+                ChangeLinePart(line.Offset, line.EndOffset, ApplyChanges);
+            }
+        }
+
+        void ApplyChanges(VisualLineElement element)
+        {
+            // This is where you do anything with the line
+            BrushConverter converter = new BrushConverter();
+            Brush brush;
+            switch (_diagnosticSeverity)
+            {
+                case DiagnosticSeverity.Warning:
+                    element.TextRunProperties.SetForegroundBrush(Brushes.Orange);
+                    break;
+                case DiagnosticSeverity.Information:
+                    break;
             }
         }
     }

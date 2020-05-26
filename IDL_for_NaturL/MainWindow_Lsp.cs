@@ -107,7 +107,7 @@ namespace IDL_for_NaturL
                 ClearLineTransformers(uri);
                 TextEditor editor = (TextEditor) FindName("CodeBox" + GetTabFromUri(uri));
                 XmlDocument doc = new XmlDocument();
-                doc.Load("resources/user_coloration.xshd");
+                doc.Load(UserSettings.syntaxFilePath);
                 editor.SyntaxHighlighting = HighlightingLoader.Load(new XmlNodeReader(doc),
                     HighlightingManager.Instance);
                 SetLineTransformers(diagnostics, uri);

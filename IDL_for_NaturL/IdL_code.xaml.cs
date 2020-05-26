@@ -11,18 +11,10 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Text;
-using System.Windows.Threading;
 using System.Windows.Media;
-using BespokeFusion;
 using Dragablz;
 using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Search;
 using IDL_for_NaturL.filemanager;
-using MaterialDesignMessageBox;
-using MaterialDesignThemes.Wpf;
-using MaterialMessageBox;
 using HighlightingManager =
     ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
@@ -214,7 +206,9 @@ namespace IDL_for_NaturL
             TextEditor PythonBox =
                 ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
                     "python_grid")).Children[0]);
-
+            TextEditor STD = 
+                (TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
+                "python_grid")).Children[3];
             // Events called in order to update attributes for research
             CodeBox.TextArea.GotFocus += CodeBoxSetLastElement;
             PythonBox.TextArea.GotFocus += PythonBoxSetLastElement;
@@ -234,6 +228,10 @@ namespace IDL_for_NaturL
             Pen pen = new Pen(borderbrush,0);
             CodeBox.TextArea.SelectionBorder = pen;
             CodeBox.TextArea.SelectionBrush = brush;
+            PythonBox.TextArea.SelectionBorder = pen;
+            PythonBox.TextArea.SelectionBrush = brush;
+            STD.TextArea.SelectionBorder = pen;
+            STD.TextArea.SelectionBrush = brush;
         }
 
         public void UpdateColorScheme(XmlDocument doc)
@@ -243,8 +241,13 @@ namespace IDL_for_NaturL
                 TextEditor CodeBox =
                     ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{element.Key}")).FindName(
                         "grid_codebox")).Children[0]);
+                TextEditor PythonBox = ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{element.Key}")).FindName(
+                    "python_grid")).Children[0]);
                 CodeBox.SyntaxHighlighting = HighlightingLoader.Load(new XmlNodeReader(doc),
                     HighlightingManager.Instance);
+                PythonBox.SyntaxHighlighting = HighlightingLoader.Load(new XmlNodeReader(doc),
+                    HighlightingManager.Instance);
+                
             }
         }
 

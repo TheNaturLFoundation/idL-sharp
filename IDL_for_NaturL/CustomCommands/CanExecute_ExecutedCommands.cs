@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using Dragablz;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
@@ -164,6 +166,9 @@ namespace IDL_for_NaturL
 
         private void DebugCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            CustomPopupPlacement placement = new CustomPopupPlacement(new Point(0,0), PopupPrimaryAxis.Horizontal);
+            ToolTip toolTip = new ToolTip 
+                {Placement = PlacementMode.Custom, Content = "Test of tooltip", IsOpen = true};
             TextEditor ed = _lastFocusedTextEditor;
             TextLocation location = ed.Document.GetLocation(ed.CaretOffset);
             LspSender.RequestDefinition(new Position(location.Line-1,location.Column-1),
