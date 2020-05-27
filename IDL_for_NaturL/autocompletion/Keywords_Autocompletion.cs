@@ -275,6 +275,7 @@ namespace IDL_for_NaturL
                 ? _currentTabHandler.playground
                 : "file://" + _currentTabHandler._file;
             string text = _lastFocusedTextEditor.Text;
+            Console.WriteLine("CodeBoxtext: " + text);
             if (sender is Key key && key == Key.Back && _lastFocusedTextEditor.CaretOffset > 1)
             {
                 text = text.Remove(_lastFocusedTextEditor.CaretOffset - 1, 1);

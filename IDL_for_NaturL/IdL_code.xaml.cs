@@ -127,13 +127,13 @@ namespace IDL_for_NaturL
                         new PublishDiagnosticsClientCapabilities())));
             if (paths.Length == 0)
             {
-                NewTabItems(_tabInt++, null);
+                NewTabItems(++_tabInt, null);
             }
             else
             {
                 foreach (string path in paths)
                 {
-                    NewTabItems(_tabInt++, path);
+                    NewTabItems(++_tabInt, path);
                 }
             }
 
@@ -237,6 +237,7 @@ namespace IDL_for_NaturL
             PythonBox.TextArea.SelectionBrush = brush;
             STD.TextArea.SelectionBorder = pen;
             STD.TextArea.SelectionBrush = brush;
+            _lastFocusedTextEditor = ((TextEditor) FindName("CodeBox" + n));
         }
 
         public void UpdateColorScheme(XmlDocument doc)
@@ -386,7 +387,7 @@ namespace IDL_for_NaturL
                 if (!tabAttributes.TryGetValue(_currenttabId,
                     out _currentTabHandler))
                 {
-                    return;
+                    
                 }
             }
             else
@@ -395,6 +396,8 @@ namespace IDL_for_NaturL
                 string i = source.Name.Replace("Tab", "");
                 tabAttributes.Remove(i);
             }
+            _lastFocusedTextEditor = (TextEditor) FindName("CodeBox" + _currenttabId);
+            CodeBoxText(null,null);
         }
 
         private void Set_Tab(int n)

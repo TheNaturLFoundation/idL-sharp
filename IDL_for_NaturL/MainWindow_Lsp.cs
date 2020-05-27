@@ -26,10 +26,10 @@ namespace IDL_for_NaturL
     public partial class MainWindow : LspReceiver
     {
         public LspSender LspSender;
-
-        private Dictionary<int, (string, IDL_for_NaturL.DiagnosticSeverity)> lineMessages =
-            new Dictionary<int, (string, IDL_for_NaturL.DiagnosticSeverity)>();
-
+        
+        private Dictionary<string, List<LineColorizer>> colorizersDictionary = new Dictionary<string, List<LineColorizer>>();
+        private Dictionary<string, Dictionary<int, (string,DiagnosticSeverity)>> uriMessages = 
+            new Dictionary<string, Dictionary<int, (string, DiagnosticSeverity)>>();
         public void JumpToDefinition(Location location)
         {
             string uri = location.uri;
@@ -80,7 +80,10 @@ namespace IDL_for_NaturL
                 if (editorFile == uri)
                 {
                     textEditor.TextArea.TextView.LineTransformers.Clear();
-                    lineMessages.Clear();
+                    if (uriMessages.TryGetValue(uri, out var lineMessages))
+                    {
+                        lineMessages.Clear();
+                    }
                     _lastFocusedTextEditor = actualEditor;
                     return;
                 }
@@ -140,9 +143,18 @@ namespace IDL_for_NaturL
                 TextEditor editor = (TextEditor) FindName("CodeBox" + tabindex);
                 DiagnosticSeverity severity = diagnostic.severity ?? DiagnosticSeverity.Information;
                 int line = diagnostic.range.start.line;
-                editor.TextArea.TextView.LineTransformers.Add(
-                    new LineColorizer(line + 1, severity, DeleteWhiteSpaceLine(line)));
-                lineMessages.Add(line + 1, (diagnostic.message, severity));
+                editor.TextArea.TextView.LineTransformers.Add(new LineColorizer(line + 1, severity, DeleteWhiteSpaceLine(line)));
+                if (uriMessages.TryGetValue(uri, out var lineMessages))
+                {
+                    lineMessages.Add(line + 1, (diagnostic.message, severity));
+                }
+                else
+                {
+                    uriMessages.Add(uri,new Dictionary<int,(string,DiagnosticSeverity)>()
+                    {
+                        {line+1, (diagnostic.message,severity)}
+                    });
+                }
                 UpdateLayout();
                 _lastFocusedTextEditor = actualEditor;
             }
@@ -154,18 +166,24 @@ namespace IDL_for_NaturL
             toolTip.IsOpen = false;
             TextLocation location = _lastFocusedTextEditor.Document.GetLocation(_lastFocusedTextEditor.CaretOffset);
             int line = location.Line;
-            if (lineMessages.TryGetValue(line, out (string, DiagnosticSeverity) tuple))
+            string uri = _currentTabHandler._file == null
+                ? _currentTabHandler.playground
+                : "file://" + _currentTabHandler._file;
+            if (uriMessages.TryGetValue(uri,out var lineMessages))
             {
-                string message = tuple.Item1;
-                DiagnosticSeverity warning = tuple.Item2;
-                var caret = _lastFocusedTextEditor.TextArea.Caret.CalculateCaretRectangle();
-                Console.WriteLine("Caret: " + caret);
-                toolTip.HorizontalOffset = caret.Width;
-                toolTip.VerticalOffset = caret.Height;
-                toolTip.Content = message;
-                toolTip.Foreground = GetBrushColorFromSeverity(warning);
-                toolTip.FontWeight = FontWeights.Bold;
-                toolTip.IsOpen = true;
+                if (lineMessages.TryGetValue(line, out (string, DiagnosticSeverity) tuple))
+                {
+                    string message = tuple.Item1;
+                    DiagnosticSeverity warning = tuple.Item2;
+                    var caret = _lastFocusedTextEditor.TextArea.Caret.CalculateCaretRectangle();
+                    Console.WriteLine("Caret: " + caret);
+                    toolTip.HorizontalOffset = caret.Width;
+                    toolTip.VerticalOffset = caret.Height;
+                    toolTip.Content = message;
+                    toolTip.Foreground = GetBrushColorFromSeverity(warning);
+                    toolTip.FontWeight = FontWeights.Bold;
+                    toolTip.IsOpen = true;
+                }
             }
         }
 
