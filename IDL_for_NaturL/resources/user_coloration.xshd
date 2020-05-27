@@ -1,147 +1,152 @@
 <?xml version="1.0"?>
 <!-- syntaxdefinition for C# 2000 by Mike Krueger -->
 <SyntaxDefinition name="naturL" extensions=".ntl">
-  <Properties>
-    <Property name="LineComment" value="//" />
-  </Properties>
-  <Digits name="Digits" bold="true" italic="false" color="#a37acc" />
-  <RuleSets>
-    <RuleSet ignorecase="false">
-      <Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' ,	.?</Delimiters>
-      <!-- ... -->
-      <Span name="BlockComment" rule="CommentMarkerSet" bold="false" italic="false" color="Green" stopateol="false">
-        <Begin>/*</Begin>
-        <End>*/</End>
-      </Span>
-      <Span name="Strings" color="Green">
-        <Begin>"</Begin>
-        <End>"</End>
-      </Span>
-      <Span name="Char" color="Green">
-        <Begin>'</Begin>
-        <End>'</End>
-      </Span>
-      <Span name="Comments" bold="true" italic="true" color="#9caab8">
-        <Begin>\</Begin>
-        <End>/</End>
-      </Span>
-      <MarkPrevious bold="true" italic="false" color="#ff9940">(</MarkPrevious>
-      <KeyWords name="Punctuation" bold="true" italic="false" color="#ed9366">
-        <Key word="," />
-        <Key word="." />
-        <Key word=";" />
-        <Key word="[" />
-        <Key word="]" />
-        <Key word="{" />
-        <Key word="}" />
-        <Key word="+" />
-        <Key word="-" />
-        <Key word="/" />
-        <Key word="%" />
-        <Key word="*" />
-        <Key word="&lt;" />
-        <Key word="&gt;" />
-        <Key word="^" />
-        <Key word="=" />
-        <Key word="~" />
-        <Key word="!" />
-        <Key word="|" />
-        <Key word="&amp;" />
-      </KeyWords>
-      <KeyWords name="Parenthesis" bold="true" italic="false" color="#ff7171">
-        <Key word="(" />
-        <Key word=")" />
-      </KeyWords>
-      <KeyWords name="Templates" bold="false" italic="true" color="Blue">
-        <Key word="\u200C" />
-      </KeyWords>
-      <KeyWords name="AccessKeywords" bold="false" italic="false" color="Black">
-        <Key word="this" />
-        <Key word="base" />
-      </KeyWords>
-      <KeyWords name="structure_words" bold="true" color="#e05a5a">
-        <Key word="fonction" />
-        <Key word="variables" />
-        <Key word="debut" />
-        <Key word="pour" />
-        <Key word="de" />
-        <Key word="jusqu_a" />
-        <Key word="faire" />
-        <Key word="retourner" />
-        <Key word="fin" />
-        <Key word="si" />
-        <Key word="sinon_si" />
-        <Key word="tant_que" />
-        <Key word="alors" />
-        <Key word="procedure" />
-        <Key word="jusqu_a" />
-        <Key word="utiliser" />
-        <Key word="sinon" />
-        <Key word="et" />
-        <Key word="and" />
-        <Key word="as" />
-        <Key word="assert" />
-        <Key word="break" />
-        <Key word="class" />
-        <Key word="continue" />
-        <Key word="def" />
-        <Key word="del" />
-        <Key word="elif" />
-        <Key word="else" />
-        <Key word="except" />
-        <Key word="exec" />
-        <Key word="False" />
-        <Key word="finally" />
-        <Key word="for" />
-        <Key word="from" />
-        <Key word="global" />
-        <Key word="if" />
-        <Key word="import" />
-        <Key word="in" />
-        <Key word="is" />
-        <Key word="lambda" />
-        <Key word="None" />
-        <Key word="nonlocal" />
-        <Key word="not" />
-        <Key word="or" />
-        <Key word="pass" />
-        <Key word="raise" />
-        <Key word="return" />
-        <Key word="True" />
-        <Key word="try" />
-        <Key word="while" />
-        <Key word="with" />
-        <Key word="yield" />
-        <Key word="async" />
-        <Key word="await" />
-      </KeyWords>
-      <KeyWords name="booleen" color="#a37acc">
-        <Key word="vrai" />
-        <Key word="faux" />
-      </KeyWords>
-      <KeyWords name="types" bold="true" color="#399ee6">
-        <Key word="entier" />
-        <Key word="reel" />
-        <Key word="chaine" />
-        <Key word="charactère" />
-        <Key word="liste" />
-        <Key word="booleen" />
-        <Key word="?" />
-        <Key word="rien" />
-        <Key word="caractere" />
-      </KeyWords>
-      <!-- ... -->
-    </RuleSet>
-    <RuleSet name="CommentMarkerSet" ignorecase="false">
-      <Delimiters>&lt;&gt;~!@%^*()-+=|\#/{}[]:;"' ,	.?</Delimiters>
-      <KeyWords name="ErrorWords" bold="true" italic="false" color="Red">
-        <Key word="TODO" />
-        <Key word="FIXME" />
-      </KeyWords>
-      <KeyWords name="WarningWords" bold="true" italic="false" color="#EEE0E000">
-        <Key word="HACK" />
-        <Key word="UNDONE" />
-      </KeyWords>
-    </RuleSet>
-  </RuleSets>
+    <Properties>
+        <Property name="LineComment" value="//"/>
+    </Properties>
+    <Digits name="Digits" bold="true" italic="false" color="#a37acc"/>
+    <RuleSets>
+        <RuleSet ignorecase="false">
+            <Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' , .?</Delimiters>
+            <!-- ... -->
+            <Span name="BlockComment" rule="CommentMarkerSet" bold="false" italic="false" color="Green"
+                  stopateol="false">
+                <Begin>/*</Begin>
+                <End>*/</End>
+            </Span>
+            <Span name="Strings" color="Green">
+                <Begin>"</Begin>
+                <End>"</End>
+            </Span>
+            <Span name="Char" color="Green">
+                <Begin>'</Begin>
+                <End>'</End>
+            </Span>
+            <Span name="Comments" bold="true" italic="true" color="#9caab8">
+                <Begin>\</Begin>
+                <End>/</End>
+            </Span>
+            <MarkPrevious bold="true" italic="false" color="#ff9940">(</MarkPrevious>
+            <KeyWords name="Punctuation" bold="true" italic="false" color="#ed9366">
+                <Key word=","/>
+                <Key word="."/>
+                <Key word=";"/>
+                <Key word="["/>
+                <Key word="]"/>
+                <Key word="{"/>
+                <Key word="}"/>
+                <Key word="+"/>
+                <Key word="-"/>
+                <Key word="/"/>
+                <Key word="%"/>
+                <Key word="*"/>
+                <Key word="&lt;"/>
+                <Key word="&gt;"/>
+                <Key word="^"/>
+                <Key word="="/>
+                <Key word="~"/>
+                <Key word="!"/>
+                <Key word="|"/>
+                <Key word="&amp;"/>
+            </KeyWords>
+            <KeyWords name="Parenthesis" bold="true" italic="false" color="#ff7171">
+                <Key word="("/>
+                <Key word=")"/>
+            </KeyWords>
+            <KeyWords name="Templates" bold="false" italic="true" color="Blue">
+                <Key word="\u200C"/>
+            </KeyWords>
+            <KeyWords name="AccessKeywords" bold="false" italic="false" color="Black">
+                <Key word="this"/>
+                <Key word="base"/>
+            </KeyWords>
+            <KeyWords name="structure_words" bold="true" color="#e05a5a">
+                <Key word="fonction"/>
+                <Key word="variables"/>
+                <Key word="debut"/>
+                <Key word="pour"/>
+                <Key word="de"/>
+                <Key word="jusqu_a"/>
+                <Key word="faire"/>
+                <Key word="retourner"/>
+                <Key word="fin"/>
+                <Key word="si"/>
+                <Key word="sinon_si"/>
+                <Key word="tant_que"/>
+                <Key word="alors"/>
+                <Key word="procedure"/>
+                <Key word="jusqu_a"/>
+                <Key word="utiliser"/>
+                <Key word="sinon"/>
+                <Key word="type_abstrait"/>
+                <Key word="attributs"/>
+                <Key word="methodes"/>
+                <Key word="et"/>
+                <Key word="and"/>
+                <Key word="as"/>
+                <Key word="assert"/>
+                <Key word="break"/>
+                <Key word="class"/>
+                <Key word="continue"/>
+                <Key word="def"/>
+                <Key word="del"/>
+                <Key word="elif"/>
+                <Key word="else"/>
+                <Key word="except"/>
+                <Key word="exec"/>
+                <Key word="False"/>
+                <Key word="finally"/>
+                <Key word="for"/>
+                <Key word="from"/>
+                <Key word="global"/>
+                <Key word="if"/>
+                <Key word="import"/>
+                <Key word="in"/>
+                <Key word="is"/>
+                <Key word="lambda"/>
+                <Key word="None"/>
+                <Key word="nonlocal"/>
+                <Key word="not"/>
+                <Key word="or"/>
+                <Key word="pass"/>
+                <Key word="raise"/>
+                <Key word="return"/>
+                <Key word="True"/>
+                <Key word="try"/>
+                <Key word="while"/>
+                <Key word="with"/>
+                <Key word="yield"/>
+                <Key word="async"/>
+                <Key word="await"/>
+            </KeyWords>
+            <KeyWords name="booleen" color="#a37acc">
+                <Key word="vrai"/>
+                <Key word="faux"/>
+            </KeyWords>
+            <KeyWords name="types" bold="true" color="#399ee6">
+                <Key word="instance"/>
+                <Key word="entier"/>
+                <Key word="reel"/>
+                <Key word="chaine"/>
+                <Key word="charactère"/>
+                <Key word="liste"/>
+                <Key word="booleen"/>
+                <Key word="?"/>
+                <Key word="rien"/>
+                <Key word="caractere"/>
+            </KeyWords>
+            <!-- ... -->
+        </RuleSet>
+        <RuleSet name="CommentMarkerSet" ignorecase="false">
+            <Delimiters>&lt;&gt;~!@%^*()-+=|\#/{}[]:;"' , .?</Delimiters>
+            <KeyWords name="ErrorWords" bold="true" italic="false" color="Red">
+                <Key word="TODO"/>
+                <Key word="FIXME"/>
+            </KeyWords>
+            <KeyWords name="WarningWords" bold="true" italic="false" color="#EEE0E000">
+                <Key word="HACK"/>
+                <Key word="UNDONE"/>
+            </KeyWords>
+        </RuleSet>
+    </RuleSets>
 </SyntaxDefinition>

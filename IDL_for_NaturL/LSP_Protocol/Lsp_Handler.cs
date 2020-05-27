@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -127,8 +128,17 @@ namespace IDL_for_NaturL
                 new ConcreteDidOpenTextDocument(new TextDocument(uri, language, version, text));
             Notification_Message notificationMessage =
                 new Notification_Message("textDocument/didOpen", document);
+            
             string json = JsonConvert.SerializeObject(notificationMessage);
-            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
+            if (json.Length > 4096)
+            {
+                document =
+                    new ConcreteDidOpenTextDocument(new TextDocument(uri, language, version, ""));
+                notificationMessage =
+                    new Notification_Message("textDocument/didOpen", document);
+                json = JsonConvert.SerializeObject(notificationMessage);
+            }
+            string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\n" + json;
             Console.WriteLine("Header length did open: " + json.Length);
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
@@ -143,7 +153,17 @@ namespace IDL_for_NaturL
             Notification_Message notificationMessage =
                 new Notification_Message("textDocument/didChange", document);
             string json = JsonConvert.SerializeObject(notificationMessage);
-            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
+            if (json.Length > 4096)
+            {
+                contentchangesEvents = new List<TextDocumentContentChangeEvent> {new TextDocumentContentChangeEvent("")};
+                document =
+                    new ConcreteDidChangeTextDocument(versionedTextDocumentIdentifier,
+                        contentchangesEvents);
+                notificationMessage =
+                    new Notification_Message("textDocument/didChange", document);
+                json = JsonConvert.SerializeObject(notificationMessage);
+            }
+            string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\n" + json;
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
         }

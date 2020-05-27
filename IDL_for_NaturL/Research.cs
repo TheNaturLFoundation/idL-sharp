@@ -98,12 +98,9 @@ namespace IDL_for_NaturL
                     return;
                 }
             }
-
+            
             textEditor.Select(index, searched.Length);
-            if (GetLineFromIndex(index) > textEditor.LineCount - 5)
-                textEditor.ScrollToEnd();
-            else
-                textEditor.BringIntoView(_lastFocusedTextEditor.TextArea.Caret.CalculateCaretRectangle());
+            textEditor.ScrollToLine(textEditor.Document.GetLineByOffset(index).LineNumber);
             index += searched.Length;
             _copyStart = index;
         }
