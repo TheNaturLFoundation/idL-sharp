@@ -36,8 +36,9 @@ namespace IDL_for_NaturL
 {
     public partial class MainWindow
     {
-        public ToolTip toolTip = new ToolTip 
-            { Placement = PlacementMode.MousePoint, PlacementTarget = _lastFocusedTextEditor};
+        public ToolTip toolTip = new ToolTip
+            {Placement = PlacementMode.MousePoint, PlacementTarget = _lastFocusedTextEditor};
+
         public List<string> ConstantKeywords = new List<string>()
         {
             "fonction",
@@ -66,7 +67,9 @@ namespace IDL_for_NaturL
             "faux",
         };
 
-        private Queue<TextDocumentContentChangeEvent> documentsList = new Queue<TextDocumentContentChangeEvent>();
+        private Dictionary<string, Queue<TextDocumentContentChangeEvent>> documentsList =
+            new Dictionary<string, Queue<TextDocumentContentChangeEvent>>();
+
         private List<string> ContextKeywords = new List<string>();
         private Dictionary<string, string> keyWordsDescriptions = new Dictionary<string, string>();
         private double lastTypedTime;
@@ -118,7 +121,6 @@ namespace IDL_for_NaturL
 
         private IList<ICompletionData> GetDataList(string lastTypedWord, TextEditor textEditor)
         {
-            Console.WriteLine("Called Get Data list");
             completionWindow =
                 CompletionWindow.GetInstance(textEditor.TextArea);
             IList<ICompletionData> data =
@@ -161,6 +163,7 @@ namespace IDL_for_NaturL
             {
                 data = GetDataList(lastTypedWord, textEditor);
             }
+
             if (data.Count == 0)
             {
                 completionWindow.Close();
@@ -262,9 +265,15 @@ namespace IDL_for_NaturL
                     {
                         Save_Click();
                     }
+
+                    //Console.WriteLine("Uri of changes: " + currentUri);
+                    while (documentsList[currentUri].Count > 1)
+                    {
+                        documentsList[currentUri].Dequeue();
+                    }
                     LspSender.DidChangeNotification(
                         new VersionedTextDocumentIdentifier(++version, currentUri),
-                        documentsList.Reverse());
+                        documentsList[currentUri]);
                 });
             }
         }
@@ -274,7 +283,6 @@ namespace IDL_for_NaturL
             string currentUri = _currentTabHandler._file == null
                 ? _currentTabHandler.playground
                 : "file://" + _currentTabHandler._file;
-            Console.WriteLine("uri is : " + currentUri);
             string text = _lastFocusedTextEditor.Text;
             if (sender is Key key && key == Key.Back && _lastFocusedTextEditor.CaretOffset > 1)
             {
@@ -282,7 +290,18 @@ namespace IDL_for_NaturL
             }
 
             text = text.Replace("\r", "");
-            documentsList.Enqueue(new TextDocumentContentChangeEvent(text));
+            try
+            {
+                documentsList[currentUri].Enqueue(new TextDocumentContentChangeEvent(text));
+            }
+            catch (KeyNotFoundException)
+            {
+                documentsList[currentUri] = new Queue<TextDocumentContentChangeEvent>(new[]
+                {
+                    new TextDocumentContentChangeEvent(text)
+                });
+            }
+
             lock (this)
             {
                 lastTypedTime = GetTimeStamp();
@@ -294,10 +313,6 @@ namespace IDL_for_NaturL
                 SendChanges(currentUri);
             });
             thread.Start();
-            if (documentsList.Count > 10)
-            {
-                documentsList.Dequeue();
-            }
         }
 
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
@@ -308,6 +323,7 @@ namespace IDL_for_NaturL
             {
                 key1 = key;
             }
+
             switch (key1)
             {
                 case Key.Escape:
@@ -321,7 +337,7 @@ namespace IDL_for_NaturL
                     CodeBoxText(Key.Back, null);
                     break;
                 case Key.F1:
-                    MouseCaptured(Key.F1,null);
+                    MouseCaptured(Key.F1, null);
                     break;
                 case Key.Y when Keyboard.Modifiers == ModifierKeys.Control:
                 case Key.X when Keyboard.Modifiers == ModifierKeys.Control:
@@ -329,7 +345,6 @@ namespace IDL_for_NaturL
                 case Key.V when Keyboard.Modifiers == ModifierKeys.Control:
                 case Key.Z when Keyboard.Modifiers == ModifierKeys.Control:
                 case Key.Enter:
-                    Console.WriteLine("Yop");
                     Thread thread = new Thread(o =>
                     {
                         Thread.Sleep(10);
@@ -482,7 +497,7 @@ namespace IDL_for_NaturL
                     case "debut":
                         return "debut\nfin";
                     case "pour":
-                        return "pour \\VAR/ de \\DEBUT/ jusqu_a \\FIN/\nfin";
+                        return "pour \\VAR/ de \\DEBUT/ jusqu_a \\FIN/ faire\nfin";
                     case "de":
                         return "de";
                     case "jusqu_a":

@@ -22,10 +22,9 @@ namespace IDL_for_NaturL
         // Attributes declared for process handling (if the user wants to cut one)
         private Process _process = new Process();
         private Process _processPython = new Process();
-
         private bool _processPythonRunning;
         //Function in order to quote paths as the cmd doesn't understand what a path with spaces is
-
+        
         private string Quote(string text)
         {
             return '"' + text + '"';
@@ -54,8 +53,8 @@ namespace IDL_for_NaturL
                 arguments += " --input " + Quote(file) + " --output " +
                              Quote(python_file);
                 readStdin = false;
-                Console.WriteLine("Stdin = false" + arguments);
             }
+            
             _process = new Process
             {
                 StartInfo =
@@ -94,9 +93,10 @@ namespace IDL_for_NaturL
                     Path.ChangeExtension(_currentTabHandler._file,".py"));
             }
             inputWriter.Close();
-            string error = reader.ReadLine();
+            string error = reader.ReadToEnd();
             string output = outputreader.ReadToEnd();
-            if (error == null)
+            bool containsError = error.Contains("Erreur") || error.Contains("Error");
+            if (!containsError)
             {
                 STD.Foreground = Brushes.ForestGreen;
                 STD.Text = FrenchBox.IsChecked ? "Transpilation réussie" : "Transpilation succeeded";

@@ -56,11 +56,11 @@ namespace IDL_for_NaturL
                     element.TextRunProperties.SetTextDecorations(myCollection);
                     break;
                 case DiagnosticSeverity.Warning:
-                    brush = (Brush) converter.ConvertFrom("#FFCC00");
+                    brush = (Brush) converter.ConvertFrom("#ed9200");
                     
                     myUnderline = new TextDecoration();
                     // Create a solid color brush pen for the text decoration.
-                    myUnderline.Pen = new Pen(brush,0.2);
+                    myUnderline.Pen = new Pen(brush,1);
                     myUnderline.PenThicknessUnit = TextDecorationUnit.FontRecommended;
                     myCollection = new TextDecorationCollection();
                     myCollection.Add(myUnderline);

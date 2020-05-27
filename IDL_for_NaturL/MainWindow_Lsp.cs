@@ -27,9 +27,9 @@ namespace IDL_for_NaturL
     {
         public LspSender LspSender;
         
-        private Dictionary<string, List<LineColorizer>> colorizersDictionary = new Dictionary<string, List<LineColorizer>>();
-        private Dictionary<string, Dictionary<int, (string,DiagnosticSeverity)>> uriMessages = 
+        private Dictionary<string, Dictionary<int, (string, DiagnosticSeverity)>> uriMessages =
             new Dictionary<string, Dictionary<int, (string, DiagnosticSeverity)>>();
+
         public void JumpToDefinition(Location location)
         {
             string uri = location.uri;
@@ -60,46 +60,15 @@ namespace IDL_for_NaturL
 
                 ContextKeywords.AddRange(keywords.Select(item => item.label));
                 ContextKeywords.AddRange(ConstantKeywords);
-                Console.WriteLine("Answered Request");
             }
         }
-
-        private void ClearLineTransformers(string uri)
-        {
-            if (uri.Contains("file://"))
-            {
-                uri = uri.Replace("file://", "");
-            }
-
-            TextEditor actualEditor = _lastFocusedTextEditor;
-            TextEditor textEditor;
-            foreach (var (key, value) in tabAttributes)
-            {
-                textEditor = (TextEditor) FindName("CodeBox" + key);
-                string editorFile = value._file ?? value.playground;
-                if (editorFile == uri)
-                {
-                    textEditor.TextArea.TextView.LineTransformers.Clear();
-                    if (uriMessages.TryGetValue(uri, out var lineMessages))
-                    {
-                        lineMessages.Clear();
-                    }
-                    _lastFocusedTextEditor = actualEditor;
-                    return;
-                }
-            }
-        }
+        
 
         private string GetTabFromUri(string uri)
         {
-            if (uri.Contains("file://"))
-            {
-                uri = uri.Replace("file://", "");
-            }
-
             foreach (var (key, value) in tabAttributes)
             {
-                string editorFile = value._file ?? value.playground;
+                string editorFile = value._file == null ? value.playground : "file://" + value._file;
                 if (uri == editorFile)
                 {
                     return key;
@@ -143,17 +112,21 @@ namespace IDL_for_NaturL
                 TextEditor editor = (TextEditor) FindName("CodeBox" + tabindex);
                 DiagnosticSeverity severity = diagnostic.severity ?? DiagnosticSeverity.Information;
                 int line = diagnostic.range.start.line;
-                editor.TextArea.TextView.LineTransformers.Add(new LineColorizer(line + 1, severity, DeleteWhiteSpaceLine(line)));
-                if (uriMessages.TryGetValue(uri, out var lineMessages))
+                editor.TextArea.TextView.LineTransformers.Add(
+                    new LineColorizer(line + 1, severity, DeleteWhiteSpaceLine(line)));
+                lock(uriMessages)
                 {
-                    lineMessages.Add(line + 1, (diagnostic.message, severity));
-                }
-                else
-                {
-                    uriMessages.Add(uri,new Dictionary<int,(string,DiagnosticSeverity)>()
+                    if (uriMessages.TryGetValue(uri, out var lineMessages))
                     {
-                        {line+1, (diagnostic.message,severity)}
-                    });
+                        uriMessages[uri][line + 1] = (diagnostic.message, severity);
+                    }
+                    else
+                    {
+                        uriMessages[uri] = new Dictionary<int, (string, DiagnosticSeverity)>()
+                        {
+                            {line + 1, (diagnostic.message, severity)}
+                        };
+                    }
                 }
                 UpdateLayout();
                 _lastFocusedTextEditor = actualEditor;
@@ -162,21 +135,19 @@ namespace IDL_for_NaturL
 
         private void MouseCaptured(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine("MouseCaptured");
             toolTip.IsOpen = false;
             TextLocation location = _lastFocusedTextEditor.Document.GetLocation(_lastFocusedTextEditor.CaretOffset);
             int line = location.Line;
             string uri = _currentTabHandler._file == null
                 ? _currentTabHandler.playground
                 : "file://" + _currentTabHandler._file;
-            if (uriMessages.TryGetValue(uri,out var lineMessages))
+            if (uriMessages.TryGetValue(uri, out var lineMessages))
             {
                 if (lineMessages.TryGetValue(line, out (string, DiagnosticSeverity) tuple))
                 {
                     string message = tuple.Item1;
                     DiagnosticSeverity warning = tuple.Item2;
                     var caret = _lastFocusedTextEditor.TextArea.Caret.CalculateCaretRectangle();
-                    Console.WriteLine("Caret: " + caret);
                     toolTip.HorizontalOffset = caret.Width;
                     toolTip.VerticalOffset = caret.Height;
                     toolTip.Content = message;
@@ -206,10 +177,15 @@ namespace IDL_for_NaturL
 
         public void Diagnostic(Diagnostic[] diagnostics, string uri)
         {
-            Dispatcher.InvokeAsync(() =>
+            
+            Dispatcher.Invoke(() =>
             {
-                ClearLineTransformers(uri);
                 TextEditor editor = (TextEditor) FindName("CodeBox" + GetTabFromUri(uri));
+                if (uriMessages.ContainsKey(uri))
+                {
+                    uriMessages[uri].Clear();
+                }
+                editor.TextArea.TextView.LineTransformers.Clear();
                 XmlDocument doc = new XmlDocument();
                 doc.Load(UserSettings.syntaxFilePath);
                 editor.SyntaxHighlighting = HighlightingLoader.Load(new XmlNodeReader(doc),
@@ -220,16 +196,15 @@ namespace IDL_for_NaturL
 
         public void Reformat(Range range, string newText)
         {
-            Dispatcher?.Invoke(() =>_lastFocusedTextEditor.Document.Text = newText);
+            Dispatcher?.Invoke(() => _lastFocusedTextEditor.Document.Text = newText);
         }
 
         private void ReformatRequest()
         {
-            Console.WriteLine("Reformat Called");
             string uri = _currentTabHandler._file == null
                 ? _currentTabHandler.playground
                 : "file://" + _currentTabHandler._file;
-            LspSender.FormattingRequest(uri, 2, true);
+            LspSender.FormattingRequest(uri, 2, false);
         }
     }
 }

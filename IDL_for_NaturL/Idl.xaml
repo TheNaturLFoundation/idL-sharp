@@ -497,6 +497,7 @@
                         <Grid Name="grid_codebox">
                             <!-- White -->
                             <avalonedit:TextEditor
+                                WordWrap="False"
                                 FontFamily="Consolas"
                                 Typography.StandardLigatures="True"
                                 Background="#FAFAFA"
@@ -509,7 +510,7 @@
                                 Margin="0,0,0,0"
                                 FontSize="12pt"
                                 Text=""
-                                HorizontalScrollBarVisibility="Disabled" />
+                                HorizontalScrollBarVisibility="Hidden" />
 
                         </Grid>
                         <Grid Grid.ColumnSpan="2" Height="120"
@@ -517,7 +518,6 @@
                               HorizontalAlignment="Stretch" Grid.Row="1" />
                         <!-- White -->
                         <avalonedit:TextEditor
-
                             WordWrap="True"
                             FontFamily="Consolas"
                             Name="STD_id_"

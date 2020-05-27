@@ -1,0 +1,6 @@
+fonction test() -> entier
+	variables
+		entier n
+debut
+	retourner 1
+fin

@@ -139,7 +139,6 @@ namespace IDL_for_NaturL
             }
             else
             {
-                Console.WriteLine("Save click file known");
                 WriteAllTextSafe();
                 _currentTabHandler._isSaved = true;
                 _currentTabHandler._firstData = ((TextEditor) FindName("CodeBox" + _currenttabId)).Text;

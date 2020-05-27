@@ -62,7 +62,7 @@ namespace IDL_for_NaturL
             typeof(CustomCommands), 
             new InputGestureCollection
             {
-                new KeyGesture(Key.L, ModifierKeys.Control | ModifierKeys.Alt)
+                new KeyGesture(Key.Enter, ModifierKeys.Control | ModifierKeys.Alt)
             }
         );
 

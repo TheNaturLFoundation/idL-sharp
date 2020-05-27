@@ -11,6 +11,8 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Windows.Media;
 using Dragablz;
 using ExtraTools;
@@ -183,10 +185,12 @@ namespace IDL_for_NaturL
                 return;
             }
 
+            string uri;
             if (path != null)
             {
+                uri =  "file://" + path;
                 Dispatcher.Invoke(() => 
-                    LspSender.DidOpenNotification(("file://" + path), "", 0, File.ReadAllText(path)));
+                    LspSender.DidOpenNotification(uri, "", 0, File.ReadAllText(path)));
                 string s = File.ReadAllText(path);
                 ((TextEditor) FindName("CodeBox" + n)).Text = s;
                 ((TabItem) FindName("Tab" + n)).Header =
@@ -197,16 +201,19 @@ namespace IDL_for_NaturL
             }
             else
             {
+                uri = _currentTabHandler.playground;
                 Dispatcher.Invoke(() => 
-                    LspSender.DidOpenNotification(_currentTabHandler.playground, "", 
+                    LspSender.DidOpenNotification(uri, "", 
                         0, ""));
                 ((TabItem) FindName("Tab" + n)).Header =
                     Path.GetFileNameWithoutExtension(tabHandling.playground);
             }
+            
+            documentsList[uri] = new Queue<TextDocumentContentChangeEvent>();
 
             TextEditor CodeBox =
-                ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{n}")).FindName(
-                    "grid_codebox")).Children[0]);
+            ((TextEditor) ((Grid) ((TabItem) FindName($"Tab{n}")).FindName(
+                "grid_codebox")).Children[0]);
             TextEditor PythonBox =
                 ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
                     "python_grid")).Children[0]);
@@ -398,7 +405,13 @@ namespace IDL_for_NaturL
                 tabAttributes.Remove(i);
             }
             _lastFocusedTextEditor = (TextEditor) FindName("CodeBox" + _currenttabId);
-            CodeBoxText(null,null);
+            
+            Thread thread = new Thread(() =>
+            {
+                Thread.Sleep(100);
+                Dispatcher.Invoke(() => CodeBoxText(null, null));
+            });
+            thread.Start();
         }
 
         private void Set_Tab(int n)

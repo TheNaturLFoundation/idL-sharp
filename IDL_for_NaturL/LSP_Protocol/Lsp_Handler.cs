@@ -78,7 +78,6 @@ namespace IDL_for_NaturL
             idDictionary.Add(id, "initialize");
             string json = JsonConvert.SerializeObject(newmessage);
             string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
-            Console.WriteLine(headerAndJson);
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
         }
@@ -121,6 +120,7 @@ namespace IDL_for_NaturL
 
         public void DidOpenNotification(string uri, string language, int version, string text)
         {
+            
             text = text.Replace("\r", "");
             DidOpenTextDocument document =
                 new ConcreteDidOpenTextDocument(new TextDocument(uri, language, version, text));
@@ -143,7 +143,7 @@ namespace IDL_for_NaturL
 
         public void DidChangeNotification(VersionedTextDocumentIdentifier versionedTextDocumentIdentifier,
             IEnumerable<TextDocumentContentChangeEvent> contentchangesEvents)
-        {
+        {            
             DidChangeTextDocument document =
                 new ConcreteDidChangeTextDocument(versionedTextDocumentIdentifier,
                     contentchangesEvents);
@@ -163,6 +163,7 @@ namespace IDL_for_NaturL
             string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\n" + json;
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
+            
         }
         
         public void DidCloseNotification(string uri)
@@ -210,12 +211,10 @@ namespace IDL_for_NaturL
                 .Replace("]", "]\n");
             JObject receivedData = (JObject) JsonConvert.DeserializeObject(data);
             bool error = false;
-            Console.WriteLine("Received: " + receivedData);
             if (IsPropertyExist(receivedData, "id"))
             {
                 if (IsPropertyExist(receivedData, "error"))
                 {
-                    Console.WriteLine("Received data"+receivedData["error"]);
                     error = true;
                 }
                 // It is a response if we get there.
@@ -252,14 +251,12 @@ namespace IDL_for_NaturL
                         }
                         else
                         {
-                            Console.WriteLine("Constant Keywords");
                             lspReceiver.Completion(new List<CompletionItem>());
                         }
                 
                         break;
                     case "textDocument/formatting":
                         items = (JArray) receivedData["result"];
-                        Console.WriteLine(receivedData);
                         if (! error)
                         {
                             foreach (JToken jToken in items)
@@ -287,6 +284,7 @@ namespace IDL_for_NaturL
                         PublishDiagnosticsParams @params =
                             receivedData["params"].ToObject<PublishDiagnosticsParams>();
                         lspReceiver.Diagnostic(@params.diagnostics, @params.uri);
+                        
                         break;
                 }
             }
