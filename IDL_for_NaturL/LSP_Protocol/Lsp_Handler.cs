@@ -57,7 +57,6 @@ namespace IDL_for_NaturL
 
         public void RequestKeywords(Position position, string uri)
         {
-            Console.WriteLine("request keywords: " + uri);
             RequestMessage newMessage = new RequestMessage
             (
                 ++id,
@@ -122,7 +121,6 @@ namespace IDL_for_NaturL
 
         public void DidOpenNotification(string uri, string language, int version, string text)
         {
-            Console.WriteLine("Did open: " + uri + " Content: " + text);
             text = text.Replace("\r", "");
             DidOpenTextDocument document =
                 new ConcreteDidOpenTextDocument(new TextDocument(uri, language, version, text));
@@ -139,7 +137,6 @@ namespace IDL_for_NaturL
                 json = JsonConvert.SerializeObject(notificationMessage);
             }
             string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\n" + json;
-            Console.WriteLine("Header length did open: " + json.Length);
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
         }
@@ -170,7 +167,6 @@ namespace IDL_for_NaturL
         
         public void DidCloseNotification(string uri)
         {
-            Console.WriteLine("Did close uri: " + uri);
             DidCloseTextDocument document =
                 new ConcreteDidCloseTextDocument(new ConcreteTextDocumentIdentifier(uri));
             Notification_Message notificationMessage =
@@ -214,10 +210,12 @@ namespace IDL_for_NaturL
                 .Replace("]", "]\n");
             JObject receivedData = (JObject) JsonConvert.DeserializeObject(data);
             bool error = false;
+            Console.WriteLine("Received: " + receivedData);
             if (IsPropertyExist(receivedData, "id"))
             {
                 if (IsPropertyExist(receivedData, "error"))
                 {
+                    Console.WriteLine("Received data"+receivedData["error"]);
                     error = true;
                 }
                 // It is a response if we get there.

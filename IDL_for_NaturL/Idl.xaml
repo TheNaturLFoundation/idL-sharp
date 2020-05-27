@@ -20,13 +20,8 @@
     MouseWheel="OnMouseDownMain"
     MinWidth="150"
     MinHeight="50">
-    
+
     <Window.Resources>
-        <VisualBrush x:Key="WavyBrush" Viewbox="0,0,3,2" ViewboxUnits="Absolute" Viewport="0,0.8,6,4" ViewportUnits="Absolute" TileMode="Tile">
-            <VisualBrush.Visual>
-                <Path Data="M 0,1 C 1,0 2,2 3,1" Stroke="Red" StrokeThickness="0.2" StrokeEndLineCap="Square" StrokeStartLineCap="Square" />
-            </VisualBrush.Visual>
-        </VisualBrush>
         <!-- This is the ressource for the current SCROLLBARS-->
         <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
         <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
@@ -154,47 +149,49 @@
                               Content="M 0 0 L 4 4 L 8 0 Z" />
             </Grid>
         </ControlTemplate>
-        <ControlTemplate x:Key="HorizontalScrollBar"
+
+            <ControlTemplate x:Key="HorizontalScrollBar"
                          TargetType="{x:Type ScrollBar}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MaxWidth="18" />
+                    <ColumnDefinition MaxWidth="0" />
                     <ColumnDefinition Width="0.00001*" />
-                    <ColumnDefinition MaxWidth="18" />
+                    <ColumnDefinition MaxWidth="0" />
                 </Grid.ColumnDefinitions>
                 <Border Grid.ColumnSpan="3" CornerRadius="2"
-                        Background="#F0F0F0" />
+                        Background="Transparent" />
                 <RepeatButton Grid.Column="0"
                               Style="{StaticResource ScrollBarLineButton}"
-                              Width="18"
+                              Height="18"
                               Command="ScrollBar.LineLeftCommand"
-                              Content="M 4 0 L 4 8 L 0 4 Z" />
+                              Content="M 0 4 L 8 4 L 4 0 Z" />
                 <Track Name="PART_Track" Grid.Column="1"
-                       IsDirectionReversed="False">
+                       IsDirectionReversed="true">
                     <Track.DecreaseRepeatButton>
                         <RepeatButton
-                            Style="{StaticResource ScrollBarPageButton}"
+                            Style="{StaticResource ScrollBarLineButton}"
                             Command="ScrollBar.PageLeftCommand" />
                     </Track.DecreaseRepeatButton>
                     <Track.Thumb>
                         <Thumb Style="{StaticResource ScrollBarThumb}"
-                               Margin="0,1,0,1"
-                               Background="{StaticResource NormalBrush}"
-                               BorderBrush="{StaticResource NormalBorderBrush}" />
+                               Margin="1,0,1,0"
+                               Background="{StaticResource HorizontalNormalBrush}"
+                               BorderBrush="{StaticResource HorizontalNormalBorderBrush}" />
                     </Track.Thumb>
                     <Track.IncreaseRepeatButton>
                         <RepeatButton
-                            Style="{StaticResource ScrollBarPageButton}"
+                            Style="{StaticResource ScrollBarLineButton}"
                             Command="ScrollBar.PageRightCommand" />
                     </Track.IncreaseRepeatButton>
                 </Track>
                 <RepeatButton Grid.Column="3"
                               Style="{StaticResource ScrollBarLineButton}"
-                              Width="18"
+                              Height="18"
                               Command="ScrollBar.LineRightCommand"
-                              Content="M 0 0 L 4 4 L 0 8 Z" />
+                              Content="magic" />
             </Grid>
         </ControlTemplate>
+
         <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -217,7 +214,7 @@
         <!--END FOR SCROLLBAR resources-->
 
         <!-- TAB resources-->
-        
+
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Exit"
@@ -261,13 +258,13 @@
                         Executed="ResearchCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Cancel_Process"
                         CanExecute="Cancel_ProcessCommand_CanExecute"
-                        Executed="Cancel_ProcessCommand_Executed"/>
+                        Executed="Cancel_ProcessCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.ResetZoom" CanExecute="ResetZoomCommand_CanExecute"
-                        Executed="ResetZoomCommand_Executed"></CommandBinding>
+                        Executed="ResetZoomCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.ToolTip"
                         CanExecute="ToolTipCommand_CanExecute"
-                        Executed="ToolTipCommand_Executed"/>
-        
+                        Executed="ToolTipCommand_Executed" />
+
     </Window.CommandBindings>
     <Grid x:Name="idl">
         <!-- White -->
@@ -392,37 +389,37 @@
                         <MenuItem Header="_Nouveau Fichier"
                                   Command="self:CustomCommands.New" ToolTip="Create a new file" />
                         <MenuItem Header="_Nouvel Onglet"
-                                  Command="self:CustomCommands.NewTab" ToolTip="Open a new tab"/>
+                                  Command="self:CustomCommands.NewTab" ToolTip="Open a new tab" />
                         <MenuItem Header="_Fermer l'onglet"
-                                  Command="self:CustomCommands.CloseTab" ToolTip="Close the current tab"/>
+                                  Command="self:CustomCommands.CloseTab" ToolTip="Close the current tab" />
                         <MenuItem Header="_Ouvrir un fichier"
-                                  Command="self:CustomCommands.Open" ToolTip="Open a file"/>
+                                  Command="self:CustomCommands.Open" ToolTip="Open a file" />
                         <MenuItem Header="_Sauvegarder"
-                                  Command="self:CustomCommands.Save" ToolTip="Save the file"/>
+                                  Command="self:CustomCommands.Save" ToolTip="Save the file" />
                         <MenuItem Header="_Sauvegarder sous"
-                                  Command="self:CustomCommands.SaveAs" ToolTip="Save the file as"/>
+                                  Command="self:CustomCommands.SaveAs" ToolTip="Save the file as" />
                         <MenuItem Header="_Paramètres"
-                                  Command="self:CustomCommands.Settings" ToolTip="Open the settings window"/>
+                                  Command="self:CustomCommands.Settings" ToolTip="Open the settings window" />
                         <Separator />
                         <MenuItem Header="_Quitter idL"
-                                  Command="self:CustomCommands.Exit" ToolTip="Exit idL"/>
+                                  Command="self:CustomCommands.Exit" ToolTip="Exit idL" />
                     </MenuItem>
 
                     <MenuItem Header="Editer" Height="39">
                         <MenuItem Header="_Copier"
-                                  Command="ApplicationCommands.Copy"/>
+                                  Command="ApplicationCommands.Copy" />
                         <MenuItem Header="_Coller"
-                                  Command="ApplicationCommands.Paste"/>
+                                  Command="ApplicationCommands.Paste" />
                         <MenuItem Header="_Couper"
-                                  Command="ApplicationCommands.Cut"/>
+                                  Command="ApplicationCommands.Cut" />
                         <MenuItem Header="_Annuler"
-                                  Command="ApplicationCommands.Undo"/>
+                                  Command="ApplicationCommands.Undo" />
                         <MenuItem Header="Rétablir"
-                                  Command="ApplicationCommands.Redo"/>
+                                  Command="ApplicationCommands.Redo" />
                         <MenuItem Header="Reformater le code"
-                                  Command="self:CustomCommands.Reformat" ToolTip="Reformat the file"/>
+                                  Command="self:CustomCommands.Reformat" ToolTip="Reformat the file" />
                         <MenuItem Header="Rétablir le niveau de zoom"
-                                  Command="self:CustomCommands.ResetZoom" ToolTip="Resets the zoom level"/>
+                                  Command="self:CustomCommands.ResetZoom" ToolTip="Resets the zoom level" />
                     </MenuItem>
                     <MenuItem Header="Langue" Height="38">
                         <MenuItem Header="Francais" Height="38"
@@ -447,7 +444,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Name="StopProcess" Height="39" Width="55" Header=""
-                                         ToolTip="Cancel" Command="self:CustomCommands.Cancel_Process" >
+                              ToolTip="Cancel" Command="self:CustomCommands.Cancel_Process">
                         <MenuItem.Icon>
                             <Image Source="resources/red_square.png"
                                    Margin="-4,-8,-7,-8" />
@@ -496,8 +493,7 @@
                             FontSize="12pt"
                             Text=""
                             Grid.Column="1"
-                            HorizontalScrollBarVisibility="Auto">
-                        </avalonedit:TextEditor>
+                            HorizontalScrollBarVisibility="Disabled" />
                         <Grid Name="grid_codebox">
                             <!-- White -->
                             <avalonedit:TextEditor
@@ -513,8 +509,7 @@
                                 Margin="0,0,0,0"
                                 FontSize="12pt"
                                 Text=""
-                                HorizontalScrollBarVisibility="Auto">
-</avalonedit:TextEditor>
+                                HorizontalScrollBarVisibility="Disabled" />
 
                         </Grid>
                         <Grid Grid.ColumnSpan="2" Height="120"
@@ -522,7 +517,7 @@
                               HorizontalAlignment="Stretch" Grid.Row="1" />
                         <!-- White -->
                         <avalonedit:TextEditor
-                            
+
                             WordWrap="True"
                             FontFamily="Consolas"
                             Name="STD_id_"
@@ -547,8 +542,9 @@
                             RenderTransformOrigin="0.5,0.5" Margin="0,0,-2,0"
                             HorizontalAlignment="Right"
                             Width="2" />
-                        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left"/>
-                        <GridSplitter  Grid.Row="1" Height="5" Grid.ColumnSpan ="3" HorizontalAlignment="Stretch" VerticalAlignment="Top"></GridSplitter>
+                        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left" />
+                        <GridSplitter Grid.Row="1" Height="5" Grid.ColumnSpan="3" HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Top" />
 
 
                     </Grid>

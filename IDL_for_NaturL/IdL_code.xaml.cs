@@ -374,6 +374,7 @@ namespace IDL_for_NaturL
         private void TabControl_OnSelectionChanged(object sender,
             SelectionChangedEventArgs e)
         {
+            toolTip.IsOpen = false;
             if (((TabablzControl) e.Source).SelectedIndex == -1)
             {
                 ((TabablzControl) e.Source).SelectedIndex = 0;

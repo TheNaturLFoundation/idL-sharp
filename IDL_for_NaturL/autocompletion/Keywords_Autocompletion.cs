@@ -274,8 +274,8 @@ namespace IDL_for_NaturL
             string currentUri = _currentTabHandler._file == null
                 ? _currentTabHandler.playground
                 : "file://" + _currentTabHandler._file;
+            Console.WriteLine("uri is : " + currentUri);
             string text = _lastFocusedTextEditor.Text;
-            Console.WriteLine("CodeBoxtext: " + text);
             if (sender is Key key && key == Key.Back && _lastFocusedTextEditor.CaretOffset > 1)
             {
                 text = text.Remove(_lastFocusedTextEditor.CaretOffset - 1, 1);
