@@ -167,7 +167,7 @@ namespace IDL_for_NaturL
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
         }
-
+        
         public void DidCloseNotification(string uri)
         {
             Console.WriteLine("Did close uri: " + uri);

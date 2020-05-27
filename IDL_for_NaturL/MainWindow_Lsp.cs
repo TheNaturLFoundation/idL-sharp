@@ -150,6 +150,7 @@ namespace IDL_for_NaturL
 
         private void MouseCaptured(object sender, MouseButtonEventArgs e)
         {
+            Console.WriteLine("MouseCaptured");
             toolTip.IsOpen = false;
             TextLocation location = _lastFocusedTextEditor.Document.GetLocation(_lastFocusedTextEditor.CaretOffset);
             int line = location.Line;

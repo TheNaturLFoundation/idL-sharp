@@ -261,6 +261,9 @@
                         Executed="Cancel_ProcessCommand_Executed"/>
         <CommandBinding Command="self:CustomCommands.ResetZoom" CanExecute="ResetZoomCommand_CanExecute"
                         Executed="ResetZoomCommand_Executed"></CommandBinding>
+        <CommandBinding Command="self:CustomCommands.ToolTip"
+                        CanExecute="ToolTipCommand_CanExecute"
+                        Executed="ToolTipCommand_Executed"/>
 
 
     </Window.CommandBindings>
@@ -489,6 +492,7 @@
                             Typography.StandardLigatures="True"
                             FontFamily="Consolas"
                             Name="python_id_"
+                            IsReadOnly="True"
                             ShowLineNumbers="True"
                             LineNumbersForeground="#399ee6"
                             SyntaxHighlighting="naturL"

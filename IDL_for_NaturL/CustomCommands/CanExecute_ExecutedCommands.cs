@@ -222,5 +222,14 @@ namespace IDL_for_NaturL
         {
             _lastFocusedTextEditor.FontSize = UserSettings.defaultFontSize;
         }
+        private void ToolTipCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        private void ToolTipCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            CodeBox_TextArea_TextEntering(Key.F1,null);
+        }
+        
     }
 }

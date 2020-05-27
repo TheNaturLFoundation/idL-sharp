@@ -163,5 +163,16 @@ namespace IDL_for_NaturL
                 new KeyGesture(Key.D0, ModifierKeys.Control)
             }
         );
+        
+        public static readonly RoutedUICommand ToolTip = new RoutedUICommand
+        (
+            "ResetZoom",
+            "ResetZoom",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.Enter, ModifierKeys.Alt)
+            }
+        );
     }
 }

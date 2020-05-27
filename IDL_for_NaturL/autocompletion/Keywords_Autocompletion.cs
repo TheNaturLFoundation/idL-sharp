@@ -298,7 +298,12 @@ namespace IDL_for_NaturL
         public void CodeBox_TextArea_TextEntering(object sender, KeyEventArgs e)
         {
             toolTip.IsOpen = false;
-            switch (e.Key)
+            Key? key1 = e?.Key;
+            if (sender is Key key && key == Key.F1)
+            {
+                key1 = key;
+            }
+            switch (key1)
             {
                 case Key.Escape:
                     _lastFocusedTextEditor.Select(_lastFocusedTextEditor.CaretOffset, 0);
@@ -310,8 +315,8 @@ namespace IDL_for_NaturL
                     CodeBox_TextArea_KeyDown(null, null);
                     CodeBoxText(Key.Back, null);
                     break;
-                case Key.Enter when Keyboard.Modifiers == ModifierKeys.Shift:
-                    MouseCaptured(null,null);
+                case Key.F1:
+                    MouseCaptured(Key.F1,null);
                     break;
                 case Key.Y when Keyboard.Modifiers == ModifierKeys.Control:
                 case Key.X when Keyboard.Modifiers == ModifierKeys.Control:
@@ -319,6 +324,7 @@ namespace IDL_for_NaturL
                 case Key.V when Keyboard.Modifiers == ModifierKeys.Control:
                 case Key.Z when Keyboard.Modifiers == ModifierKeys.Control:
                 case Key.Enter:
+                    Console.WriteLine("Yop");
                     Thread thread = new Thread(o =>
                     {
                         Thread.Sleep(10);
