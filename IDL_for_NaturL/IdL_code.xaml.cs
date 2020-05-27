@@ -13,8 +13,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Media;
 using Dragablz;
+using ExtraTools;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using IDL_for_NaturL.filemanager;
+using MaterialDesignThemes.Wpf;
 using HighlightingManager =
     ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
@@ -197,7 +199,7 @@ namespace IDL_for_NaturL
             {
                 Dispatcher.Invoke(() => 
                     LspSender.DidOpenNotification(_currentTabHandler.playground, "", 
-                        0, _currentTabHandler.playground));
+                        0, ""));
                 ((TabItem) FindName("Tab" + n)).Header =
                     Path.GetFileNameWithoutExtension(tabHandling.playground);
             }
@@ -256,7 +258,7 @@ namespace IDL_for_NaturL
 
         private MessageBoxResult messageOnClose(string message)
         {
-            MessageBoxResult result = MessageBox.Show(message, "Data App",
+            MessageBoxResult result = MessageBox.Show(message, "Information",
                 MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Question);
             return result;
@@ -345,7 +347,8 @@ namespace IDL_for_NaturL
         {
             if (!_currentTabHandler._isFileSelected && DataChanged())
             {
-                string msg = "Do you want to save your changes ?\n";
+                string msg = language == IDL_for_NaturL.Language.English? "Do you want to save your changes ?\n" :
+                    "Voulez-vous sauvegarder vos modifications ?";
                 MessageBoxResult result = MessageBox.Show(msg, "Data App",
                     MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Question);

@@ -49,7 +49,10 @@ namespace IDL_for_NaturL
                 if (_currentTabHandler.playground != null) return;
                 Save_Click();
                 string file = _currentTabHandler._file;
-                arguments += " --input " + Quote(file) + " --output " + Quote(Path.ChangeExtension(file,".py"));
+                string python_file = Path.ChangeExtension(file, ".py");
+                File.Delete(python_file);
+                arguments += " --input " + Quote(file) + " --output " +
+                             Quote(python_file);
                 readStdin = false;
                 Console.WriteLine("Stdin = false" + arguments);
             }
@@ -79,6 +82,7 @@ namespace IDL_for_NaturL
             StreamWriter inputWriter = _process.StandardInput;
             StreamReader reader = _process.StandardError;
             StreamReader outputreader;
+            _process.WaitForExit();
             if (readStdin)
             {
                 inputWriter.Write(CodeBox.Text);

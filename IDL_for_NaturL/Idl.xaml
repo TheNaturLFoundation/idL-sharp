@@ -6,6 +6,7 @@
     xmlns:self="clr-namespace:IDL_for_NaturL"
     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     x:Class="IDL_for_NaturL.MainWindow"
     mc:Ignorable="d"
     Title="IdL for NaturL" Height="633" Width="1123"
@@ -19,6 +20,7 @@
     MouseWheel="OnMouseDownMain"
     MinWidth="150"
     MinHeight="50">
+    
     <Window.Resources>
         <VisualBrush x:Key="WavyBrush" Viewbox="0,0,3,2" ViewboxUnits="Absolute" Viewport="0,0.8,6,4" ViewportUnits="Absolute" TileMode="Tile">
             <VisualBrush.Visual>
@@ -215,6 +217,7 @@
         <!--END FOR SCROLLBAR resources-->
 
         <!-- TAB resources-->
+        
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.Exit"
@@ -264,8 +267,7 @@
         <CommandBinding Command="self:CustomCommands.ToolTip"
                         CanExecute="ToolTipCommand_CanExecute"
                         Executed="ToolTipCommand_Executed"/>
-
-
+        
     </Window.CommandBindings>
     <Grid x:Name="idl">
         <!-- White -->
@@ -408,26 +410,19 @@
 
                     <MenuItem Header="Editer" Height="39">
                         <MenuItem Header="_Copier"
-                                  Command="ApplicationCommands.Copy"
-                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                                  Command="ApplicationCommands.Copy"/>
                         <MenuItem Header="_Coller"
-                                  Command="ApplicationCommands.Paste"
-                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                                  Command="ApplicationCommands.Paste"/>
                         <MenuItem Header="_Couper"
-                                  Command="ApplicationCommands.Cut"
-                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                                  Command="ApplicationCommands.Cut"/>
                         <MenuItem Header="_Annuler"
-                                  Command="ApplicationCommands.Undo"
-                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                                  Command="ApplicationCommands.Undo"/>
                         <MenuItem Header="Rétablir"
-                                  Command="ApplicationCommands.Redo"
-                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                                  Command="ApplicationCommands.Redo"/>
                         <MenuItem Header="Reformater le code"
-                                  Command="self:CustomCommands.Reformat" ToolTip="Reformat the file"
-                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                                  Command="self:CustomCommands.Reformat" ToolTip="Reformat the file"/>
                         <MenuItem Header="Rétablir le niveau de zoom"
-                                  Command="self:CustomCommands.ResetZoom" ToolTip="Resets the zoom level"
-                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                                  Command="self:CustomCommands.ResetZoom" ToolTip="Resets the zoom level"/>
                     </MenuItem>
                     <MenuItem Header="Langue" Height="38">
                         <MenuItem Header="Francais" Height="38"
@@ -458,7 +453,6 @@
                                    Margin="-4,-8,-7,-8" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    
                 </Menu>
                 <TextBox Name="ResearchBox" Foreground="Gray" FontSize="16"
                          HorizontalAlignment="Left" AcceptsReturn="False"

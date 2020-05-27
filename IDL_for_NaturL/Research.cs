@@ -87,9 +87,11 @@ namespace IDL_for_NaturL
                 textlength - _copyStart, StringComparison.Ordinal);
             if (index == -1)
             {
-                MessageBoxResult messageBox = MessageBox.Show(
-                    "No more occurences of \"" + searched + "\" found",
-                    "Research", MessageBoxButton.OK,
+                string message = language == IDL_for_NaturL.Language.English
+                    ? "No more occurences of \"" + searched + "\" found"
+                    : "Plus d'occurences \"" + searched + "\" trouvées";
+                MessageBoxResult messageBox = MessageBox.Show(message,
+                    language == IDL_for_NaturL.Language.French ? "Rechercher" : "Research", MessageBoxButton.OK,
                     MessageBoxImage.Information);
                 if (messageBox == MessageBoxResult.OK)
                 {

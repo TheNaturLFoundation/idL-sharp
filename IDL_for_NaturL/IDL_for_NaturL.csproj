@@ -30,6 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="DialogBoxForMaterialDesignToolkitInXaml" Version="1.0.0" />
         <PackageReference Include="Dragablz" Version="0.0.3.203" />
         <PackageReference Include="Json.NET.Web" Version="1.0.49" />
         <PackageReference Include="MaterialDesignColors" Version="1.2.4-ci1276" />

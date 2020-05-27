@@ -122,7 +122,7 @@ namespace IDL_for_NaturL
 
         public void DidOpenNotification(string uri, string language, int version, string text)
         {
-            Console.WriteLine("Did open: " + uri);
+            Console.WriteLine("Did open: " + uri + " Content: " + text);
             text = text.Replace("\r", "");
             DidOpenTextDocument document =
                 new ConcreteDidOpenTextDocument(new TextDocument(uri, language, version, text));

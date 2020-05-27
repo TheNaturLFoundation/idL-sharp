@@ -258,6 +258,10 @@ namespace IDL_for_NaturL
             {
                 Dispatcher.Invoke(() =>
                 {
+                    if (_currentTabHandler._file != null)
+                    {
+                        Save_Click();
+                    }
                     LspSender.DidChangeNotification(
                         new VersionedTextDocumentIdentifier(++version, currentUri),
                         documentsList.Reverse());
