@@ -6,6 +6,7 @@ namespace IDL_for_NaturL
 {
     public partial class MainWindow
     {
+
         private void Window_Resize(object sender, RoutedEventArgs e)
         {
             if (WindowState == WindowState.Maximized)

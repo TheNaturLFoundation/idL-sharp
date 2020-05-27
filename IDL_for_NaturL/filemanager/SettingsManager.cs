@@ -13,6 +13,7 @@ namespace IDL_for_NaturL.filemanager
         [DataMember] public string language;
         [DataMember] public string severity;
         [DataMember] public string syntaxFilePath;
+        [DataMember] public double fontSize;
 
         //TODO Change the way type attribute is managed.
         /// <summary>
@@ -22,11 +23,12 @@ namespace IDL_for_NaturL.filemanager
         /// <param name="warningSeverity"></param>
         /// <param name="isDefaultHighlighting"></param>
         public SettingsManager(string languageName, string warningSeverity,
-            string syntaxFilePath)
+            string syntaxFilePath, double fontSize)
         {
             language = languageName;
             severity = warningSeverity;
             this.syntaxFilePath = syntaxFilePath;
+            this.fontSize = fontSize;
         }
 
         /// <summary>

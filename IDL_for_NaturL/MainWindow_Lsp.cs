@@ -26,7 +26,9 @@ namespace IDL_for_NaturL
     public partial class MainWindow : LspReceiver
     {
         public LspSender LspSender;
-        private Dictionary<int, (string,IDL_for_NaturL.DiagnosticSeverity)> lineMessages = new Dictionary<int, (string,IDL_for_NaturL.DiagnosticSeverity)>();
+
+        private Dictionary<int, (string, IDL_for_NaturL.DiagnosticSeverity)> lineMessages =
+            new Dictionary<int, (string, IDL_for_NaturL.DiagnosticSeverity)>();
 
         public void JumpToDefinition(Location location)
         {
@@ -53,7 +55,7 @@ namespace IDL_for_NaturL
                 keyWordsDescriptions = new Dictionary<string, string>();
                 foreach (var keyword in keywords)
                 {
-                    keyWordsDescriptions.Add(keyword.label, keyword.detail);
+                    keyWordsDescriptions.TryAdd(keyword.label, keyword.detail);
                 }
 
                 ContextKeywords.AddRange(keywords.Select(item => item.label));
@@ -151,7 +153,7 @@ namespace IDL_for_NaturL
             toolTip.IsOpen = false;
             TextLocation location = _lastFocusedTextEditor.Document.GetLocation(_lastFocusedTextEditor.CaretOffset);
             int line = location.Line;
-            if (lineMessages.TryGetValue(line, out (string,DiagnosticSeverity) tuple))
+            if (lineMessages.TryGetValue(line, out (string, DiagnosticSeverity) tuple))
             {
                 string message = tuple.Item1;
                 DiagnosticSeverity warning = tuple.Item2;
@@ -179,6 +181,7 @@ namespace IDL_for_NaturL
                 case DiagnosticSeverity.Hint:
                     break;
             }
+
             throw new ArgumentOutOfRangeException(nameof(severity), severity, null);
         }
 
@@ -194,6 +197,20 @@ namespace IDL_for_NaturL
                     HighlightingManager.Instance);
                 SetLineTransformers(diagnostics, uri);
             });
+        }
+
+        public void Reformat(Range range, string newText)
+        {
+            Dispatcher?.Invoke(() =>_lastFocusedTextEditor.Document.Text = newText);
+        }
+
+        private void ReformatRequest()
+        {
+            Console.WriteLine("Reformat Called");
+            string uri = _currentTabHandler._file == null
+                ? _currentTabHandler.playground
+                : "file://" + _currentTabHandler._file;
+            LspSender.FormattingRequest(uri, 2, true);
         }
     }
 }

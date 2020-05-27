@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using System.Xml;
 using IDL_for_NaturL.colorscheme;
 using IDL_for_NaturL.filemanager;
@@ -15,6 +16,7 @@ namespace IDL_for_NaturL
     {
         public bool clicked;
         public int selected_item = 0;
+        public SettingsWindow Instance = null;
 
         public SettingsWindow()
         {
@@ -25,6 +27,7 @@ namespace IDL_for_NaturL
         //TODO Ajouter la possibilité de charger un fichier directement dans les configurations.
         private void UpdateAtLaunch()
         {
+            UpdateLanguage(UserSettings.language);
             XmlDocument doc = new XmlDocument();
             doc.Load("resources/user_coloration.xshd");
             XmlNode root = doc.DocumentElement;
@@ -36,7 +39,8 @@ namespace IDL_for_NaturL
                     Brush brush;
                     try
                     {
-                        brush = new SolidColorBrush((Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
+                        brush = new SolidColorBrush(
+                            (Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
                         Color_functions.Foreground = brush;
                     }
                     catch (Exception exception)
@@ -51,15 +55,18 @@ namespace IDL_for_NaturL
                     switch (node?.InnerText)
                     {
                         case "structure_words":
-                            brush = new SolidColorBrush((Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
+                            brush = new SolidColorBrush(
+                                (Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
                             Color_keywords.Foreground = brush;
                             break;
                         case "booleen":
-                            brush = new SolidColorBrush((Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
+                            brush = new SolidColorBrush(
+                                (Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
                             Color_truefalse.Foreground = brush;
                             break;
                         case "types":
-                            brush = new SolidColorBrush((Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
+                            brush = new SolidColorBrush(
+                                (Color) ColorConverter.ConvertFromString(rule.Attributes.GetNamedItem("color").Value));
                             Color_types.Foreground = brush;
                             break;
                         default:
@@ -67,8 +74,40 @@ namespace IDL_for_NaturL
                     }
                 }
             }
-            
         }
+
+        private void UpdateLanguage(Language language)
+        {
+            if (language == IDL_for_NaturL.Language.French)
+            {
+                SaveButton.Content = "Sauvegarder";
+                DefaultResetButton.Content = "Paramètres par défaut";
+                CancelButton.Content = "Annuler";
+                Color_keywords.Text = "Mots clés: \n fonction \n sinon_si \n si";
+                Color_functions.Text = "Fonctions:\n afficher\n longueur ";
+                Color_types.Text = "Types:\n entier\n booleen\n chaine";
+                Color_truefalse.Text = "Booleens:\n vrai\n faux";
+                Constantes.Content = "Constantes";
+                Type.Content = "Type";
+                Fonction.Content = "Fonction";
+                MotClef.Content = "Mots clés";
+            }
+            else
+            {
+                SaveButton.Content = "Save";
+                DefaultResetButton.Content = "Reset defaults";
+                CancelButton.Content = "Cancel";
+                Color_keywords.Text = "Keywords: \n fonction \n sinon_si \n si";
+                Color_functions.Text = "Functions:\n afficher\n longueur ";
+                Color_types.Text = "Types:\n entier\n booleen\n chaine";
+                Color_truefalse.Text = "Booleans:\n vrai\n faux";
+                Constantes.Content = "Constants";
+                Type.Content = "Type";
+                Fonction.Content = "Function";
+                MotClef.Content = "Keywords";
+            }
+        }
+
         private void Save_Setting(object sender, RoutedEventArgs e)
         {
             XmlDocument doc = new XmlDocument();
@@ -107,13 +146,14 @@ namespace IDL_for_NaturL
                     }
                 }
             }
+
             Thread thread = new Thread(() => doc.Save("resources/user_coloration.xshd"));
             thread.Start();
             UserSettings.syntaxFilePath = "resources/user_coloration.xshd";
             MainWindow.Instance.UpdateColorScheme(doc);
         }
-        
-        
+
+
         private string GetHexFromBrush(TextBlock colorBlock)
         {
             Color color = ((SolidColorBrush) colorBlock.Foreground).Color;
@@ -165,6 +205,7 @@ namespace IDL_for_NaturL
                     break;
             }
         }
+
         private void Selected_Combo_OnSelected(object sender, RoutedEventArgs e)
         {
             selected_item = Selected_Combo.SelectedIndex;
@@ -208,7 +249,5 @@ namespace IDL_for_NaturL
             MainWindow.Instance.UpdateColorScheme(doc);
             Close();
         }
-
-       
     }
 }

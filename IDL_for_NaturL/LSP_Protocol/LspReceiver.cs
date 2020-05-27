@@ -8,5 +8,6 @@ namespace IDL_for_NaturL
         void JumpToDefinition(Location location);
         void Completion(IList<CompletionItem> completionList);
         void Diagnostic(Diagnostic[] diagnostics, string uri);
+        void Reformat(Range range, string newText);
     }
 }

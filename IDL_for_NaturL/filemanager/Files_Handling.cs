@@ -145,6 +145,7 @@ namespace IDL_for_NaturL
                 return true;
             }
         }
+        
 
         private bool Save_AsClick()
         {

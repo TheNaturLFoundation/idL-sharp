@@ -3,29 +3,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:IDL_for_NaturL"
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              StartupUri="LaunchWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                
                 <!-- primary color -->
                 <ResourceDictionary>
                     <!-- include your primary palette -->
                     <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.purple.xaml" />
+                        <ResourceDictionary
+                            Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.purple.xaml" />
                     </ResourceDictionary.MergedDictionaries>
 
                     <!--
                             include three hues from the primary palette (and the associated forecolours).
                             Do not rename, keep in sequence; light to dark.
                         -->
-                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#ed9200"/>
+                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#ed9200" />
                     <!--"{StaticResource Primary100}"-->
-                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary200}"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#ed9200"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary500Foreground}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary700}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary700Foreground}"/>
+                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary200}" />
+                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#ed9200" />
+                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary500Foreground}" />
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary700}" />
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush"
+                                     Color="{StaticResource Primary700Foreground}" />
                     <!--""-->
                 </ResourceDictionary>
 
@@ -33,22 +35,26 @@
                 <ResourceDictionary>
                     <!-- include your secondary pallette -->
                     <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.purple.xaml" />
+                        <ResourceDictionary
+                            Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.purple.xaml" />
                     </ResourceDictionary.MergedDictionaries>
 
                     <!-- include a single secondary accent color (and the associated forecolour) -->
-                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="White"/>
-                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Accent200Foreground}"/>
+                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="White" />
+                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush"
+                                     Color="{StaticResource Accent200Foreground}" />
                 </ResourceDictionary>
 
                 <!-- Include the Dragablz Material Design style -->
-                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" /> 
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- tell Dragablz tab control to use the Material Design theme -->
-            <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}"/>
+            <Style TargetType="{x:Type dragablz:TabablzControl}"
+                   BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" />
         </ResourceDictionary>
-        
+
     </Application.Resources>
 </Application>

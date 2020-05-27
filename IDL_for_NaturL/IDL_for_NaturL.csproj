@@ -104,9 +104,6 @@
         </EmbeddedResource>
         <None Remove="resources\testspurposes.py" />
         <None Remove="resources\settings.xml" />
-        <EmbeddedResource Include="resources\settings.xml">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
         <None Remove="resources\server.exe" />
         <EmbeddedResource Include="resources\server.exe">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -147,6 +144,8 @@
         <EmbeddedResource Include="resources\std\naturl-package">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Remove="languages\StringRessourcesEnglish.xml" />
+        <None Remove="languages\english.xml" />
     </ItemGroup>
 
     <ItemGroup>

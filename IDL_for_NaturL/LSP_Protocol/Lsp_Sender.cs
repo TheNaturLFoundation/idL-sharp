@@ -10,9 +10,12 @@ namespace IDL_for_NaturL
         void ExitNotification();
         void ShutDownRequest();
         void DidOpenNotification(string uri, string language, int version, string text);
-        void DidChangeNotification(VersionedTextDocumentIdentifier versionedTextDocumentIdentifier, 
+
+        void DidChangeNotification(VersionedTextDocumentIdentifier versionedTextDocumentIdentifier,
             IEnumerable<TextDocumentContentChangeEvent> contentchangesEvents);
+
         void DidCloseNotification(string uri);
-        
+
+        void FormattingRequest(string uri, int tabSize, bool insertSpaces);
     }
 }

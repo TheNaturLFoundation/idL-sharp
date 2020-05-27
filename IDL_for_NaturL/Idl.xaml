@@ -19,7 +19,6 @@
     MouseWheel="OnMouseDownMain"
     MinWidth="150"
     MinHeight="50">
-
     <Window.Resources>
         <VisualBrush x:Key="WavyBrush" Viewbox="0,0,3,2" ViewboxUnits="Absolute" Viewport="0,0.8,6,4" ViewportUnits="Absolute" TileMode="Tile">
             <VisualBrush.Visual>
@@ -233,6 +232,9 @@
         <CommandBinding Command="self:CustomCommands.Transpile"
                         CanExecute="TranspileCommand_CanExecute"
                         Executed="TranspileCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.Reformat"
+                        CanExecute="ReformatCommand_CanExecute"
+                        Executed="ReformatCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.Execute"
                         CanExecute="ExecuteCommand_CanExecute"
                         Executed="ExecuteCommand_Executed" />
@@ -257,6 +259,8 @@
         <CommandBinding Command="self:CustomCommands.Cancel_Process"
                         CanExecute="Cancel_ProcessCommand_CanExecute"
                         Executed="Cancel_ProcessCommand_Executed"/>
+        <CommandBinding Command="self:CustomCommands.ResetZoom" CanExecute="ResetZoomCommand_CanExecute"
+                        Executed="ResetZoomCommand_Executed"></CommandBinding>
 
 
     </Window.CommandBindings>
@@ -415,6 +419,12 @@
                         <MenuItem Header="Rétablir"
                                   Command="ApplicationCommands.Redo"
                                   CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                        <MenuItem Header="Reformater le code"
+                                  Command="self:CustomCommands.Reformat" ToolTip="Reformat the file"
+                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
+                        <MenuItem Header="Rétablir le niveau de zoom"
+                                  Command="self:CustomCommands.ResetZoom" ToolTip="Resets the zoom level"
+                                  CommandTarget="{Binding ElementName=CodeBox_id_}" />
                     </MenuItem>
                     <MenuItem Header="Langue" Height="38">
                         <MenuItem Header="Francais" Height="38"
@@ -445,6 +455,7 @@
                                    Margin="-4,-8,-7,-8" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    
                 </Menu>
                 <TextBox Name="ResearchBox" Foreground="Gray" FontSize="16"
                          HorizontalAlignment="Left" AcceptsReturn="False"

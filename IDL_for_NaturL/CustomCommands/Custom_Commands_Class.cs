@@ -56,6 +56,16 @@ namespace IDL_for_NaturL
             typeof(CustomCommands)
         );
 
+        public static readonly RoutedUICommand Reformat = new RoutedUICommand
+        (
+            "Reformat", "Reformat",
+            typeof(CustomCommands), 
+            new InputGestureCollection
+            {
+                new KeyGesture(Key.L, ModifierKeys.Control | ModifierKeys.Alt)
+            }
+        );
+
         public static readonly RoutedUICommand Transpile = new RoutedUICommand
         (
             "Transpile",
@@ -132,7 +142,7 @@ namespace IDL_for_NaturL
                 new KeyGesture(Key.F, ModifierKeys.Control)
             }
         );
-        
+
         public static readonly RoutedUICommand Cancel_Process = new RoutedUICommand
         (
             "Cancel_Process",
@@ -141,6 +151,16 @@ namespace IDL_for_NaturL
             new InputGestureCollection()
             {
                 new KeyGesture(Key.F5, ModifierKeys.Shift)
+            }
+        );
+        public static readonly RoutedUICommand ResetZoom = new RoutedUICommand
+        (
+            "ResetZoom",
+            "ResetZoom",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.D0, ModifierKeys.Control)
             }
         );
     }

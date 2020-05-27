@@ -31,6 +31,8 @@ namespace IDL_for_NaturL
         private string tabitem;
         private int playgroundCount;
         private WarningSeverity _warningSeverity;
+        public double defaultSize;
+
 
         private static Dictionary<string, TabHandling> tabAttributes =
             new Dictionary<string, TabHandling>();
@@ -87,6 +89,7 @@ namespace IDL_for_NaturL
                 HighlightingLoader.Load(reader, HighlightingManager.Instance);
 
             textEditor.SyntaxHighlighting = _highlightingDefinition;
+            defaultSize = UserSettings.defaultFontSize;
             reader.Close();
             string[] paths =
                 File.ReadAllLines("resources/lastfiles.txt");

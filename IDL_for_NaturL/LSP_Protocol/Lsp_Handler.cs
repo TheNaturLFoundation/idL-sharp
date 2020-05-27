@@ -12,6 +12,7 @@ using System.Threading;
 using System.Windows.Threading;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
+using IDL_for_NaturL.filemanager;
 using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,7 +27,7 @@ namespace IDL_for_NaturL
         private Dictionary<int, string> idDictionary = new Dictionary<int, string>();
         public int breakCount = 0;
 
-        
+
         public LspHandler(LspReceiver lspReceiver, Process server)
         {
             this.lspReceiver = lspReceiver;
@@ -68,19 +69,20 @@ namespace IDL_for_NaturL
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
         }
-        
+
         public void InitializeRequest(int processId, string uri, ClientCapabilities capabilities)
         {
             Initialize_Params initializeParams =
-                new Initialize_Params(processId, uri, capabilities);
+                new Initialize_Params(processId, uri, capabilities, UserSettings.language.ToStringRepresentation());
             RequestMessage newmessage = new RequestMessage(++id, initializeParams, "initialize");
             idDictionary.Add(id, "initialize");
             string json = JsonConvert.SerializeObject(newmessage);
             string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
+            Console.WriteLine(headerAndJson);
             server.StandardInput.Write(headerAndJson);
             server.StandardInput.Flush();
         }
-        
+
         public void InitializedNotification()
         {
             InitializedNotification initRequest =
@@ -108,7 +110,7 @@ namespace IDL_for_NaturL
         {
             ShutDownParams initializeParams =
                 new ShutDownParams();
-            RequestMessage newmessage = 
+            RequestMessage newmessage =
                 new RequestMessage(++id, initializeParams, "shutdown");
             idDictionary.Add(id, "shutdown");
             string json = JsonConvert.SerializeObject(newmessage);
@@ -159,6 +161,19 @@ namespace IDL_for_NaturL
             server.StandardInput.Flush();
         }
 
+        public void FormattingRequest(string uri, int tabSize, bool insertSpaces)
+        {
+            TextDocumentFormattingParams textDocument =
+                new TextDocumentFormattingParams(new ConcreteTextDocumentIdentifier(uri),
+                    new FormattingOptions(tabSize, insertSpaces));
+            RequestMessage message = new RequestMessage(++id, textDocument, "textDocument/formatting");
+            idDictionary.Add(id, "textDocument/formatting");
+            string json = JsonConvert.SerializeObject(message);
+            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
+            server.StandardInput.Write(headerAndJson);
+            server.StandardInput.Flush();
+        }
+
         public void ReceiveData(object sender, DataReceivedEventArgs e)
         {
             if (string.IsNullOrEmpty(e.Data))
@@ -166,11 +181,13 @@ namespace IDL_for_NaturL
                 breakCount++;
                 return;
             }
+
             if (breakCount < 2)
             {
                 breakCount = 0;
                 return;
             }
+
             breakCount = 0;
             // Everything will be received here
             string data = e.Data.Replace("{", "{\n").Replace("}", "}\n").Replace(",", ",\n").Replace("[", "[\n")
@@ -198,6 +215,8 @@ namespace IDL_for_NaturL
 
                     return;
                 }
+
+                JArray items;
                 switch (method)
                 {
                     case "textDocument/definition":
@@ -205,9 +224,10 @@ namespace IDL_for_NaturL
                         {
                             lspReceiver.JumpToDefinition(receivedData["result"].ToObject<Location>());
                         }
+
                         break;
                     case "textDocument/completion":
-                        JArray items = (JArray) receivedData["result"];
+                        items = (JArray) receivedData["result"];
                         if (!error)
                         {
                             lspReceiver.Completion(items.ToObject<IList<CompletionItem>>());
@@ -217,8 +237,22 @@ namespace IDL_for_NaturL
                             Console.WriteLine("Constant Keywords");
                             lspReceiver.Completion(new List<CompletionItem>());
                         }
+                
                         break;
-                    case "shudown":
+                    case "textDocument/formatting":
+                        items = (JArray) receivedData["result"];
+                        Console.WriteLine(receivedData);
+                        if (! error)
+                        {
+                            foreach (JToken jToken in items)
+                            {
+                                TextEdit textEdit = jToken.ToObject<TextEdit>();
+                                lspReceiver.Reformat(textEdit.range, textEdit.newText);
+                            }
+                        }
+
+                        break;
+                    case "shutdown":
                         //ExitNotification();
                         break;
                     default:
@@ -244,8 +278,8 @@ namespace IDL_for_NaturL
         {
             return settings[name] != null;
         }
-        
     }
+
     internal static class ConsoleAllocator
     {
         [DllImport(@"kernel32.dll", SetLastError = true)]

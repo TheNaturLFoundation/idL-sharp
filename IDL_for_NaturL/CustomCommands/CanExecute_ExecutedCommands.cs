@@ -10,6 +10,7 @@ using Dragablz;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
+using IDL_for_NaturL.filemanager;
 using MaterialDesignThemes.Wpf;
 
 namespace IDL_for_NaturL
@@ -68,6 +69,20 @@ namespace IDL_for_NaturL
         private void SaveAsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Save_AsClick();
+        }
+
+        #endregion
+
+        #region ReformatCommand
+
+        private void ReformatCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ReformatCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            ReformatRequest();
         }
 
         #endregion
@@ -168,8 +183,10 @@ namespace IDL_for_NaturL
         {
             TextEditor ed = _lastFocusedTextEditor;
             TextLocation location = ed.Document.GetLocation(ed.CaretOffset);
-            LspSender.RequestDefinition(new Position(location.Line-1,location.Column-1),
-                _currentTabHandler._file == null ? _currentTabHandler.playground : "file://" + _currentTabHandler._file);
+            LspSender.RequestDefinition(new Position(location.Line - 1, location.Column - 1),
+                _currentTabHandler._file == null
+                    ? _currentTabHandler.playground
+                    : "file://" + _currentTabHandler._file);
         }
 
         private void ResearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -191,6 +208,19 @@ namespace IDL_for_NaturL
         {
             Cancel_Process(null, null);
         }
-        
+        private void ResetZoomCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ResetZoomCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            ResetZoomLevel();
+        }
+
+        private void ResetZoomLevel()
+        {
+            _lastFocusedTextEditor.FontSize = UserSettings.defaultFontSize;
+        }
     }
 }

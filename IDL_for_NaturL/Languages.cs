@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using IDL_for_NaturL.filemanager;
 
 namespace IDL_for_NaturL
@@ -65,7 +66,7 @@ namespace IDL_for_NaturL
             };
             List<string> editFrench = new List<string>()
             {
-                "_Copier", "_Coller", "_Couper", "_Annuler", "_Rétablir"
+                "_Copier", "_Coller", "_Couper", "_Annuler", "_Rétablir", "Reformatter le code", "Rétablir le zoom"
             };
             List<List<string>> frenchList = new List<List<string>>() {fileFrench, editFrench};
 
@@ -76,7 +77,7 @@ namespace IDL_for_NaturL
             };
             List<string> editEng = new List<string>()
             {
-                "_Copy", "_Paste", "_Cut", "_Undo", "_Redo"
+                "_Copy", "_Paste", "_Cut", "_Undo", "_Redo", "Reformat", "Reset Zoom Level"
             };
             List<List<string>> engList = new List<List<string>>() {fileEng, editEng};
             switch (language)

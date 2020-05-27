@@ -179,13 +179,13 @@
                     <Grid Margin="0,9,0,0" Width="689" Height="412" VerticalAlignment="Top">
                         <Button Click="Save_Setting" Style="{DynamicResource RoundCorner}" Content="Save"
                                 Margin="0,360,174,0" Height="19" VerticalAlignment="Top" Foreground="White"
-                                HorizontalAlignment="Right" Width="73" />
+                                HorizontalAlignment="Right" Width="73" Name="SaveButton"/>
                         <Button Click="DefaultReset" Style="{DynamicResource RoundCornerGray}" Content="Reset colors"
-                                HorizontalAlignment="Right" Margin="120,50,25,50" VerticalAlignment="Top"
-                                Foreground="White" Width="73" Height="19" />
+                                HorizontalAlignment="Right" Margin="120,70,25,50" VerticalAlignment="Top"
+                                Foreground="White" Height="19" Name="DefaultResetButton"/>
                         <Button Click="Cancel_Click" Style="{DynamicResource RoundCornerGray}" Content="Cancel"
                                 HorizontalAlignment="Right" Margin="0,360,86,0" VerticalAlignment="Top"
-                                Foreground="White" Width="73" Height="19" />
+                                Foreground="White" Width="73" Height="19" Name="CancelButton"/>
                         <Button Click="OK_Click" Style="{DynamicResource RoundCornerOK}" Content="OK"
                                 Margin="610,360,39,0" VerticalAlignment="Top" Foreground="White" Height="19" />
                         <materialDesign:ColorPicker Name="Color_Picker" HorizontalAlignment="Left" VerticalAlignment="Top" 
@@ -204,10 +204,10 @@
                         <!--<CheckBox Name="Bold_TrueFalse"  Content="Gras" Foreground="#a37acc" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Left" Margin="498,195,0,0" VerticalAlignment="Top"
                                   BorderThickness="1" IsChecked="True" Checked="Bold_TrueFalse_OnChecked"/>-->
                         <ComboBox Name="Selected_Combo" HorizontalAlignment="Left" Margin="224,19,0,0" VerticalAlignment="Top" Width="120" Visibility="Visible" SelectionChanged="Selected_Combo_OnSelected">
-                            <ComboBoxItem Content="Mots clefs" IsSelected="True" Background="White"/>
-                            <ComboBoxItem Content="Fonctions" Background="White"/>
-                            <ComboBoxItem Content="Types" Background="White"/>
-                            <ComboBoxItem Content="Constantes" Background="White"/>
+                            <ComboBoxItem Content="Mots clefs" IsSelected="True" Background="White" Name="MotClef"/>
+                            <ComboBoxItem Content="Fonctions" Background="White" Name="Fonction"/>
+                            <ComboBoxItem Content="Types" Background="White" Name="Type"/>
+                            <ComboBoxItem Content="Constantes" Background="White" Name="Constantes"/>
                         </ComboBox>
                     </Grid>
                 </TabItem>

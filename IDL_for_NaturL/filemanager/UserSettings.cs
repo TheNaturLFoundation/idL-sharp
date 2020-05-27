@@ -14,6 +14,7 @@ namespace IDL_for_NaturL.filemanager
         public static Language language;
         public static WarningSeverity warningSeverity;
         public static string syntaxFilePath;
+        public static double defaultFontSize = 16;
 
         /// <summary>
         /// Function that loads the configuration from XML DataContract present in the class SettingsManager 
@@ -37,12 +38,14 @@ namespace IDL_for_NaturL.filemanager
                 language = deserializedSettingsManager.GetLanguage();
                 warningSeverity = deserializedSettingsManager.GetSeverity();
                 syntaxFilePath = deserializedSettingsManager.syntaxFilePath;
+                defaultFontSize = deserializedSettingsManager.fontSize;
             }
             catch (Exception)
             {
                 language = Language.French;
                 warningSeverity = WarningSeverity.Light;
                 syntaxFilePath = "resources/naturl_coloration.xshd";
+                defaultFontSize = 18d;
             }
         }
 
@@ -53,7 +56,7 @@ namespace IDL_for_NaturL.filemanager
         public static void SaveUserSettings(string fileName)
         {
             SettingsManager S1 = new SettingsManager(language.ToStringRepresentation(),
-                warningSeverity.ToStringRepresentation(), syntaxFilePath);
+                warningSeverity.ToStringRepresentation(), syntaxFilePath, MainWindow._lastFocusedTextEditor.FontSize);
             FileStream writer = new FileStream(fileName, FileMode.Create);
             DataContractSerializer ser =
                 new DataContractSerializer(typeof(SettingsManager));
