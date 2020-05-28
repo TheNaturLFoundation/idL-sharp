@@ -1,6 +1,6 @@
 # idL
-![](IDL_for_NaturL/resources/idL_Welcome.png)
-![](IDL_for_NaturL/resources/idL_Current1.png)
+<img src="IDL_for_NaturL/resources/idL_Welcome.png"  height="256">
+<img src="IDL_for_NaturL/resources/idL_Current1.png" height="400" >
 Bienvenue sur le projet idL. idL est l'IDE spécialement conçu et développé pour écrire du code en naturL. Vous pourrez trouver une documentation plus ample de idL et de naturL ainsi que l'installeur de notre projet sur notre site web : https://thenaturlfoundation.github.io/. Une vidéo de présentation de toutes les fonctionnalités détaillés de idL sera bientôt publiée pour aider a l'utilisation de cet outil.
 
 idL est actuellement le seul IDE qui peut exécuter du naturL et le transpiler vers dy python. L'origine de ce nom naturL est en fait l'idée que notre IDE peut transpiler du code écrit en language naturel (aussi appelé langage algorithmique ou encore pseudo-code) vers du python. Ainsi, "naturL" est en fait notre version formalisée du langage naturel. Vous trouverez la synthaxe du langage "naturL" dans la documentation présente sur notre site web.
