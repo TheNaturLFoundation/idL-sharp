@@ -22,8 +22,9 @@ namespace IDL_for_NaturL
             mainWindow = new MainWindow();
             Close();
             mainWindow.Show();
-            mainWindow.NewFile(sender, e);
-            mainWindow.RemoveTab(0);
+            bool opened = mainWindow.NewFile(sender, e);
+            if (opened)
+                mainWindow.RemoveTab(0);
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -32,8 +33,11 @@ namespace IDL_for_NaturL
             mainWindow = new MainWindow();
             Close();
             mainWindow.Show();
-            mainWindow.Open_Click();
-            mainWindow.RemoveTab(0);
+            bool opened = mainWindow.Open_Click();
+            if (opened)
+            {
+                mainWindow.RemoveTab(0);
+            }
         }
 
         private void Window_MouseDown(object sender, RoutedEventArgs e)

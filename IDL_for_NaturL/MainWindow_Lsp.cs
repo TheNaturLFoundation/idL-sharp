@@ -1,24 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
-using Dragablz;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using ICSharpCode.AvalonEdit.Rendering;
 using IDL_for_NaturL.filemanager;
-using System.Windows.Media;
 
 
 namespace IDL_for_NaturL
@@ -32,7 +23,9 @@ namespace IDL_for_NaturL
 
         public void JumpToDefinition(Location location)
         {
+            
             string uri = location.uri;
+            Console.WriteLine($"uri is {uri}");
             Range range = location.range;
             Position start = range.start;
             Position end = range.end;
@@ -44,6 +37,8 @@ namespace IDL_for_NaturL
             int endPos = Dispatcher.Invoke(() =>
                 _lastFocusedTextEditor.Document.GetOffset(end.line + 1, end.character + 1));
             Dispatcher.Invoke(() => _lastFocusedTextEditor.Select(startPos, endPos - startPos + 1));
+            Dispatcher.Invoke(() =>
+                _lastFocusedTextEditor.ScrollToLine(start.line));
         }
 
 

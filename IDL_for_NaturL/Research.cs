@@ -71,7 +71,7 @@ namespace IDL_for_NaturL
             {
                 
                 _occurrences = CountOccurences(_lastFocusedTextEditor.Text, ResearchBox.Text);
-                Occurences.Text = _occurrences + " occurrences";
+                Occurences.Text = _occurrences + " occurrence" + (_occurrences > 1 ? "s" : "");
                 SearchInput(ResearchBox.Text, _lastFocusedTextEditor);
             }
         }

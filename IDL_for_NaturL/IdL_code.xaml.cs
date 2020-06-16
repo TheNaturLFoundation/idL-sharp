@@ -97,7 +97,7 @@ namespace IDL_for_NaturL
             reader.Close();
             string[] paths =
                 File.ReadAllLines("resources/lastfiles.txt");
-            tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
+            tabitem = XamlWriter.Save(FindName("Tab_id_"));
             ((TabablzControl) FindName("TabControl")).Items.RemoveAt(0);
             Process processServer = new Process
             {
@@ -176,7 +176,7 @@ namespace IDL_for_NaturL
             ((TextEditor) ((Grid) ((TabItem) FindName("Tab" + n)).FindName(
                     "python_grid")).Children[0])
                 .SyntaxHighlighting = _highlightingDefinition;
-
+            
 
             TabControl.SelectedIndex =
                 ((TabablzControl) FindName("TabControl")).Items.Count - 1;

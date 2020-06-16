@@ -26,7 +26,7 @@ namespace IDL_for_NaturL
         // This function refers to the "Open" button in the toolbar, opens the file dialog and asks the user the file to open
         // Content of the opened file is then showed in the codebox of idl
         
-        public void Open_Click(string uri = null)
+        public bool Open_Click(string uri = null)
         {
             if (uri != null)
             {
@@ -35,36 +35,35 @@ namespace IDL_for_NaturL
                 {
                     // Select the openend file
                     Dispatcher.Invoke(() => TabControl.SelectedIndex = fileKey);
-                    Dispatcher.Invoke(() => _lastFocusedTextEditor = 
+                    Dispatcher.Invoke(() => _lastFocusedTextEditor =
                         (TextEditor) FindName("CodeBox" + _currenttabId));
+                    return false;
                 }
-                else
-                {
-                    // Open the file according to the uri
-                    uri = uri.Replace("file://", "");
-                    OpenFile(uri);
-                }
-                return;
+                // Open the file according to the uri
+                uri = uri.Replace("file://", "");
+                OpenFile(uri);
+                return true;
             }
+
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "nl files (*.ntl)|*.ntl|Text files (*.txt)|*.txt| cs files (*.cs)|*.cs"
             };
-            if (openFileDialog.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() != true) return false;
+            string filename = openFileDialog.FileName;
+            int filekey = IsFileOpen(filename);
+            if (filekey == -1)
             {
-                string filename = openFileDialog.FileName;
-                int filekey = IsFileOpen(filename);
-                if (filekey == -1)
-                {
-                    OpenFile(filename);
-                }
-                else
-                {
-                    Dispatcher.Invoke(() => TabControl.SelectedIndex = filekey);
-                    Dispatcher.Invoke(() => _lastFocusedTextEditor = 
-                        (TextEditor) FindName("CodeBox" + _currenttabId));
-                }
+                OpenFile(filename);
             }
+            else
+            {
+                Dispatcher.Invoke(() => TabControl.SelectedIndex = filekey);
+                Dispatcher.Invoke(() => _lastFocusedTextEditor = 
+                    (TextEditor) FindName("CodeBox" + _currenttabId));
+            }
+
+            return true;
         }
 
         public void OpenFile(string path)
@@ -77,23 +76,28 @@ namespace IDL_for_NaturL
                 Path.GetFileNameWithoutExtension(_currentTabHandler._file);
         }
 
-        public int IsFileOpen(string path)
+        private int IsFileOpen(string uri)
         {
-            string uriType = path.Contains("file://") ? "file" : path.Contains("playground://") ? "playground" : null;
             int index = 0;
+            if (uri.StartsWith("file://"))
+            {
+                uri = uri.Replace("file://","");
+            }
             foreach (var element in Dispatcher.Invoke(() => tabAttributes))
             {
-                string path1 = path.Replace("file://", "");
-                if (element.Value._file == path1 || element.Value.playground == path)
+                if (uri == element.Value._file || uri == element.Value.playground)
                 {
+                    Console.WriteLine($@"Index is {index}");
                     return index;
                 }
+
                 index++;
             }
+            Console.WriteLine("-1");
             return -1;
         }
         
-        public void NewFile(object sender, RoutedEventArgs e)
+        public bool NewFile(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -112,7 +116,10 @@ namespace IDL_for_NaturL
                 ((TabItem) FindName("Tab" + _currenttabId)).Header =
                     Path.GetFileNameWithoutExtension(_currentTabHandler._file);
                 ((TextEditor) FindName("CodeBox" + _currenttabId)).Text = "";
+                return true;
             }
+
+            return false;
         }
         
         private void NewWindow(object sender, RoutedEventArgs e)

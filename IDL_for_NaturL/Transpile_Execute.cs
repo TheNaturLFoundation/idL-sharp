@@ -154,6 +154,9 @@ namespace IDL_for_NaturL
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
+                    StandardErrorEncoding = Encoding.UTF8,
+                    StandardOutputEncoding = Encoding.UTF8,
+                    StandardInputEncoding = Encoding.UTF8,
                     WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true
                 }
