@@ -150,7 +150,7 @@
             </Grid>
         </ControlTemplate>
 
-            <ControlTemplate x:Key="HorizontalScrollBar"
+        <ControlTemplate x:Key="HorizontalScrollBar"
                          TargetType="{x:Type ScrollBar}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -382,8 +382,11 @@
 
             </Grid>
             <Grid DockPanel.Dock="Top">
-                <Menu Name="Menu" DockPanel.Dock="Top" Height="39" Background="White"
-                      HorizontalAlignment="Left">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="19*"/>
+                    <RowDefinition Height="29*"/>
+                </Grid.RowDefinitions>
+                <Menu Name="Menu" HorizontalAlignment="Left" Height="39" Background="White" Margin="0,6,0,6" Grid.RowSpan="2" Width="400">
                     <!-- White -->
                     <MenuItem Header="_Fichier" Height="38">
                         <MenuItem Header="_Nouveau Fichier"
@@ -429,21 +432,21 @@
                                   IsCheckable="True" Name="EngBox"
                                   Click="EngBoxClicked" />
                     </MenuItem>
-                    <MenuItem Name="ExecuteProcess" Height="39" Width="51" Header=""
+                    <MenuItem Name="ExecuteProcess" Height="26" Width="50" Header=""
                               Command="self:CustomCommands.Execute" ToolTip="Execute">
                         <MenuItem.Icon>
-                            <Image Source="resources/Untitled.png"
-                                   Margin="-14,-8,-16,-8" />
+                            <Image Source="resources/Untitled1.png"
+                                   Margin="-12,-5,-13,-4"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Height="39" Width="51" Header=""
+                    <MenuItem Height="25" Width="54" Header=""
                               Command="self:CustomCommands.Transpile" ToolTip="Transpile">
                         <MenuItem.Icon>
-                            <Image Source="resources/transpile.png"
-                                   Margin="-14,-8,-16,-8" />
+                            <Image Source="resources/transpile1.png" HorizontalAlignment="Right"
+                                   Margin="0,-5,-6,-4" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Name="StopProcess" Height="39" Width="55" Header=""
+                    <MenuItem Name="StopProcess" Height="39" Width="56" Header=""
                               ToolTip="Cancel" Command="self:CustomCommands.Cancel_Process">
                         <MenuItem.Icon>
                             <Image Source="resources/red_square.png"
@@ -451,18 +454,32 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </Menu>
+
                 <TextBox Name="ResearchBox" Foreground="Gray" FontSize="16"
                          HorizontalAlignment="Left" AcceptsReturn="False"
-                         Text="Search (Ctrl + F)" Margin="462,0,0,7"
-                         Width="150"
+                         Text="Search (Ctrl + F)" Margin="505,6,0,10"
+                         Width="138"
                          GotFocus="ResearchBoxGotFocus"
                          LostFocus="ResearchBoxLostFocus"
-                         KeyDown="OnKeyPressed" />
+                         KeyDown="OnKeyPressed" Grid.RowSpan="2" />
                 <TextBlock Name="Occurences" FontSize="16"
-                           HorizontalAlignment="Left" Margin="620,-12,0,0"
+                           HorizontalAlignment="Left" Margin="670,14,0,0"
                            Text="" TextWrapping="Wrap"
-                           VerticalAlignment="Center" Width="113"
-                           Foreground="Gray" Height="20" />
+                           VerticalAlignment="Top" Width="103"
+                           Foreground="Gray" Height="20" Grid.RowSpan="2" />
+                <Menu Grid.RowSpan="2" Margin="670,5,0,10" HorizontalAlignment="Stretch">
+                    <Menu.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <DockPanel HorizontalAlignment="Stretch"/>
+                        </ItemsPanelTemplate>
+                    </Menu.ItemsPanel>
+                    <MenuItem Name="Clear" Width="63" Height="35" HorizontalAlignment="Right">
+                        <MenuItem.Icon>
+                            <Image Source="resources/clear.png" Margin="-11,-6,-19,-3"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </Menu>
+
             </Grid>
             <dragablz:TabablzControl Name="TabControl" DockPanel.Dock="Top"
                                      SelectionChanged="TabControl_OnSelectionChanged">

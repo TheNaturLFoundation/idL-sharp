@@ -14,7 +14,7 @@ namespace IDL_for_NaturL.filemanager
         public static Language language;
         public static WarningSeverity warningSeverity;
         public static string syntaxFilePath;
-        public static double defaultFontSize = 16;
+        public static double defaultFontSize = 12;
 
         /// <summary>
         /// Function that loads the configuration from XML DataContract present in the class SettingsManager 

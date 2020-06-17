@@ -9,6 +9,7 @@
     <LangVersion>8</LangVersion>
   </PropertyGroup>
     <ItemGroup>
+        <None Remove="resources\clear.png" />
         <None Remove="resources\close.png" />
         <None Remove="resources\close1.png" />
         <None Remove="resources\FiraCode-Medium.ttf" />
@@ -24,6 +25,7 @@
         <None Remove="resources\transpile.png" />
         <None Remove="resources\Untitled.png" />
         <None Remove="PythonAdrian.xshd" />
+        <None Remove="resources\Untitled.svg" />
         <None Update="resources\naturL.exe">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -70,14 +72,14 @@
         <Resource Include="resources\transpile.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
-        <Resource Include="resources\Untitled.png">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Resource>
         <None Remove="resources\play (1).png" />
         <Resource Include="resources\play (1).png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
         <None Remove="resources\naturl_coloration.xshd" />
+        <Resource Include="resources\clear.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
         <EmbeddedResource Include="resources\naturl_coloration.xshd">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
@@ -143,6 +145,14 @@
         </EmbeddedResource>
         <None Remove="languages\StringRessourcesEnglish.xml" />
         <None Remove="languages\english.xml" />
+        <None Remove="resources\Untitled1.png" />
+        <Resource Include="resources\Untitled1.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <None Remove="resources\transpile1.png" />
+        <Resource Include="resources\transpile1.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
     </ItemGroup>
 
     <ItemGroup>
@@ -159,6 +169,9 @@
         <Resource Include="resources\resize.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
+        <EmbeddedResource Include="resources\Untitled.svg">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>

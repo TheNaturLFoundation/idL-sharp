@@ -167,6 +167,7 @@ namespace IDL_for_NaturL
             StreamReader outputreader;
             if (readStdin)
             {
+                Console.WriteLine("Text given in the StdIn: " + CodeBox.Text);
                 inputWriter.Write(CodeBox.Text);
                 outputreader = _process.StandardOutput;
             }
@@ -180,6 +181,8 @@ namespace IDL_for_NaturL
             _process.WaitForExit();
             string errorTranspile = reader.ReadToEnd();
             string outputTranspile = outputreader.ReadToEnd();
+            Console.WriteLine("Error transpile: " + errorTranspile);
+            Console.WriteLine("Output Transpile: " + outputTranspile);
             bool containsError = errorTranspile.Contains("Erreur") || errorTranspile.Contains("Error");
             if (!containsError)
             {
@@ -242,6 +245,8 @@ namespace IDL_for_NaturL
             }
             else
             {
+                Console.WriteLine("Error transpile: " + errorTranspile);
+                Console.WriteLine("StdOut: " + outputTranspile);
                 STD.Foreground = Brushes.Red;
                 STD.Text = errorTranspile;
             }
