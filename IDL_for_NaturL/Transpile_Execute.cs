@@ -121,17 +121,18 @@ namespace IDL_for_NaturL
         
         private void Execute(object sender, RoutedEventArgs e)
         {
-            TextEditor STD = Dispatcher.Invoke(() =>(TextEditor) FindName("STD" + _currenttabId));
+            TextEditor STD = (TextEditor) FindName("STD" + _currenttabId);
+            TextEditor CodeBox = (TextEditor) FindName("CodeBox" + _currenttabId);
+            TextEditor PythonBox = (TextEditor) FindName("python" + _currenttabId);
             STD.TextArea.TextView.LineTransformers.Clear();
-            TextEditor CodeBox = Dispatcher.Invoke(() => (TextEditor) FindName("CodeBox" + _currenttabId));
-            if (string.IsNullOrEmpty(((TextEditor) FindName("CodeBox" + _currenttabId)).Text)) return;
+            bool readStdin = true;
+            if (string.IsNullOrEmpty(CodeBox.Text)) return;
             string arguments = language switch
             {
                 IDL_for_NaturL.Language.French => "--language french",
                 IDL_for_NaturL.Language.English => "--language english",
                 _ => throw new ArgumentOutOfRangeException()
             };
-            bool readStdin = true;
             if (CodeBox.Text.Length > 4096)
             {
                 if (_currentTabHandler.playground != null) return;
@@ -143,32 +144,35 @@ namespace IDL_for_NaturL
                              Quote(python_file);
                 readStdin = false;
             }
+            
             _process = new Process
             {
                 StartInfo =
                 {
                     FileName = "resources/naturL.exe",
                     WorkingDirectory = "resources/",
+                    EnvironmentVariables =
+                    {
+                        ["NATURLPATH"] =
+                            Path.GetFullPath("resources")
+                    },
                     Arguments = arguments,
-                    EnvironmentVariables = {["NATURLPATH"] = Path.GetFullPath("resources")},
+                    StandardOutputEncoding = Encoding.UTF8,
+                    StandardErrorEncoding = Encoding.UTF8,
                     UseShellExecute = false,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
-                    StandardErrorEncoding = Encoding.UTF8,
-                    StandardOutputEncoding = Encoding.UTF8,
-                    StandardInputEncoding = Encoding.UTF8,
-                    WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true
                 }
             };
+            _process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             _process.Start();
             StreamWriter inputWriter = _process.StandardInput;
             StreamReader reader = _process.StandardError;
             StreamReader outputreader;
             if (readStdin)
             {
-                Console.WriteLine("Text given in the StdIn: " + CodeBox.Text);
                 inputWriter.Write(CodeBox.Text);
                 outputreader = _process.StandardOutput;
             }
@@ -179,12 +183,9 @@ namespace IDL_for_NaturL
                     Path.ChangeExtension(_currentTabHandler._file,".py"));
             }
             inputWriter.Close();
-            _process.WaitForExit();
-            string errorTranspile = reader.ReadToEnd();
-            string outputTranspile = outputreader.ReadToEnd();
-            Console.WriteLine("Error transpile: " + errorTranspile);
-            Console.WriteLine("Output Transpile: " + outputTranspile);
-            bool containsError = errorTranspile.Contains("Erreur") || errorTranspile.Contains("Error");
+            string error = reader.ReadToEnd();
+            string output = outputreader.ReadToEnd();
+            bool containsError = error.Contains("Erreur") || error.Contains("Error");
             if (!containsError)
             {
                 STD.Foreground = Brushes.Black;
@@ -211,9 +212,9 @@ namespace IDL_for_NaturL
                 _processPython.Start();
                 _processPythonRunning = true;
                 inputWriter = _processPython.StandardInput;
-                inputWriter.Write(outputTranspile);
+                inputWriter.Write(output);
                 inputWriter.Close();
-                string[] warnings = errorTranspile.Split('\n');
+                string[] warnings = error.Split('\n');
                 for (int i = 0; i < warnings.Length-1; i++)
                 {
                     STD.TextArea.TextView.LineTransformers.Add(new STDColorizer(i+1,DiagnosticSeverity.Warning));
@@ -246,10 +247,10 @@ namespace IDL_for_NaturL
             }
             else
             {
-                Console.WriteLine("Error transpile: " + errorTranspile);
-                Console.WriteLine("StdOut: " + outputTranspile);
+                Console.WriteLine("Error transpile: " + error);
+                Console.WriteLine("StdOut: " + output);
                 STD.Foreground = Brushes.Red;
-                STD.Text = errorTranspile;
+                STD.Text = error;
             }
         }
 
