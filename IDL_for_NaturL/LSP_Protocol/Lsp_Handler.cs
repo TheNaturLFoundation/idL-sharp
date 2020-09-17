@@ -1,20 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Text.Json.Serialization;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Threading;
-using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Document;
 using IDL_for_NaturL.filemanager;
-using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -23,23 +16,26 @@ namespace IDL_for_NaturL
     public class LspHandler : LspSender
     {
         public int id;
-        public bool initializedServer = false;
-        private Process server;
+        public bool initializedServer;
+        private TcpManager tcpManager;
         private Dictionary<int, string> idDictionary = new Dictionary<int, string>();
         public int breakCount = 0;
 
-
-        public LspHandler(LspReceiver lspReceiver, Process server)
+        private const int Port = 9131;
+        private const string Ip = "localhost";
+        
+        
+        public LspHandler(LspReceiver lspReceiver, Process lspServer)
         {
+            lspServer.Start();
+            Thread.Sleep(100);
             this.lspReceiver = lspReceiver;
-            server.Start();
-            server.OutputDataReceived += ReceiveData;
-            server.ErrorDataReceived += (sender, args) => Console.WriteLine(args.Data);
-            server.BeginOutputReadLine();
-            server.BeginErrorReadLine();
-            this.server = server;
+            tcpManager = new TcpManager(IPAddress.Loopback,Port);
+            tcpManager.ConnectAsync();
+            tcpManager.OnReceive = ReceiveData;
         }
-
+        
+        
         private LspReceiver lspReceiver;
 
         public void RequestDefinition(Position position, string uri)
@@ -50,9 +46,8 @@ namespace IDL_for_NaturL
 
             idDictionary.Add(id, "textDocument/definition");
             string json = JsonConvert.SerializeObject(newMessage);
-            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
+            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            tcpManager.Send(headerAndJson);
         }
 
         public void RequestKeywords(Position position, string uri)
@@ -65,9 +60,8 @@ namespace IDL_for_NaturL
             );
             idDictionary.Add(id, "textDocument/completion");
             string json = JsonConvert.SerializeObject(newMessage);
-            string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
+            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            tcpManager.Send(headerAndJson);
         }
 
         public void InitializeRequest(int processId, string uri, ClientCapabilities capabilities)
@@ -78,8 +72,7 @@ namespace IDL_for_NaturL
             idDictionary.Add(id, "initialize");
             string json = JsonConvert.SerializeObject(newmessage);
             string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
+            tcpManager.Send(headerAndJson);
         }
 
         public void InitializedNotification()
@@ -89,9 +82,8 @@ namespace IDL_for_NaturL
             Notification_Message initializeNotification =
                 new Notification_Message("initialized", initRequest);
             string json = JsonConvert.SerializeObject(initializeNotification);
-            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
+            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            tcpManager.Send(headerAndJson);
         }
 
         public void ExitNotification()
@@ -100,9 +92,8 @@ namespace IDL_for_NaturL
                 new ExitNotification();
             Notification_Message notificationMessage = new Notification_Message("exit", exitNotification);
             string json = JsonConvert.SerializeObject(notificationMessage);
-            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
+            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            tcpManager.Send(headerAndJson);
         }
 
         public void ShutDownRequest()
@@ -113,14 +104,12 @@ namespace IDL_for_NaturL
                 new RequestMessage(++id, initializeParams, "shutdown");
             idDictionary.Add(id, "shutdown");
             string json = JsonConvert.SerializeObject(newmessage);
-            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
+            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            tcpManager.Send(headerAndJson);
         }
 
         public void DidOpenNotification(string uri, string language, int version, string text)
         {
-            
             text = text.Replace("\r", "");
             DidOpenTextDocument document =
                 new ConcreteDidOpenTextDocument(new TextDocument(uri, language, version, text));
@@ -128,17 +117,8 @@ namespace IDL_for_NaturL
                 new Notification_Message("textDocument/didOpen", document);
             
             string json = JsonConvert.SerializeObject(notificationMessage);
-            if (json.Length > 4096)
-            {
-                document =
-                    new ConcreteDidOpenTextDocument(new TextDocument(uri, language, version, ""));
-                notificationMessage =
-                    new Notification_Message("textDocument/didOpen", document);
-                json = JsonConvert.SerializeObject(notificationMessage);
-            }
-            string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
+            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            tcpManager.Send(headerAndJson);
         }
 
         public void DidChangeNotification(VersionedTextDocumentIdentifier versionedTextDocumentIdentifier,
@@ -150,20 +130,8 @@ namespace IDL_for_NaturL
             Notification_Message notificationMessage =
                 new Notification_Message("textDocument/didChange", document);
             string json = JsonConvert.SerializeObject(notificationMessage);
-            if (json.Length > 4096)
-            {
-                contentchangesEvents = new List<TextDocumentContentChangeEvent> {new TextDocumentContentChangeEvent("")};
-                document =
-                    new ConcreteDidChangeTextDocument(versionedTextDocumentIdentifier,
-                        contentchangesEvents);
-                notificationMessage =
-                    new Notification_Message("textDocument/didChange", document);
-                json = JsonConvert.SerializeObject(notificationMessage);
-            }
-            string headerAndJson = "Content-Length: " + json.Length + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
-            
+            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            tcpManager.Send(headerAndJson);
         }
         
         public void DidCloseNotification(string uri)
@@ -173,9 +141,8 @@ namespace IDL_for_NaturL
             Notification_Message notificationMessage =
                 new Notification_Message("textDocument/didClose", document);
             string json = JsonConvert.SerializeObject(notificationMessage);
-            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
+            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            tcpManager.Send(headerAndJson);
         }
 
         public void FormattingRequest(string uri, int tabSize, bool insertSpaces)
@@ -186,28 +153,19 @@ namespace IDL_for_NaturL
             RequestMessage message = new RequestMessage(++id, textDocument, "textDocument/formatting");
             idDictionary.Add(id, "textDocument/formatting");
             string json = JsonConvert.SerializeObject(message);
-            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
-            server.StandardInput.Write(headerAndJson);
-            server.StandardInput.Flush();
+            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            tcpManager.Send(headerAndJson);
         }
 
-        public void ReceiveData(object sender, DataReceivedEventArgs e)
+        public void ReceiveData(string e)
         {
-            if (string.IsNullOrEmpty(e.Data))
-            {
-                breakCount++;
-                return;
-            }
-
-            if (breakCount < 2)
-            {
-                breakCount = 0;
-                return;
-            }
+            if (String.IsNullOrEmpty(e)) return; // Tkt c'est pour toi simon
+            e = e.Split("\r\n\r\n")[1];
 
             breakCount = 0;
             // Everything will be received here
-            string data = e.Data.Replace("{", "{\n").Replace("}", "}\n").Replace(",", ",\n").Replace("[", "[\n")
+            string data = e.Replace("{", "{\n").Replace("}", "}\n")
+                .Replace(",", ",\n").Replace("[", "[\n")
                 .Replace("]", "]\n");
             JObject receivedData = (JObject) JsonConvert.DeserializeObject(data);
             bool error = false;
@@ -219,7 +177,6 @@ namespace IDL_for_NaturL
                 }
                 // It is a response if we get there.
                 // Now need to find the id of the method called that was previously serialized
-
                 idDictionary.TryGetValue(receivedData["id"].Value<int>(), out string method);
                 if (!initializedServer)
                 {

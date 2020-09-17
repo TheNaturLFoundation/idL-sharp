@@ -29,6 +29,7 @@ namespace IDL_for_NaturL
         {
             return '"' + text + '"';
         }
+        
         private void Transpile(object sender, RoutedEventArgs routedEventArgs)
         {
             TextEditor STD = (TextEditor) FindName("STD" + _currenttabId);
