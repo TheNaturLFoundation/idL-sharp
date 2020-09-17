@@ -99,35 +99,31 @@ namespace IDL_for_NaturL
                 File.ReadAllLines("resources/lastfiles.txt");
             tabitem = XamlWriter.Save(this.FindName("Tab_id_"));
             ((TabablzControl) FindName("TabControl")).Items.RemoveAt(0);
-            Process processServer = new Process
+            
+            Process lspServer = new Process
             {
                 StartInfo =
                 {
                     FileName = "resources/server.exe",
+                    //C:\\Users\\Adrian\\Desktop\\TCP Server\\TCP Server\\bin\\Debug\\netcoreapp3.1\\TCP Server.exe
                     EnvironmentVariables =
                     {
                         ["NATURLPATH"] =
                             Path.GetFullPath("resources")
                     },
-                    UseShellExecute = false,
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    ErrorDialog = false,
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                },
-                EnableRaisingEvents = true
+                    CreateNoWindow = true
+                }
             };
-            LspSender = new LspHandler(this, processServer);
+            LspSender = new LspHandler(this, lspServer);
             LspSender.InitializeRequest(Process.GetCurrentProcess().Id,
-                "file://" + Directory.GetCurrentDirectory(),
-                new ClientCapabilities(
-                    new TextDocumentClientCapabilities(
-                        new CompletionClientCapabilities(),
-                        new DefinitionClientCapabilities(),
-                        new PublishDiagnosticsClientCapabilities())));
-            if (paths.Length == 0)
+                    "file://" + Directory.GetCurrentDirectory(),
+                    new ClientCapabilities(
+                        new TextDocumentClientCapabilities(
+                            new CompletionClientCapabilities(),
+                            new DefinitionClientCapabilities(),
+                            new PublishDiagnosticsClientCapabilities())));
+                if (paths.Length == 0)
             {
                 NewTabItems(++_tabInt, null);
             }
