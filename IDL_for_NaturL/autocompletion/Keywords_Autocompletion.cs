@@ -479,7 +479,7 @@ namespace IDL_for_NaturL
 
                 int copyoffset = offset;
                 textArea.Document.Replace(mySegment, SetTextDep());
-                Lastfocusedtexteditor.CaretOffset = SetOffSet(offset, Lastfocusedtexteditor.Text, SetTextDep().Length);
+                _lastFocusedTextEditor.Select(offset, 0);
                 ScrollIfIsLastsLines(copyoffset);
                 action();
             }

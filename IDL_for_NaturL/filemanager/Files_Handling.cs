@@ -87,13 +87,10 @@ namespace IDL_for_NaturL
             {
                 if (uri == element.Value._file || uri == element.Value.playground)
                 {
-                    Console.WriteLine($@"Index is {index}");
                     return index;
                 }
-
                 index++;
             }
-            Console.WriteLine("-1");
             return -1;
         }
         
@@ -144,13 +141,11 @@ namespace IDL_for_NaturL
             {
                 return Save_AsClick();
             }
-            else
-            {
-                WriteAllTextSafe();
-                _currentTabHandler._isSaved = true;
-                _currentTabHandler._firstData = ((TextEditor) FindName("CodeBox" + _currenttabId)).Text;
-                return true;
-            }
+
+            WriteAllTextSafe();
+            _currentTabHandler._isSaved = true;
+            _currentTabHandler._firstData = ((TextEditor) FindName("CodeBox" + _currenttabId)).Text;
+            return true;
         }
         
 

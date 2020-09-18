@@ -2,10 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using IDL_for_NaturL.filemanager;
 using Newtonsoft.Json;
@@ -19,22 +16,18 @@ namespace IDL_for_NaturL
         public bool initializedServer;
         private TcpManager tcpManager;
         private Dictionary<int, string> idDictionary = new Dictionary<int, string>();
-        public int breakCount = 0;
 
         private const int Port = 9131;
-        private const string Ip = "localhost";
-        
-        
+
         public LspHandler(LspReceiver lspReceiver, Process lspServer)
         {
             lspServer.Start();
-            Thread.Sleep(100);
+            Thread.Sleep(500);
             this.lspReceiver = lspReceiver;
             tcpManager = new TcpManager(IPAddress.Loopback,Port);
             tcpManager.ConnectAsync();
-            tcpManager.OnReceive = ReceiveData;
+            tcpManager.onReceive = ReceiveData;
         }
-        
         
         private LspReceiver lspReceiver;
 
@@ -92,7 +85,7 @@ namespace IDL_for_NaturL
                 new ExitNotification();
             Notification_Message notificationMessage = new Notification_Message("exit", exitNotification);
             string json = JsonConvert.SerializeObject(notificationMessage);
-            string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
+            string headerAndJson = "Content-Length: " + (json.Length) + "\r\n\r\n" + json;
             tcpManager.Send(headerAndJson);
         }
 
@@ -156,18 +149,42 @@ namespace IDL_for_NaturL
             string headerAndJson = "Content-Length: " + (json.Length ) + "\r\n\r\n" + json;
             tcpManager.Send(headerAndJson);
         }
-
+        
         public void ReceiveData(string e)
         {
+            if (e.Length <= 1)
+            {
+                return;
+            }
+            int i = e.IndexOf("Content-Length: ", StringComparison.Ordinal) + 16; //Content-Length : length = 16
+            string val = "";
+            while (e[i] != '\r')
+            {
+                val += e[i];
+                i++;
+            }
+            i = e.IndexOf("\r\n\r\n", StringComparison.Ordinal) + 4;
+            int contentLength = Int32.Parse(val);
+            string dataToProcess = "";
+            int j = i;
+            for (; j < contentLength + i; j++)
+            {
+                dataToProcess += e[j];
+            }
+            ProcessData(dataToProcess);
+            ReceiveData(e.Substring(j, e.Length - j));
+        }
+        
+        public void ProcessData(string e)
+        {
             if (String.IsNullOrEmpty(e)) return; // Tkt c'est pour toi simon
-            e = e.Split("\r\n\r\n")[1];
 
-            breakCount = 0;
             // Everything will be received here
             string data = e.Replace("{", "{\n").Replace("}", "}\n")
                 .Replace(",", ",\n").Replace("[", "[\n")
                 .Replace("]", "]\n");
             JObject receivedData = (JObject) JsonConvert.DeserializeObject(data);
+            //Console.WriteLine("Json object: "+receivedData);
             bool error = false;
             if (IsPropertyExist(receivedData, "id"))
             {
@@ -189,7 +206,6 @@ namespace IDL_for_NaturL
 
                     return;
                 }
-
                 JArray items;
                 switch (method)
                 {

@@ -23,9 +23,7 @@ namespace IDL_for_NaturL
 
         public void JumpToDefinition(Location location)
         {
-            
             string uri = location.uri;
-            Console.WriteLine($"uri is {uri}");
             Range range = location.range;
             Position start = range.start;
             Position end = range.end;
@@ -37,8 +35,7 @@ namespace IDL_for_NaturL
             int endPos = Dispatcher.Invoke(() =>
                 _lastFocusedTextEditor.Document.GetOffset(end.line + 1, end.character + 1));
             Dispatcher.Invoke(() => _lastFocusedTextEditor.Select(startPos, endPos - startPos + 1));
-            Dispatcher.Invoke(() =>
-                _lastFocusedTextEditor.ScrollToLine(start.line));
+            Dispatcher.Invoke(() => _lastFocusedTextEditor.ScrollToLine(start.line));
         }
 
 
@@ -108,7 +105,8 @@ namespace IDL_for_NaturL
                 DiagnosticSeverity severity = diagnostic.severity ?? DiagnosticSeverity.Information;
                 int line = diagnostic.range.start.line;
                 editor.TextArea.TextView.LineTransformers.Add(
-                    new LineColorizer(line + 1, severity, DeleteWhiteSpaceLine(line)));
+                    new LineColorizer(line + 1, severity, 
+                        DeleteWhiteSpaceLine(line)));
                 lock(uriMessages)
                 {
                     if (uriMessages.TryGetValue(uri, out var lineMessages))
@@ -172,7 +170,6 @@ namespace IDL_for_NaturL
 
         public void Diagnostic(Diagnostic[] diagnostics, string uri)
         {
-            
             Dispatcher.Invoke(() =>
             {
                 TextEditor editor = (TextEditor) FindName("CodeBox" + GetTabFromUri(uri));

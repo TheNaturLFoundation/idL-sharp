@@ -247,8 +247,6 @@ namespace IDL_for_NaturL
             }
             else
             {
-                Console.WriteLine("Error transpile: " + error);
-                Console.WriteLine("StdOut: " + output);
                 STD.Foreground = Brushes.Red;
                 STD.Text = error;
             }

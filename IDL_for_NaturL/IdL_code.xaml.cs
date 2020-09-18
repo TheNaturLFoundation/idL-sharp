@@ -113,8 +113,12 @@ namespace IDL_for_NaturL
                     },
                     WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true
-                }
+                },
+                EnableRaisingEvents = true
             };
+            Console.ForegroundColor = ConsoleColor.Red;
+            lspServer.ErrorDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            Console.ForegroundColor = ConsoleColor.White;
             LspSender = new LspHandler(this, lspServer);
             LspSender.InitializeRequest(Process.GetCurrentProcess().Id,
                     "file://" + Directory.GetCurrentDirectory(),
