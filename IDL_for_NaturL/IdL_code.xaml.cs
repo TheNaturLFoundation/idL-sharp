@@ -111,14 +111,12 @@ namespace IDL_for_NaturL
                         ["NATURLPATH"] =
                             Path.GetFullPath("resources")
                     },
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
+                    RedirectStandardError = true
                 },
-                EnableRaisingEvents = true
             };
-            Console.ForegroundColor = ConsoleColor.Red;
-            lspServer.ErrorDataReceived += (sender, args) => Console.WriteLine(args.Data);
-            Console.ForegroundColor = ConsoleColor.White;
+            //lspServer.OutputDataReceived += (sender, args) => Console.WriteLine("Server log:" + args.Data);
+            //lspServer.ErrorDataReceived += (sender, args) => Console.WriteLine("Server log(err):" + args.Data);
             LspSender = new LspHandler(this, lspServer);
             LspSender.InitializeRequest(Process.GetCurrentProcess().Id,
                     "file://" + Directory.GetCurrentDirectory(),

@@ -169,7 +169,14 @@ namespace IDL_for_NaturL
             int j = i;
             for (; j < contentLength + i; j++)
             {
-                dataToProcess += e[j];
+                try
+                {
+                    dataToProcess += e[j];
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    break;
+                }
             }
             ProcessData(dataToProcess);
             ReceiveData(e.Substring(j, e.Length - j));
@@ -184,7 +191,6 @@ namespace IDL_for_NaturL
                 .Replace(",", ",\n").Replace("[", "[\n")
                 .Replace("]", "]\n");
             JObject receivedData = (JObject) JsonConvert.DeserializeObject(data);
-            //Console.WriteLine("Json object: "+receivedData);
             bool error = false;
             if (IsPropertyExist(receivedData, "id"))
             {
@@ -257,7 +263,6 @@ namespace IDL_for_NaturL
                         PublishDiagnosticsParams @params =
                             receivedData["params"].ToObject<PublishDiagnosticsParams>();
                         lspReceiver.Diagnostic(@params.diagnostics, @params.uri);
-                        
                         break;
                 }
             }

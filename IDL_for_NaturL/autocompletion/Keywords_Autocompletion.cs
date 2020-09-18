@@ -266,7 +266,6 @@ namespace IDL_for_NaturL
                         Save_Click();
                     }
 
-                    //Console.WriteLine("Uri of changes: " + currentUri);
                     while (documentsList[currentUri].Count > 1)
                     {
                         documentsList[currentUri].Dequeue();
