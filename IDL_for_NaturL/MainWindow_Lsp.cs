@@ -66,7 +66,6 @@ namespace IDL_for_NaturL
                     return key;
                 }
             }
-
             throw new ArgumentOutOfRangeException(); // not supposed to be reached
         }
 
@@ -172,7 +171,16 @@ namespace IDL_for_NaturL
         {
             Dispatcher.Invoke(() =>
             {
-                TextEditor editor = (TextEditor) FindName("CodeBox" + GetTabFromUri(uri));
+                TextEditor editor;
+                try
+                {
+                    editor = (TextEditor) FindName("CodeBox" + GetTabFromUri(uri));
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    return;
+                }
+                
                 if (uriMessages.ContainsKey(uri))
                 {
                     uriMessages[uri].Clear();

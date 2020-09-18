@@ -17,6 +17,8 @@ namespace IDL_for_NaturL
 {
     public partial class MainWindow
     {
+        private double lastTabTime;
+        private double lastClosed;
         #region ExitCommand
 
         private void ExitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -115,12 +117,14 @@ namespace IDL_for_NaturL
 
         private void NewTabCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            double currentTime = GetTimeStamp();
+            e.CanExecute = currentTime - lastTabTime > 100;
         }
 
         private void NewTabCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             NewTabItems(++_tabInt, null);
+            lastTabTime = GetTimeStamp();
         }
 
         #endregion
