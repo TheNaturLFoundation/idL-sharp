@@ -25,7 +25,7 @@
         <Begin>\</Begin>
         <End>/</End>
       </Span>
-      <MarkPrevious bold="true" italic="false" color="#d70b0b">(</MarkPrevious>
+      <MarkPrevious bold="true" italic="false" color="#ff9940">(</MarkPrevious>
       <KeyWords name="Punctuation" bold="true" italic="false" color="#ed9366">
         <Key word="," />
         <Key word="." />
@@ -59,7 +59,7 @@
         <Key word="this" />
         <Key word="base" />
       </KeyWords>
-      <KeyWords name="structure_words" bold="true" color="#3b0ef4">
+      <KeyWords name="structure_words" bold="true" color="#390d0d">
         <Key word="fonction" />
         <Key word="variables" />
         <Key word="debut" />
@@ -118,11 +118,11 @@
         <Key word="async" />
         <Key word="await" />
       </KeyWords>
-      <KeyWords name="booleen" color="#e50141">
+      <KeyWords name="booleen" color="#a37acc">
         <Key word="vrai" />
         <Key word="faux" />
       </KeyWords>
-      <KeyWords name="types" bold="true" color="#64ff00">
+      <KeyWords name="types" bold="true" color="#399ee6">
         <Key word="instance" />
         <Key word="entier" />
         <Key word="reel" />

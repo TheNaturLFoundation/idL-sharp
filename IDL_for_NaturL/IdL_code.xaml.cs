@@ -46,6 +46,7 @@ namespace IDL_for_NaturL
         private IHighlightingDefinition _highlightingDefinition;
         private double clickPosition;
         public static MainWindow Instance { get; set; }
+        public static SettingsWindow SettingsInstance { get; set; }
 
         private class TabHandling
         {
@@ -258,7 +259,6 @@ namespace IDL_for_NaturL
                     HighlightingManager.Instance);
                 PythonBox.SyntaxHighlighting = HighlightingLoader.Load(new XmlNodeReader(doc),
                     HighlightingManager.Instance);
-                
             }
         }
 

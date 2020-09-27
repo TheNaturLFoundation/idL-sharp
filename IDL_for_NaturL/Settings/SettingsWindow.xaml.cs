@@ -21,15 +21,15 @@ namespace IDL_for_NaturL
         public SettingsWindow()
         {
             InitializeComponent();
-            UpdateAtLaunch();
+            UpdateAtLaunch(UserSettings.syntaxFilePath);
         }
 
         //TODO Ajouter la possibilité de charger un fichier directement dans les configurations.
-        private void UpdateAtLaunch()
+        private void UpdateAtLaunch(string path)
         {
             UpdateLanguage(UserSettings.language);
             XmlDocument doc = new XmlDocument();
-            doc.Load("resources/user_coloration.xshd");
+            doc.Load(path);
             XmlNode root = doc.DocumentElement;
             XmlNodeList ruleSets = root.FirstChild.NextSibling.NextSibling.FirstChild.ChildNodes;
             foreach (XmlNode rule in ruleSets)
@@ -111,7 +111,7 @@ namespace IDL_for_NaturL
         private void Save_Setting(object sender, RoutedEventArgs e)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load("resources/user_coloration.xshd");
+            doc.Load("resources/naturl_coloration.xshd");
             XmlNode root = doc.DocumentElement;
             XmlNodeList ruleSets = root.FirstChild.NextSibling.NextSibling.FirstChild.ChildNodes;
             foreach (XmlNode rule in ruleSets)
@@ -240,6 +240,7 @@ namespace IDL_for_NaturL
             {
             }
         }
+        
 
         private void DefaultReset(object sender, RoutedEventArgs e)
         {

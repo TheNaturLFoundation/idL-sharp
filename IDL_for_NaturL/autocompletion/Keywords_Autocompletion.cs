@@ -484,7 +484,7 @@ namespace IDL_for_NaturL
             }
 
             public string SetTextDep()
-            {
+            { 
                 switch (Text)
                 {
                     case "fonction":
