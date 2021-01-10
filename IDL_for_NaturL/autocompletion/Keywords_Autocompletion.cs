@@ -1,36 +1,14 @@
 using System;
-using System.Windows;
 using System.Windows.Input;
-using System.IO;
-using Path = System.IO.Path;
 using System.Windows.Controls;
-using System.Windows.Markup;
-using System.Xml;
-using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
-using System.Net;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Threading;
-using Dragablz;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
-using ICSharpCode.AvalonEdit.Search;
-using MaterialDesignThemes.Wpf;
-using HighlightingManager =
-    ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
 namespace IDL_for_NaturL
 {

@@ -11,14 +11,11 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Windows.Media;
 using Dragablz;
-using ExtraTools;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using IDL_for_NaturL.filemanager;
-using MaterialDesignThemes.Wpf;
 using HighlightingManager =
     ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 
